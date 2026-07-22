@@ -207,3 +207,31 @@ font-size:32px;
 width:100%;
 }
 }
+<section id="about" class="about">
+  <div class="container">
+    <h2>About Fahwa</h2>
+
+    <p>
+      Fahwa is an independent music artist focused on creating emotional,
+      cinematic and modern music. This website is the official home of
+      Fahwa, featuring music releases, biography and official links.
+    </p>
+
+    <div class="about-box">
+      <div>
+        <h3>Genre</h3>
+        <p>Electronic • Cinematic • Pop</p>
+      </div>
+
+      <div>
+        <h3>Country</h3>
+        <p>Iran</p>
+      </div>
+
+      <div>
+        <h3>Status</h3>
+        <p>Independent Artist</p>
+      </div>
+    </div>
+  </div>
+</section>
