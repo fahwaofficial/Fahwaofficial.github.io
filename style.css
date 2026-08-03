@@ -728,3 +728,7 @@ color:#000;
 box-shadow:0 15px 35px rgba(29,185,84,.35);
 
 }
+.social-links a {
+  margin: 8px;
+  display: inline-block;
+}
