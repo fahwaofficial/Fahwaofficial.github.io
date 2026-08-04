@@ -754,3 +754,30 @@ box-shadow:0 15px 35px rgba(29,185,84,.35);
     color: white;
     transform: translateY(-3px);
 }
+.gallery{
+    text-align:center;
+    padding:70px 20px;
+}
+
+.gallery h2{
+    margin-bottom:25px;
+    font-size:32px;
+}
+
+.slider{
+    max-width:900px;
+    margin:auto;
+    position:relative;
+    overflow:hidden;
+    border-radius:18px;
+}
+
+.slide{
+    width:100%;
+    display:none;
+    border-radius:18px;
+}
+
+.slide.active{
+    display:block;
+  }
