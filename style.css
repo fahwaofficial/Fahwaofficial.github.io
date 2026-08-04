@@ -1,4 +1,10 @@
-/* ========= RESET ========= */
+.slide {
+    display: none;
+}
+
+.slide.active {
+    display: block;
+}/* ========= RESET ========= */
 
 *{
 margin:0;
