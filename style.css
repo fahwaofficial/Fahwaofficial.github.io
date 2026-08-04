@@ -781,3 +781,23 @@ box-shadow:0 15px 35px rgba(29,185,84,.35);
 .slide.active{
     display:block;
   }
+.gallery{
+    padding:60px 20px;
+    text-align:center;
+}
+
+.slider{
+    max-width:900px;
+    margin:auto;
+    overflow:hidden;
+    border-radius:20px;
+}
+
+.slide{
+    width:100%;
+    display:none;
+}
+
+.slide.active{
+    display:block;
+  }
