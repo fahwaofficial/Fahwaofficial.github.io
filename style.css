@@ -1340,3 +1340,27 @@ transition:.3s;
 transform:translateY(-3px);
 
 }
+.dropdown {
+position: relative;
+}
+
+.dropdown-menu {
+display: none;
+position: absolute;
+background: #111;
+padding: 10px;
+list-style: none;
+}
+
+.dropdown:hover .dropdown-menu {
+display: block;
+}
+
+.dropdown-menu li {
+padding: 8px;
+}
+
+.dropdown-menu a {
+color: white;
+text-decoration: none;
+}
