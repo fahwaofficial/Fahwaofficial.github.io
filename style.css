@@ -1136,3 +1136,84 @@ height:240px;
 }
 
 }
+/* ---------- Biography Page ---------- */
+
+.bio-container{
+
+max-width:950px;
+
+margin:60px auto;
+
+padding:45px;
+
+background:#171717;
+
+border-radius:18px;
+
+box-shadow:0 0 25px rgba(0,0,0,.35);
+
+}
+
+.bio-container h1{
+
+font-size:42px;
+
+text-align:center;
+
+margin-bottom:35px;
+
+}
+
+.bio-container h2{
+
+margin-top:45px;
+
+margin-bottom:18px;
+
+padding-right:12px;
+
+border-right:4px solid #ffffff;
+
+font-size:28px;
+
+}
+
+.bio-container p{
+
+font-size:18px;
+
+line-height:2.2;
+
+text-align:justify;
+
+}
+
+.bio-intro{
+
+font-size:20px;
+
+}
+
+.bio-list{
+
+line-height:2.2;
+
+font-size:18px;
+
+padding-right:22px;
+
+}
+
+.bio-list li{
+
+margin-bottom:10px;
+
+}
+
+.social-grid{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+
+gap:18
