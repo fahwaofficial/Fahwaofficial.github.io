@@ -1357,60 +1357,35 @@ font-weight:bold;
 
 transition:.3s;
 }
+```css
+/* ===== MUSIC DROPDOWN ===== */
 
-/* =========================
-   MUSIC DROPDOWN
-========================= */
-
-.dropdown {
+.navbar .dropdown {
     position: relative;
 }
 
-/* کشو در حالت عادی بسته است */
-.dropdown-menu {
+.navbar .dropdown-menu {
     display: none;
     position: absolute;
     top: 100%;
     right: 0;
-
-    min-width: 420px;
-
-    padding: 12px 15px;
-    margin: 0;
-
-    background: rgba(0, 0, 0, 0.95);
-    border-radius: 8px;
-
+    min-width: 180px;
+    background: #000;
+    padding: 10px 0;
     z-index: 9999;
+}
 
-    /* ترک‌ها افقی */
-    flex-direction: row;
-    align-items: center;
-    gap: 25px;
+.navbar .dropdown-menu a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 15px;
     white-space: nowrap;
 }
 
-/* فقط وقتی موس روی Music می‌رود باز شود */
-.dropdown:hover .dropdown-menu {
-    display: flex;
-}
-
-/* لینک‌های داخل کشو */
-.dropdown-menu a {
+/* فقط وقتی موس روی Music است باز شود */
+.navbar .dropdown:hover .dropdown-menu {
     display: block;
-
-    color: white !important;
-    text-decoration: none;
-
-    padding: 5px 0;
 }
-
-/* وقتی موس روی ترک می‌رود */
-.dropdown-menu a:hover {
-    color: #aaa !important;
-}
-
-/* جلوگیری از بنفش شدن لینک‌های قبلی/بازدیدشده */
-.dropdown-menu a:visited {
-    color: white !important;
-}
+```
+ 
