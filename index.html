@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -111,38 +110,20 @@ FAHWA
 
 <li class="dropdown">
 
-<a href="songs.html">Music</a>
+    <button class="music-btn" type="button" onclick="toggleMusic()">
+        Music
+    </button>
 
-<div class="dropdown-menu">
+    <div class="dropdown-menu" id="musicMenu">
 
-<a href="MoTenaferam.html">MoTenaferam</a>
+        <a href="MoTenaferam.html">MoTenaferam</a>
 
-<a href="FORSATMAHDOD.html">FORSATMAHDOD</a>
+        <a href="FORSATMAHDOD.html">FORSATMAHDOD</a>
 
-<a href="Hamaknon.html">Hamakon</a>
+        <a href="Hamaknon.html">Hamakon</a>
 
-</div>
+    </div>
 
-</li>
-
-
-<li>
-<a href="about.html">About</a>
-</li>
-
-
-<li>
-<a href="social.html">Social</a>
-</li>
-
-
-<li>
-<a href="biography.html">بیوگرافی فهوا</a>
-</li>
-
-
-<li>
-<a href="contact.html">تماس (همکاری)</a>
 </li>
 
 
@@ -446,7 +427,7 @@ It's identity."
 <div class="container footer-content">
 
 <div>
-
+<body>
 <h3>FAHWA</h3>
 
 <p>
@@ -494,7 +475,14 @@ All Rights Reserved
 </div>
 
 </footer>
- 
+ <script>
+function toggleMusic() {
+    const menu = document.getElementById("musicMenu");
+
+    menu.classList.toggle("open")
+}
+ </script>
+  
 </body>
 
  </html>
