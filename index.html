@@ -458,7 +458,20 @@ All Rights Reserved
 <script src="script.js"></script>
 
 <script>
+  
+const menuButton = document.querySelector(".menu-btn");
+const menu = document.querySelector(".dropdown-menu");
 
+menuButton.onclick = function() {
+    menu.classList.toggle("active");
+};
+
+document.addEventListener("click", function(e) {
+    if (!menu.contains(e.target) && !menuButton.contains(e.target)) {
+        menu.classList.remove("active");
+    }
+});
+</script>
 </body>
 
  </html>
