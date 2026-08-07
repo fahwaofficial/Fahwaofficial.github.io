@@ -1316,44 +1316,53 @@ display:inline-block;
 
 padding:15px 35px;
 
-border-radiu.header{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-}
-
-```css
-/* ===== MUSIC MENU - FIX ===== */
+/* MUSIC DRAWER */
 
 .navbar .dropdown {
     position: relative;
 }
 
-.navbar .dropdown-menu {
-    display: none !important;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    width: 200px;
-    background: #000;
-    margin: 0;
+.music-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
     padding: 0;
-    list-style: none;
-    z-index: 99999;
 }
 
-.navbar .dropdown-menu a {
+.dropdown-menu {
+    display: none;
+    position: absolute;
+
+    top: 100%;
+    right: 0;
+
+    width: 190px;
+
+    background: #111;
+
+    padding: 8px 0;
+
+    z-index: 9999;
+}
+
+.dropdown-menu.open {
     display: block;
-    width: 100%;
+}
+
+.dropdown-menu a {
+    display: block;
+
     color: #fff !important;
-    padding: 10px 15px;
     text-decoration: none;
+
+    padding: 10px 15px;
+
     white-space: nowrap;
 }
 
-/* باز شدن فقط هنگام رفتن موس روی Music */
-.navbar .dropdown:hover > .dropdown-menu {
-    display: block !important;
-}
-```
+.dropdown-menu a:hover {
+    background: #222;
+    }
