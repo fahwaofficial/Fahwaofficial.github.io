@@ -1369,3 +1369,26 @@ header ul{
 header li{
     display:block !important;
 }
+.menu{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+
+    display: flex;
+    flex-direction: column; /* عمودی */
+    gap: 12px;
+    }
+.menu a,
+.menu a:visited{
+    color: white;
+    text-decoration: none;
+}
+
+.menu a:hover{
+    color: #999;
+}
+a,
+a:visited{
+    color: white !important;
+    text-decoration: none;
+}
