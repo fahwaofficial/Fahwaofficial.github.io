@@ -465,12 +465,11 @@ All Rights Reserved
 </div>
 
 </footer>
-
-<script>
-document.querySelector(".dropbtn").addEventListener("click", function(e) {
+  <script>
+document.getElementById("musicBtn").onclick = function(e) {
     e.preventDefault();
-    document.querySelector(".dropdown-menu").classList.toggle("show");
-});
+    document.getElementById("musicMenu").classList.toggle("show");
+};
   </script>
 </body>
 
