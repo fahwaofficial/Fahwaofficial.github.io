@@ -1323,69 +1323,37 @@ border-radiu.header{
     width: 100%;
 }
 
-.container{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.navbar ul{
-    display: flex;
-    flex-direction: row;
-    list-style: none;
-    gap: 25px;
-    margin: 0;
-    padding: 0;
-}
-
-.navbar a{
-    color: #fff;
-    text-decoration: none;
-}
-
-.navbar a:visited{
-    color: #fff;
-}s:40px;
-
-background:white;
-
-color:black;
-
-text-decoration:none;
-
-font-weight:bold;
-
-transition:.3s;
-}
 ```css
-/* ===== MUSIC DROPDOWN ===== */
+/* ===== MUSIC MENU - FIX ===== */
 
 .navbar .dropdown {
     position: relative;
 }
 
 .navbar .dropdown-menu {
-    display: none;
+    display: none !important;
     position: absolute;
     top: 100%;
     right: 0;
-    min-width: 180px;
+    width: 200px;
     background: #000;
-    padding: 10px 0;
-    z-index: 9999;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    z-index: 99999;
 }
 
 .navbar .dropdown-menu a {
     display: block;
-    color: #fff;
-    text-decoration: none;
+    width: 100%;
+    color: #fff !important;
     padding: 10px 15px;
+    text-decoration: none;
     white-space: nowrap;
 }
 
-/* فقط وقتی موس روی Music است باز شود */
-.navbar .dropdown:hover .dropdown-menu {
-    display: block;
+/* باز شدن فقط هنگام رفتن موس روی Music */
+.navbar .dropdown:hover > .dropdown-menu {
+    display: block !important;
 }
 ```
- 
