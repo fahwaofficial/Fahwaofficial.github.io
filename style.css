@@ -1500,3 +1500,36 @@ nav ul li a:hover{
     color:#fff !important;
     padding:10px 15px;
     }
+.header nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+
+.dropdown {
+    position: relative;
+}
+
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 100%;
+    top: 0;
+    min-width: 160px;
+}
+
+
+.dropdown:hover .dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    }
