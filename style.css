@@ -1348,13 +1348,10 @@ transform:translateY(-3px);
 .dropdown-menu {
     display: none;
     position: absolute;
-    top: 100%;
+    top: 25px;
     left: 0;
-    background: #111;
-    padding: 10px;
-    margin: 0;
-    list-style: none;
-    min-width: 180px;
+    background: #000;
+    min-width: 120px;
     z-index: 999;
 }
 
@@ -1362,16 +1359,9 @@ transform:translateY(-3px);
     display: block;
 }
 
-.dropdown-menu li {
-    padding: 8px;
-    white-space: nowrap;
-}
-
 .dropdown-menu a {
+    display: block;
     color: white;
+    padding: 8px;
     text-decoration: none;
 }
-
-.dropdown-menu a:hover {
-    color: #ff3b6b;
-    }
