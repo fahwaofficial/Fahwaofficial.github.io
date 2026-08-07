@@ -1345,10 +1345,3 @@ transition:.3s;
     left: 0;
 }
 
-.dropdown-menu a {
-    display: block;
-}
-
-.dropdown-menu.show {
-    display: block;
-    }
