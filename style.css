@@ -1334,13 +1334,21 @@ font-weight:bold;
 transition:.3s;
 
 }
+.dropdown {
+    position: relative;
+}
+
 .dropdown-menu {
     display: none;
     position: absolute;
-    top: 100%;
+    top: 30px;
     left: 0;
 }
 
-.dropdown:hover .dropdown-menu {
+.dropdown-menu a {
     display: block;
-                      }
+}
+
+.dropdown-menu.show {
+    display: block;
+    }
