@@ -1356,3 +1356,25 @@ nav ul li a {
 nav ul li a:hover {
     color: #00e5ff;
     }
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #111;
+    min-width: 180px;
+    padding: 10px 0;
+}
+
+.dropdown-menu a {
+    display: block;      /* باعث عمودی شدن */
+    color: #fff;         /* متن سفید */
+    text-decoration: none;
+    padding: 12px 16px;
+}
+
+.dropdown-menu a:hover {
+    background: #333;
+    }
+display: flex;
+flex-direction: column;
