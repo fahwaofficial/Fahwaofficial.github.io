@@ -1436,3 +1436,67 @@ nav ul li a:hover{
 .dropdown-menu a:hover{
     background:#222;
 }
+/* ===== FORCE MENU FIX ===== */
+
+nav{
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    z-index: 99999 !important;
+}
+
+nav ul{
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    align-items: flex-end !important;
+}
+
+nav ul li{
+    display: block !important;
+    margin: 8px 0 !important;
+}
+
+nav ul li a{
+    display: block !important;
+    color: #fff !important;
+    text-decoration: none !important;
+}
+
+nav ul li a:visited{
+    color:#fff !important;
+}
+
+nav ul li a:hover{
+    color:#00ffd5 !important;
+}
+
+/* کشوی موزیک */
+
+.dropdown{
+    position:relative;
+}
+
+.dropdown-menu{
+    display:none;
+    position:absolute;
+    right:100%;
+    top:0;
+    background:#111;
+    min-width:220px;
+    border-radius:10px;
+}
+
+.dropdown:hover .dropdown-menu{
+    display:block;
+}
+
+.dropdown-menu a{
+    display:block;
+    color:#fff !important;
+    padding:10px 15px;
+    }
