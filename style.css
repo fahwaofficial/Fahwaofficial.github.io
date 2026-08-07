@@ -1332,11 +1332,4 @@ text-decoration:none;
 font-weight:bold;
 
 transition:.3s;
-
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 30px;
-    left: 0;
 }
-
