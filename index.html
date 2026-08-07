@@ -108,24 +108,15 @@ FAHWA
 <a href="index.html">Home</a>
 </li>
 
-<li class="dropdown">
+<button class="music-btn" type="button" onclick="toggleMusic()">
+    Music
+</button>
 
-    <button class="music-btn" type="button" onclick="toggleMusic()">
-        Music
-    </button>
-
-    <div class="dropdown-menu" id="musicMenu">
-
-        <a href="MoTenaferam.html">MoTenaferam</a>
-
-        <a href="FORSATMAHDOD.html">FORSATMAHDOD</a>
-
-        <a href="Hamaknon.html">Hamakon</a>
-
-    </div>
-
-</li>
-
+<div class="dropdown-menu" id="musicMenu">
+    <a href="MoTenaferam.html">MoTenaferam</a>
+    <a href="FORSATMAHDOD.html">FORSATMAHDOD</a>
+    <a href="Hamaknon.html">Hamakon</a>
+</div>
 
 </ul>
 
@@ -478,8 +469,7 @@ All Rights Reserved
  <script>
 function toggleMusic() {
     const menu = document.getElementById("musicMenu");
-
-    menu.classList.toggle("open")
+    menu.classList.toggle("open");
 }
  </script>
   
