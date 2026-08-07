@@ -1316,16 +1316,12 @@ display:inline-block;
 
 padding:15px 35px;
 
-/* MUSIC DRAWER */
-
-.navbar .dropdown {
-    position: relative;
-}
+/* ===== MUSIC DROPDOWN ===== */
 
 .music-btn {
     background: none;
     border: none;
-    color: #fff;
+    color: white;
     font-family: inherit;
     font-size: inherit;
     cursor: pointer;
@@ -1334,35 +1330,21 @@ padding:15px 35px;
 
 .dropdown-menu {
     display: none;
-    position: absolute;
-
-    top: 100%;
-    right: 0;
-
-    width: 190px;
-
-    background: #111;
-
-    padding: 8px 0;
-
-    z-index: 9999;
+    flex-direction: column;
+    margin-top: 10px;
 }
 
 .dropdown-menu.open {
-    display: block;
+    display: flex;
 }
 
 .dropdown-menu a {
-    display: block;
-
-    color: #fff !important;
+    color: white;
     text-decoration: none;
-
-    padding: 10px 15px;
-
-    white-space: nowrap;
+    display: block;
+    margin: 5px 0;
 }
 
 .dropdown-menu a:hover {
-    background: #222;
-    }
+    color: #ccc;
+}
