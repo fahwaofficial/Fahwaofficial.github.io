@@ -1334,34 +1334,13 @@ font-weight:bold;
 transition:.3s;
 
 }
-
-.back-home a:hover{
-
-transform:translateY(-3px);
-
- 
-}
-.dropdown {
-    position: relative;
-}
-
 .dropdown-menu {
     display: none;
     position: absolute;
-    top: 25px;
+    top: 100%;
     left: 0;
-    background: #000;
-    min-width: 120px;
-    z-index: 999;
 }
 
 .dropdown:hover .dropdown-menu {
     display: block;
-}
-
-.dropdown-menu a {
-    display: block;
-    color: white;
-    padding: 8px;
-    text-decoration: none;
-}
+                      }
