@@ -1,58 +1,297 @@
+```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
 <head>
     <meta charset="UTF-8">
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>دانلود ترک جدید فهوا | دانلود ترک‌های فهوا</title>
 
     <meta name="description"
-        content="دانلود ترک جدید فهوا و جدیدترین آهنگ‌های فهوا. در این صفحه می‌توانید ترک‌های فهوا را مشاهده و برای دانلود به صفحه هر آهنگ مراجعه کنید.">
+        content="دانلود ترک جدید فهوا و دانلود ترک‌های فهوا. در این صفحه می‌توانید آهنگ‌های فهوا را آنلاین گوش دهید و به صورت مستقیم دانلود کنید.">
 
     <meta name="robots" content="index, follow">
 
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #050505;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        .download-page {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 70px 20px;
+        }
+
+        /* عنوان اصلی */
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 55px;
+        }
+
+        .page-header h1 {
+            font-size: 38px;
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+        }
+
+        .page-header p {
+            color: #bdbdbd;
+            font-size: 17px;
+            line-height: 2;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* کارت آهنگ */
+
+        .track-card {
+            background: linear-gradient(
+                145deg,
+                #151515,
+                #0c0c0c
+            );
+
+            border: 1px solid #292929;
+            border-radius: 18px;
+
+            padding: 30px;
+            margin-bottom: 25px;
+
+            text-align: center;
+
+            box-shadow:
+                0 10px 35px rgba(0, 0, 0, 0.45);
+
+            transition: transform 0.25s ease,
+                        border-color 0.25s ease;
+        }
+
+        .track-card:hover {
+            transform: translateY(-4px);
+            border-color: #555;
+        }
+
+        .track-number {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .track-card h2 {
+            font-size: 24px;
+            margin-bottom: 22px;
+        }
+
+        /* پلیر */
+
+        audio {
+            width: 100%;
+            max-width: 650px;
+            margin-bottom: 22px;
+        }
+
+        /* دکمه دانلود */
+
+        .download-button {
+            display: inline-block;
+
+            padding: 12px 28px;
+
+            border: 1px solid #ffffff;
+            border-radius: 30px;
+
+            color: #ffffff;
+            text-decoration: none;
+
+            font-size: 15px;
+
+            transition: all 0.25s ease;
+        }
+
+        .download-button:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* متن پایین صفحه */
+
+        .bottom-text {
+            text-align: center;
+            margin-top: 55px;
+
+            color: #888;
+            font-size: 14px;
+            line-height: 2;
+        }
+
+        /* موبایل */
+
+        @media (max-width: 600px) {
+
+            .download-page {
+                padding: 45px 15px;
+            }
+
+            .page-header h1 {
+                font-size: 29px;
+            }
+
+            .page-header p {
+                font-size: 15px;
+            }
+
+            .track-card {
+                padding: 22px 15px;
+            }
+
+            .track-card h2 {
+                font-size: 21px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
     <main class="download-page">
 
-        <h1>دانلود ترک جدید فهوا</h1>
+        <!-- عنوان صفحه -->
 
-        <p>
-            در این صفحه می‌توانید جدیدترین ترک‌های فهوا را مشاهده کنید
-            و برای دانلود هر آهنگ وارد صفحه مربوط به آن شوید.
-        </p>
+        <header class="page-header">
 
-        <h2>دانلود ترک‌های فهوا</h2>
+            <h1>
+                دانلود ترک جدید فهوا
+            </h1>
 
-        <div class="download-list">
+            <p>
+                در این صفحه می‌توانید جدیدترین ترک‌های فهوا را
+                به صورت آنلاین گوش دهید و آهنگ مورد نظر خود را
+                به صورت مستقیم دانلود کنید.
+            </p>
 
-            <div class="track">
-                <h3>MoTenaferam</h3>
-                <a href="MoTenaferam.html">مشاهده و دانلود MoTenaferam</a>
+        </header>
+
+
+        <!-- MoTenaferam -->
+
+        <section class="track-card">
+
+            <div class="track-number">
+                TRACK 01
             </div>
 
-            <div class="track">
-                <h3>FORSATMAHDOD</h3>
-                <a href="FORSATMAHDOD.html">مشاهده و دانلود FORSATMAHDOD</a>
+            <h2>
+                MoTenaferam
+            </h2>
+
+            <audio controls preload="metadata">
+                <source src="MoTenaferam.mp3" type="audio/mpeg">
+                مرورگر شما از پخش فایل صوتی پشتیبانی نمی‌کند.
+            </audio>
+
+            <br>
+
+            <a
+                class="download-button"
+                href="MoTenaferam.mp3"
+                download="MoTenaferam.mp3">
+                ↓ دانلود ترک
+            </a>
+
+        </section>
+
+
+        <!-- FORSATMAHDOD -->
+
+        <section class="track-card">
+
+            <div class="track-number">
+                TRACK 02
             </div>
 
-            <div class="track">
-                <h3>Hamaknon</h3>
-                <a href="Hamaknon.html">مشاهده و دانلود Hamaknon</a>
+            <h2>
+                FORSATMAHDOD
+            </h2>
+
+            <audio controls preload="metadata">
+                <source src="forsatmahdod.mp3" type="audio/mpeg">
+                مرورگر شما از پخش فایل صوتی پشتیبانی نمی‌کند.
+            </audio>
+
+            <br>
+
+            <a
+                class="download-button"
+                href="forsatmahdod.mp3"
+                download="forsatmahdod.mp3">
+                ↓ دانلود ترک
+            </a>
+
+        </section>
+
+
+        <!-- Hamaknon -->
+
+        <section class="track-card">
+
+            <div class="track-number">
+                TRACK 03
             </div>
+
+            <h2>
+                Hamaknon
+            </h2>
+
+            <audio controls preload="metadata">
+                <source src="Hamaknon.mp3" type="audio/mpeg">
+                مرورگر شما از پخش فایل صوتی پشتیبانی نمی‌کند.
+            </audio>
+
+            <br>
+
+            <a
+                class="download-button"
+                href="Hamaknon.mp3"
+                download="Hamaknon.mp3">
+                ↓ دانلود ترک
+            </a>
+
+        </section>
+
+
+        <!-- توضیح پایین -->
+
+        <div class="bottom-text">
+
+            <p>
+                ترک‌های فهوا را آنلاین گوش دهید و دانلود کنید.
+            </p>
 
         </div>
-
-        <h2>ترک‌های جدید فهوا</h2>
-
-        <p>
-            برای دسترسی به ترک‌های جدید فهوا و آهنگ‌های منتشرشده،
-            از فهرست بالا آهنگ مورد نظر خود را انتخاب کنید.
-        </p>
 
     </main>
 
 </body>
-                  </html>
+
+</html>
+```
