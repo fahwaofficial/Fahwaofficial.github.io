@@ -1483,4 +1483,33 @@ padding:15px 35px;
     color: #ffffff !important;
 }
 ```
+/* MUSIC + TRACKS */
 
+.music-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.music-title {
+    display: block;
+}
+
+.music-tracks {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 8px;
+    gap: 6px;
+}
+
+.music-tracks a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.music-tracks a:hover {
+    color: #aaa;
+        }
