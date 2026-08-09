@@ -1,320 +1,367 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منوی بالای سایت</title>
-    <style>
-        /* ===== ریشه و استایل کلی ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fahwa · بیوگرافی رسمی</title>
+  <!-- فونت‌های منحصربه‌فرد و جدید -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- فونت انگلیسی: Orbitron (حسی مدرن و تکنو) -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <!-- فونت فارسی: Vazir+ و یک فونت خاص برای عنوان (لومینا/دنیا) ولی از Vazir به‌عنوان پایه استفاده می‌کنیم + یک فونت نمایشی برای فارسی -->
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <!-- فونت ثانویه برای فارسی با استایل خاص (Plus Jakarta Sans هم فارسی ندارد، ولی از Vazir استفاده می‌کنیم) -->
+  <style>
+    /* ریست و پایه */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
-            padding-top: 80px; /* فاصله برای دیدن محتوا در زیر منوی ثابت */
-        }
+    body {
+      background: #0b0b0b;
+      color: #eee;
+      font-family: 'Vazirmatn', 'Orbitron', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      direction: rtl;
+    }
 
-        /* ===== منوی اصلی (بالای بالای صفحه) ===== */
-        .top-nav {
-            position: fixed;
-            top: 0;
-            right: 0;
-            left: 0;
-            z-index: 9999;
-            background: #1e2a3a;
-            padding: 12px 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center; /* وسط‌چین شدن آیتم‌ها */
-            gap: 8px 18px;
-            border-bottom: 3px solid #f39c12;
-        }
+    .artist-card {
+      max-width: 1200px;
+      width: 100%;
+      background: linear-gradient(145deg, #121212 0%, #1a1a1a 100%);
+      border-radius: 3.5rem;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 215, 0, 0.1);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 215, 0, 0.15);
+    }
 
-        /* آیتم‌های اصلی منو */
-        .nav-item {
-            color: #ecf0f1;
-            text-decoration: none;
-            font-size: 1.05rem;
-            font-weight: 500;
-            padding: 8px 14px;
-            border-radius: 30px;
-            transition: all 0.2s ease;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            display: inline-block;
-            white-space: nowrap;
-        }
+    /* هدر با تصویر و نام */
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 3.5rem;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+      padding-bottom: 2.5rem;
+    }
 
-        .nav-item:hover {
-            background: #2c3e50;
-            color: #f1c40f;
-            transform: scale(1.02);
-        }
+    .photo-frame {
+      flex: 0 0 220px;
+      height: 220px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid #f5c842;
+      box-shadow: 0 0 30px rgba(245, 200, 66, 0.3);
+      transition: 0.4s;
+      background: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        /* آیتم موزیک با آیکون و موقعیت خاص */
-        .music-toggle {
-            background: #2c3e50;
-            color: #f1c40f;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s;
+    }
 
-        .music-toggle:hover {
-            background: #34495e;
-        }
+    .photo-frame:hover img {
+      transform: scale(1.05);
+    }
 
-        /* ===== زیرمنوی موزیک ===== */
-        .sub-menu {
-            position: absolute;
-            top: 100%;          /* دقیقاً زیر آیتم موزیک */
-            right: 0;
-            background: #2c3e50;
-            min-width: 200px;
-            border-radius: 0 0 12px 12px;
-            box-shadow: 0 12px 25px rgba(0,0,0,0.5);
-            padding: 8px 0;
-            display: none;      /* پنهان به‌صورت پیش‌فرض */
-            flex-direction: column;
-            border-top: 3px solid #f39c12;
-            z-index: 99999;
-        }
+    .title-group {
+      flex: 1;
+      min-width: 260px;
+      text-align: center;
+    }
 
-        /* وقتی زیرمنو باز است (کلاس open) */
-        .sub-menu.open {
-            display: flex;
-        }
+    .title-group h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 4.2rem;
+      letter-spacing: 6px;
+      background: linear-gradient(135deg, #f5c842, #ffb347);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(245, 200, 66, 0.2);
+      line-height: 1.1;
+      margin-bottom: 0.3rem;
+    }
 
-        /* آیتم‌های زیرمنو */
-        .sub-item {
-            color: #ecf0f1;
-            text-decoration: none;
-            padding: 12px 24px;
-            font-size: 0.95rem;
-            transition: background 0.2s;
-            border-bottom: 1px solid #3a4a5a;
-            white-space: nowrap;
-        }
+    .title-group .persian-name {
+      font-family: 'Vazirmatn', sans-serif;
+      font-weight: 900;
+      font-size: 2.8rem;
+      background: linear-gradient(135deg, #f0e6d0, #d4b68a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+      display: block;
+      margin-top: -0.3rem;
+      text-shadow: 0 0 10px rgba(212, 182, 138, 0.3);
+    }
 
-        .sub-item:last-child {
-            border-bottom: none;
-        }
+    .title-group .subhead {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 400;
+      font-size: 0.9rem;
+      color: #aaa;
+      letter-spacing: 3px;
+      margin-top: 0.6rem;
+      border-top: 1px dashed #444;
+      padding-top: 0.8rem;
+      display: inline-block;
+    }
 
-        .sub-item:hover {
-            background: #1e2a3a;
-            color: #f1c40f;
-        }
+    /* بخش بیوگرافی دوزبانه */
+    .bio-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      margin: 2.8rem 0 3rem;
+    }
 
-        /* ===== موقعیت‌دهی آیتم موزیک ===== */
-        .music-wrapper {
-            position: relative;  /* زیرمنو نسبت به این والد مطلق می‌شود */
-            display: inline-block;
-        }
+    @media (max-width: 720px) {
+      .bio-section {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .title-group h1 {
+        font-size: 3rem;
+      }
+      .title-group .persian-name {
+        font-size: 2rem;
+      }
+      .hero {
+        gap: 1.5rem;
+      }
+    }
 
-        /* ===== ریسپانسیو ===== */
-        @media (max-width: 700px) {
-            .top-nav {
-                padding: 10px 12px;
-                gap: 6px 10px;
-            }
-            .nav-item {
-                font-size: 0.9rem;
-                padding: 6px 10px;
-            }
-            .sub-menu {
-                min-width: 170px;
-                right: 0;
-            }
-            .sub-item {
-                padding: 10px 16px;
-                font-size: 0.85rem;
-            }
-        }
+    .bio-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(4px);
+      padding: 1.8rem 2rem;
+      border-radius: 2.5rem;
+      border: 1px solid rgba(255, 215, 0, 0.08);
+      transition: 0.3s;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
 
-        /* ===== محتوای ساختگی برای نمایش صفحات ===== */
-        .page-content {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 20px 30px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-        }
+    .bio-card:hover {
+      border-color: #f5c84255;
+      box-shadow: 0 8px 30px rgba(245, 200, 66, 0.1);
+      transform: translateY(-3px);
+    }
 
-        .page-content h2 {
-            color: #1e2a3a;
-            border-bottom: 3px solid #f39c12;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
+    .bio-card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      color: #f5c842;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 0.6rem;
+    }
 
-        .page-content p {
-            line-height: 1.8;
-            color: #2c3e50;
-        }
+    .bio-card h3 span {
+      background: #f5c84222;
+      padding: 0 8px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+    }
 
-        /* برای دمو چند صفحه */
-        .page-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            margin-top: 20px;
-        }
+    .bio-card p {
+      font-size: 1rem;
+      line-height: 1.9;
+      color: #d0d0d0;
+      font-weight: 300;
+    }
 
-        .page-card {
-            background: #ecf0f1;
-            padding: 15px 25px;
-            border-radius: 50px;
-            font-weight: 600;
-            color: #1e2a3a;
-            box-shadow: inset 0 -2px 0 #bdc3c7;
-        }
+    .bio-card p strong {
+      color: #f5c842;
+      font-weight: 700;
+    }
 
-        .badge {
-            background: #f39c12;
-            color: #1e2a3a;
-            padding: 2px 12px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
+    .bio-card.persian p {
+      font-family: 'Vazirmatn', sans-serif;
+      font-weight: 400;
+      font-size: 1.05rem;
+      line-height: 2;
+    }
 
-        .note {
-            background: #fef9e7;
-            border-right: 6px solid #f39c12;
-            padding: 14px 20px;
-            border-radius: 10px;
-            margin: 25px 0;
-        }
-    </style>
+    .bio-card.english p {
+      font-family: 'Orbitron', 'Segoe UI', sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+      font-size: 0.95rem;
+      direction: ltr;
+      text-align: left;
+    }
+
+    /* لینک‌های شبکه‌های اجتماعی */
+    .social-links {
+      margin: 3rem 0 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.8rem 1.2rem;
+      border-top: 1px solid #2a2a2a;
+      padding-top: 2.5rem;
+    }
+
+    .social-links a {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 400;
+      font-size: 0.7rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #ccc;
+      background: #1f1f1f;
+      padding: 0.6rem 1.3rem;
+      border-radius: 60px;
+      border: 1px solid #333;
+      transition: 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+    }
+
+    .social-links a:hover {
+      background: #f5c842;
+      color: #0b0b0b;
+      border-color: #f5c842;
+      transform: scale(1.04);
+      box-shadow: 0 0 25px #f5c84255;
+    }
+
+    .social-links a i {
+      font-style: normal;
+      font-weight: 900;
+      font-size: 1rem;
+    }
+
+    /* دکمه‌های شبکه با آیکون ساده (اموجی) */
+    .social-links a::before {
+      content: "●";
+      color: #f5c842;
+      font-size: 0.5rem;
+      margin-left: 4px;
+      transition: 0.2s;
+    }
+
+    .social-links a:hover::before {
+      color: #0b0b0b;
+    }
+
+    /* فوتر */
+    .footer-note {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #555;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 2px;
+      margin-top: 1.5rem;
+      border-top: 1px solid #1f1f1f;
+      padding-top: 1.8rem;
+    }
+
+    .footer-note span {
+      color: #f5c842;
+    }
+
+    /* تنظیم عکس در صورت عدم وجود فایل photo3.jpg */
+    .photo-frame img {
+      background: #2a2a2a;
+    }
+  </style>
 </head>
 <body>
+  <div class="artist-card">
 
-    <!-- ============================================================ -->
-    <!--  منوی بالای بالای صفحه (همه صفحات)                           -->
-    <!--  این کد رو در فایل‌های زیر قرار بدید:                         -->
-    <!--  contact.html , about.html , music.html , biography.html ,    -->
-    <!--  Social.html , forsatmahdod.html , MoTenaferam.html ,        -->
-    <!--  Dictator.html                                               -->
-    <!--                                                              -->
-    <!--  دقیقاً بعد از تگ <body> در هر صفحه قرار بدید.              -->
-    <!-- ============================================================ -->
-    <nav class="top-nav" id="mainNav">
-
-        <!-- لینک‌های اصلی (به جز موزیک که wrapper دارد) -->
-        <a href="contact.html" class="nav-item">تماس</a>
-        <a href="about.html" class="nav-item">درباره</a>
-        <a href="biography.html" class="nav-item">بیوگرافی</a>
-        <a href="Social.html" class="nav-item">شبکه‌های اجتماعی</a>
-
-        <!-- آیتم موزیک با زیرمنو -->
-        <div class="music-wrapper" id="musicWrapper">
-            <button class="nav-item music-toggle" id="musicToggle">
-                🎵 موزیک
-                <span style="font-size:0.7rem; margin-right:4px;">▼</span>
-            </button>
-
-            <!-- زیرمنو (شامل سه صفحه) -->
-            <div class="sub-menu" id="subMenu">
-                <a href="forsatmahdod.html" class="sub-item">فرصت محدود</a>
-                <a href="MoTenaferam.html" class="sub-item">متنافرم</a>
-                <a href="Dictator.html" class="sub-item">دیکتاتور</a>
-            </div>
-        </div>
-
-        <!-- (اختیاری) می‌تونید آیتم‌های دیگه هم اضافه کنید -->
-    </nav>
-    <!-- ===== پایان منوی بالای بالای صفحه ===== -->
-
-
-    <!-- ============================================================ -->
-    <!--  محتوای دمو برای نمایش (این بخش رو در صفحات واقعی حذف کنید)   -->
-    <!-- ============================================================ -->
-    <div class="page-content">
-        <h2>📄 صفحه اصلی (دمو)</h2>
-        <p>
-            این یک نمونه صفحه است. منوی بالا در تمام صفحات شما (contact, about, music, biography, Social, 
-            forsatmahdod, MoTenaferam, Dictator) به‌صورت یکسان نمایش داده می‌شود.
-        </p>
-        <div class="note">
-            <strong>📍 جای گذاری دقیق:</strong>
-            <ul style="margin-right: 20px; margin-top: 10px; list-style: square;">
-                <li>کد <strong>&lt;nav class="top-nav" ...&gt;</strong> تا <strong>&lt;/nav&gt;</strong> را در تمام فایل‌های HTML مورد نظر (<code>contact.html</code> ، <code>about.html</code> ، <code>music.html</code> ، <code>biography.html</code> ، <code>Social.html</code> ، <code>forsatmahdod.html</code> ، <code>MoTenaferam.html</code> ، <code>Dictator.html</code>) دقیقاً بعد از تگ <code>&lt;body&gt;</code> قرار دهید.</li>
-                <li>زیرمنوی موزیک شامل لینک‌های <strong>forsatmahdod.html</strong> ، <strong>MoTenaferam.html</strong> ، <strong>Dictator.html</strong> می‌باشد که با کلیک روی "موزیک" باز و بسته می‌شوند.</li>
-                <li>همه استایل‌های مربوط به منو در بخش <code>&lt;style&gt;</code> قرار دارند. می‌توانید آن را در یک فایل CSS جداگانه هم قرار دهید.</li>
-            </ul>
-        </div>
-
-        <div class="page-list">
-            <span class="page-card">📌 contact.html</span>
-            <span class="page-card">📌 about.html</span>
-            <span class="page-card">📌 music.html</span>
-            <span class="page-card">📌 biography.html</span>
-            <span class="page-card">📌 Social.html</span>
-            <span class="page-card" style="background:#f1c40f;">🎵 forsatmahdod.html</span>
-            <span class="page-card" style="background:#f1c40f;">🎵 MoTenaferam.html</span>
-            <span class="page-card" style="background:#f1c40f;">🎵 Dictator.html</span>
-        </div>
-
-        <p style="margin-top: 30px; color: #7f8c8d;">
-            <span class="badge">توجه</span> برای تست زیرمنو، روی دکمه <strong>موزیک</strong> کلیک کنید. باز و بسته می‌شود.
-        </p>
+    <!-- بخش هیرو: عکس + نام -->
+    <div class="hero">
+      <div class="photo-frame">
+        <!-- عکس photo3.jpg (در کنار فایل html قرار دهید) -->
+        <img src="photo3.jpg" alt="Fahwa · فَهوا" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22 viewBox=%220 0 300 300%22%3E%3Crect width=%22300%22 height=%22300%22 fill=%22%231a1a1a%22/%3E%3Ctext x=%2250%22 y=%22160%22 font-family=%22Orbitron%22 font-size=%2230%22 fill=%22%23f5c842%22%3EFAHWA%3C/text%3E%3C/svg%3E'">
+      </div>
+      <div class="title-group">
+        <h1>FAHWA</h1>
+        <span class="persian-name">فَهوا</span>
+        <div class="subhead">RAPPER · PRODUCER · IRAN</div>
+      </div>
     </div>
 
+    <!-- بیوگرافی دو زبانه -->
+    <div class="bio-section">
+      <!-- فارسی -->
+      <div class="bio-card persian">
+        <h3>بیوگرافی <span>🇮🇷</span></h3>
+        <p>
+          <strong>فَهوا</strong> (متولد ۱۳۷۲، ۳۳ ساله) رپر، ترانه‌سرا و آهنگساز ایرانی ساکن تهران است. 
+          فعالیت حرفه‌ای خود را از سال <strong>۲۰۲۰</strong> به‌طور رسمی آغاز کرد و با سبکی منحصربه‌فرد 
+          و ترکیبی از هارمونی‌های مدرن و اشعار عمیق، به‌سرعت در میان مخاطبان جایگاه ویژه‌ای یافت. 
+          او با تکیه بر تجربه‌های زیستی و فضای اجتماعی ایران، آثاری خلق کرده که بازتابی از 
+          نسل امروز است. فَهوا علاوه بر رپ، در زمینه‌ی تولید موسیقی و تنظیم نیز فعالیت گسترده‌ای 
+          دارد و همکاری با هنرمندان دیگر را در کارنامه‌ی خود می‌بیند.
+        </p>
+      </div>
+      <!-- انگلیسی -->
+      <div class="bio-card english">
+        <h3>Biography <span>🇬🇧</span></h3>
+        <p>
+          <strong>Fahwa</strong> (b. 1993, age 33) is an Iranian rapper, songwriter, and producer 
+          based in Tehran. He officially started his career in <strong>2020</strong> and quickly 
+          gained attention for his distinctive flow, introspective lyrics, and modern production 
+          style. Blending traditional Persian melodies with trap and alternative hip-hop, 
+          Fahwa’s music reflects the complexities of life in Iran today. He is also an active 
+          collaborator and has worked with several underground and mainstream artists across 
+          the Middle East.
+        </p>
+      </div>
+    </div>
 
-    <!-- ============================================================ -->
-    <!--  اسکریپت باز و بسته کردن زیرمنو (فقط یک جا قرار بدید)        -->
-    <!--  می‌توانید این اسکریپت را در فایل جداگانه‌ای قرار دهید یا      -->
-    <!--  در انتهای هر صفحه (قبل از </body>) قرار دهید.               -->
-    <!-- ============================================================ -->
-    <script>
-        (function() {
-            const musicToggle = document.getElementById('musicToggle');
-            const subMenu = document.getElementById('subMenu');
+    <!-- تمام لینک‌های شبکه‌های اجتماعی (با متن به‌صورت دکمه) -->
+    <div class="social-links">
+      <a href="https://www.instagram.com/fahwaofficial?igsh=MWY2M3h1cnZnZW00dw==" target="_blank">Instagram</a>
+      <a href="https://x.com/fahwaofficial?t=FwD5_1e1MYA541awWEOGpg&s=09" target="_blank">X</a>
+      <a href="https://t.me/fahwaofficial/544" target="_blank">Telegram</a>
+      <a href="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK?si=OSjGCMdiRha0Sfus15aU7Q" target="_blank">Spotify</a>
+      <a href="https://soundcloud.com/fahwaofficial?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" target="_blank">SoundCloud</a>
+      <a href="https://youtube.com/@fahwaofficial?si=ZOC9pHhkG4HSHU3L" target="_blank">YouTube</a>
+      <a href="https://genius.com/artists/Fahwa" target="_blank">Genius</a>
+      <a href="https://musicbrainz.org/artist/85623249-de16-4582-ab32-a73b7aff093a" target="_blank">MusicBrainz</a>
+      <a href="https://fahwa.substack.com/" target="_blank">Substack</a>
+      <a href="https://youtube.com/@fahwaofficial?si=gMthC9TAcRZmFiEs" target="_blank">YT 2</a>
+      <a href="https://musicbrainz.org/artist/12be2b36-1596-4ec7-9abf-0f9eb53377e1" target="_blank">MB 2</a>
+      <a href="https://www.tiktok.com/@fahwaofficial?_r=1&_d=dfj79h7h7bg66d&sec_uid=MS4wLjABAAAAedKz2xnRTCBQoTtnBUL09h5nIxWLG1kxNB7jqqDdmItiq7xWtGHxsT4T_X2jYYY9&share_author_id=7603187326018323464&sharer_language=en&source=h5_m&u_code=f1lh7hmi0ma778&utm_source=copy&utm_campaign=client_share&share_link_id=ba0f3127-6379-4d62-90e7-767cb43a78b0&share_app_id=1340&ugbiz_name=Account&lang=en&user_id=7603187326018323464&sec_user_id=MS4wLjABAAAAedKz2xnRTCBQoTtnBUL09h5nIxWLG1kxNB7jqqDdmItiq7xWtGHxsT4T_X2jYYY9&enable_checksum=1" target="_blank">TikTok</a>
+      <a href="https://music.apple.com/mx/artist/fahwa/1813073821" target="_blank">Apple Music</a>
+      <a href="https://music.amazon.it/artists/B0F7RW3YL2" target="_blank">Amazon Music</a>
+      <a href="https://sites.google.com/view/fahwaofficial" target="_blank">Google Site</a>
+    </div>
 
-            // تابع برای بستن زیرمنو (در صورت باز بودن)
-            function closeSubMenu() {
-                if (subMenu.classList.contains('open')) {
-                    subMenu.classList.remove('open');
-                }
-            }
+    <div class="footer-note">
+      <span>⚡</span> FAHWA · OFFICIAL PAGE <span>⚡</span>
+    </div>
 
-            // باز/بسته کردن با کلیک روی دکمه موزیک
-            if (musicToggle && subMenu) {
-                musicToggle.addEventListener('click', function(e) {
-                    e.stopPropagation(); // جلوگیری از بسته شدن ناخواسته توسط کلیک روی داکیومنت
-                    subMenu.classList.toggle('open');
-                });
-            }
-
-            // اگر روی هر جای دیگری از صفحه کلیک شود، زیرمنو بسته شود
-            document.addEventListener('click', function(e) {
-                const wrapper = document.getElementById('musicWrapper');
-                // اگر کلیک داخل wrapper (دکمه یا خود زیرمنو) نباشد، ببند
-                if (wrapper && !wrapper.contains(e.target)) {
-                    closeSubMenu();
-                }
-            });
-
-            // (اختیاری) اگر روی لینک‌های زیرمنو کلیک شود، زیرمنو بسته شود
-            const subItems = document.querySelectorAll('.sub-item');
-            subItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    closeSubMenu();
-                });
-            });
-
-        })();
-    </script>
-    <!-- ===== پایان اسکریپت ===== -->
-
+  </div>
 </body>
-</html>
+    </html>
