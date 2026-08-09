@@ -1,344 +1,443 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تماس با ما</title>
-  <style>
-    /* Reset & base */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تماس با ما - Fahwa</title>
+    <!-- فونت‌های خاص و مدرن -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@200;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ریست کامل و تنظیمات پایه */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      background-color: #0b0b0b;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 1.5rem;
-      color: #f0f0f0;
-    }
+        body {
+            background-color: #0a0a0a;
+            color: #f5f5f5;
+            font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
 
-    .contact-card {
-      max-width: 700px;
-      width: 100%;
-      background: #1a1a1a;
-      border: 1px solid #2e2e2e;
-      border-radius: 2rem;
-      padding: 2rem 2rem 2.5rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px #2a2a2a inset;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(2px);
-    }
+        /* پس‌زمینه‌ی گرافیکی خاص با خطوط ظریف */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    /*رپفارسی*/
-    .image-wrapper {
-      width: 100%;
-      border-radius: 1.2rem;
-      overflow: hidden;
-      margin-bottom: 2rem;
-      border: 1px solid #3a3a3a;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
-      background: #111;
-    }
+        /* حلقه‌های بزرگ و محو در پس‌زمینه */
+        .bg-circle {
+            position: fixed;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    .image-wrapper img {
-      display: block;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 16/9;
-      object-fit: cover;
-      filter: grayscale(0.2) contrast(1.05);
-      transition: transform 0.3s ease;
-    }
+        .bg-circle-1 {
+            width: 600px;
+            height: 600px;
+            top: -200px;
+            right: -200px;
+        }
 
-    .image-wrapper img:hover {
-      transform: scale(1.01);
-      filter: grayscale(0) contrast(1.1);
-    }
+        .bg-circle-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -150px;
+            left: -150px;
+        }
 
-    /* عنوان و توضیحات */
-    .contact-header {
-      margin-bottom: 2rem;
-      border-bottom: 1px solid #2c2c2c;
-      padding-bottom: 1rem;
-    }
+        /* کانتینر اصلی صفحه با حس لوکس و مینیمال */
+        .contact-container {
+            position: relative;
+            z-index: 1;
+            max-width: 680px;
+            width: 100%;
+            background: rgba(20, 20, 20, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 2.5rem;
+            padding: 3.5rem 3rem;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
 
-    .contact-header h1 {
-      font-size: 2rem;
-      font-weight: 300;
-      letter-spacing: 2px;
-      color: #ffffff;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        .contact-container:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        }
 
-    .contact-header h1 span {
-      background: #2a2a2a;
-      padding: 0 12px;
-      border-radius: 40px;
-      font-size: 1.2rem;
-      color: #aaa;
-      border: 1px solid #3d3d3d;
-    }
+        /* هدر با شماره‌گذاری خاص */
+        .header {
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 1.5rem;
+        }
 
-    .contact-header p {
-      color: #b0b0b0;
-      font-size: 1rem;
-      margin-top: 6px;
-      font-weight: 300;
-    }
+        .header .label {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.3);
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
 
-    /* کانال‌های ارتباطی */
-    .contact-methods {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
+        .header .label span {
+            display: inline-block;
+            width: 24px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.15);
+        }
 
-    .method-item {
-      background: #141414;
-      border: 1px solid #2a2a2a;
-      border-radius: 1.4rem;
-      padding: 1rem 1.6rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: all 0.2s ease;
-    }
+        .header h1 {
+            font-size: 3.2rem;
+            font-weight: 300;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+        }
 
-    .method-item:hover {
-      background: #1f1f1f;
-      border-color: #4a4a4a;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.02);
-    }
+        .header h1 strong {
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #aaaaaa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-    .method-label {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 400;
-      color: #e0e0e0;
-    }
+        .header .sub {
+            margin-top: 0.75rem;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: 300;
+            letter-spacing: 0.02em;
+        }
 
-    .method-label i {
-      font-size: 1.7rem;
-      color: #ccc;
-      width: 2rem;
-      text-align: center;
-    }
+        /* بخش اطلاعات تماس با استایل مینیمال */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin: 2.5rem 0;
+        }
 
-    .method-link {
-      background: #252525;
-      padding: 0.4rem 1.2rem;
-      border-radius: 40px;
-      border: 1px solid #3a3a3a;
-      transition: all 0.15s ease;
-      font-size: 0.95rem;
-    }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: border-color 0.3s ease;
+        }
 
-    .method-link a {
-      color: #f0f0f0;
-      text-decoration: none;
-      font-weight: 400;
-      letter-spacing: 0.3px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+        .contact-item:hover {
+            border-bottom-color: rgba(255, 255, 255, 0.12);
+        }
 
-    .method-link a:hover {
-      color: #ffffff;
-      text-decoration: none;
-    }
+        .contact-item .label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 0.25);
+            font-weight: 400;
+        }
 
-    .method-link:hover {
-      background: #323232;
-      border-color: #5a5a5a;
-      transform: scale(1.02);
-    }
+        .contact-item .value {
+            font-size: 1.05rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
 
-    /* لینک تلگرام (فهوا) */
-    .telegram-highlight {
-      background: #0f0f0f;
-      border: 1px solid #3a3a3a;
-      border-radius: 1.4rem;
-      padding: 1.2rem 1.6rem;
-      margin-top: 1.2rem;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-    }
+        /* لینک اصلی تلگرام با طراحی خاص و مینیمال */
+        .telegram-link-wrapper {
+            margin: 2rem 0 1.5rem;
+            position: relative;
+        }
 
-    .telegram-highlight .label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #d0d0d0;
-      font-weight: 300;
-    }
+        .telegram-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 100px;
+            padding: 0.85rem 1.5rem 0.85rem 1.8rem;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(4px);
+            position: relative;
+            overflow: hidden;
+        }
 
-    .telegram-highlight .label i {
-      font-size: 1.8rem;
-      color: #aaa;
-    }
+        .telegram-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
 
-    .telegram-buttons {
-      display: flex;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-    }
+        .telegram-link:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.06);
+            transform: scale(1.01);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
 
-    .tg-btn {
-      background: #1f1f1f;
-      padding: 0.5rem 1.3rem;
-      border-radius: 60px;
-      border: 1px solid #3f3f3f;
-      transition: all 0.15s ease;
-      font-weight: 400;
-    }
+        .telegram-link:hover::before {
+            opacity: 1;
+        }
 
-    .tg-btn a {
-      color: #eee;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+        .telegram-link .link-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            z-index: 1;
+        }
 
-    .tg-btn:hover {
-      background: #2d2d2d;
-      border-color: #5f5f5f;
-      transform: scale(1.02);
-    }
+        /* آیکون تلگرام با استایل خاص */
+        .telegram-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
 
-    .tg-btn a i {
-      font-size: 1.2rem;
-    }
+        .telegram-link:hover .telegram-icon {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
 
-    /* فوتر کوچک */
-    .footer-note {
-      margin-top: 2rem;
-      font-size: 0.75rem;
-      color: #4a4a4a;
-      text-align: center;
-      border-top: 1px solid #242424;
-      padding-top: 1.2rem;
-      letter-spacing: 1px;
-      font-weight: 300;
-    }
+        .telegram-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
 
-    /* آیکون‌ها (از یونی کد یا ایموجی استفاده شده) */
-    .icon {
-      font-style: normal;
-    }
+        .telegram-link .text {
+            font-size: 1.05rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            color: rgba(255, 255, 255, 0.85);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
 
-    /* ریسپانسیو */
-    @media (max-width: 550px) {
-      .contact-card {
-        padding: 1.5rem;
-      }
-      .telegram-highlight {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 1rem;
-      }
-      .telegram-buttons {
-        justify-content: center;
-      }
-      .method-item {
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
-      }
-      .contact-header h1 {
-        font-size: 1.6rem;
-        flex-wrap: wrap;
-      }
-    }
-  </style>
+        .telegram-link .username {
+            font-weight: 600;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            letter-spacing: 0.02em;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        .telegram-link:hover .username {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .telegram-link .arrow {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .telegram-link:hover .arrow {
+            transform: translateX(4px);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* فوتر مینیمال با شماره */
+        .footer-note {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.15);
+            letter-spacing: 0.05em;
+        }
+
+        .footer-note .dot {
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin: 0 0.5rem;
+        }
+
+        /* ریسپانسیو برای موبایل */
+        @media (max-width: 640px) {
+            .contact-container {
+                padding: 2rem 1.5rem;
+                border-radius: 2rem;
+            }
+
+            .header h1 {
+                font-size: 2.4rem;
+            }
+
+            .contact-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
+                padding: 0.9rem 0;
+            }
+
+            .telegram-link {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+                border-radius: 1.8rem;
+                padding: 1.2rem 1.5rem;
+            }
+
+            .telegram-link .link-content {
+                justify-content: center;
+            }
+
+            .telegram-link .arrow {
+                display: none;
+            }
+
+            .footer-note {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+        }
+
+        /* انیمیشن محو شدن هنگام لود */
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .contact-container {
+            animation: fadeSlide 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        /* استایل خاص برای انتخاب متن */
+        ::selection {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+    </style>
 </head>
 <body>
-  <div class="contact-card">
+    <!-- عناصر گرافیکی پس‌زمینه -->
+    <div class="bg-circle bg-circle-1"></div>
+    <div class="bg-circle bg-circle-2"></div>
 
-    <!-- تصویر photo2.jpg (دقیقاً با همین نام) -->
-    <div class="image-wrapper">
-      <img src="favicon.jpg" alt="تصویر تماس" loading="lazy">
+    <div class="contact-container">
+        <!-- هدر -->
+        <div class="header">
+            <div class="label">
+                <span></span> ارتباط
+            </div>
+            <h1>
+                تماس <strong>مستقیم</strong>
+            </h1>
+            <div class="sub">
+                از طریق پیام‌رسان تلگرام
+            </div>
+        </div>
+
+        <!-- اطلاعات تماس (نمادین) -->
+        <div class="contact-info">
+            <div class="contact-item">
+                <span class="label">پاسخگویی</span>
+                <span class="value">۲۴ ساعته</span>
+            </div>
+            <div class="contact-item">
+                <span class="label">اولویت</span>
+                <span class="value">پیام‌های تلگرام</span>
+            </div>
+        </div>
+
+        <!-- لینک مستقیم تلگرام با طراحی خاص -->
+        <div class="telegram-link-wrapper">
+            <a href="https://t.me/fahwaam" target="_blank" rel="noopener noreferrer" class="telegram-link">
+                <div class="link-content">
+                    <div class="telegram-icon">
+                        <!-- آیکون تلگرام با استایل مینیمال (SVG) -->
+                        <svg viewBox="0 0 24 24">
+                            <path d="M22 2L11 13" />
+                            <path d="M22 2L15 22L11 13L2 9L22 2Z" />
+                        </svg>
+                    </div>
+                    <span class="text">ارسال پیام در</span>
+                    <span class="username">@fahwaam</span>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+        </div>
+
+        <!-- فوتر با جزئیات ظریف -->
+        <div class="footer-note">
+            <span>طراحی شده با تمرکز بر جزئیات</span>
+            <span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </span>
+            <span>Fahwa</span>
+        </div>
     </div>
-
-    <!-- هدر -->
-    <div class="contact-header">
-      <h1>
-        📬 ارتباط با ما
-        <span>#Rap</span>
-      </h1>
-      <p>از دو راه زیر می‌توانید با من در تماس باشید.</p>
-    </div>
-
-    <!-- دو روش ارتباطی (همانطور که خواسته‌اید) -->
-    <div class="contact-methods">
-
-      <!-- روش اول: لینک تلگرام مستقیم -->
-      <div class="method-item">
-        <span class="method-label">
-          <i class="icon">✈️</i> 
-          تلگرام (مستقیم)
-        </span>
-        <span class="method-link">
-          <a href="https://t.me/fahwaam" target="_blank" rel="noopener">
-            <span>@fahwaam</span> 
-            <span style="font-size:1.2rem;">↗</span>
-          </a>
-        </span>
-      </div>
-
-      <!-- روش دوم: لینک تلگرام با آیکون و توضیح (همان لینک) -->
-      <div class="method-item">
-        <span class="method-label">
-          <i class="icon">💬</i> 
-          پیام در تلگرام
-        </span>
-        <span class="method-link">
-          <a href="https://t.me/fahwaofficial" target="_blank" rel="noopener">
-            <span>t.me/fahwaofficial</span>
-            <span style="font-size:1.2rem;">↗</span>
-          </a>
-        </span>
-      </div>
-    </div>
-
-    <!-- بخش اختصاصی تلگرام با دو مسیر (همان لینک، اما با دو دکمه متفاوت) -->
-    <div class="telegram-highlight">
-      <span class="label">
-        <i class="icon">📱</i> 
-        <span>ارتباط از طریق تلگرام</span>
-      </span>
-      <div class="telegram-buttons">
-        <span class="tg-btn">
-          <a href="https://t.me/fahwaam" target="_blank" rel="noopener">
-            <i>👤</i> پیام مستقیم
-          </a>
-        </span>
-        <span class="tg-btn">
-          <a href="https://t.me/fahwaam" target="_blank" rel="noopener">
-            <i>🔗</i> لینک کانال
-          </a>
-        </span>
-      </div>
-    </div>
-
-    <!-- یک یادآوری کوچک (اختیاری) -->
-    <div class="footer-note">
-      طراحی شده با ❤️ · تم دارک مشکی-سفید
-    </div>
-  </div>
 </body>
-</html>
+  </html><link rel="icon" type="image/jpeg" href="images/favicon.jpg">
