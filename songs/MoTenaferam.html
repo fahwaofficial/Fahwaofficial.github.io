@@ -26,7 +26,7 @@
         }
 
         .card {
-            max-width: 480px;
+            max-width: 520px;
             width: 100%;
             background: #141414;
             border-radius: 32px;
@@ -34,6 +34,28 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px #2a2a2a;
             transition: all 0.3s ease;
             text-align: center;
+        }
+
+        /* Home Button */
+        .home-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 6px 14px;
+            border-radius: 40px;
+            border: 1px solid #2a2a2a;
+            background: #1a1a1a;
+            transition: 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .home-link:hover {
+            color: #fff;
+            border-color: #555;
+            background: #222;
         }
 
         /* Cover Image */
@@ -55,24 +77,6 @@
             display: block;
         }
 
-        /* Music Player (Online Box) */
-        .player-box {
-            background: #1e1e1e;
-            border-radius: 18px;
-            padding: 18px 12px 12px;
-            margin-bottom: 28px;
-            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.02), 0 6px 12px rgba(0, 0, 0, 0.5);
-            border: 1px solid #2c2c2c;
-        }
-
-        .player-box iframe {
-            width: 100%;
-            height: 80px;
-            border-radius: 12px;
-            border: none;
-            background: #000;
-        }
-
         /* Track Title & Artist */
         .track-title {
             font-size: 2rem;
@@ -91,9 +95,56 @@
             padding-bottom: 16px;
         }
 
+        /* Player Boxes (Separate for Spotify & YouTube) */
+        .player-section {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .player-box {
+            background: #1a1a1a;
+            border-radius: 18px;
+            padding: 14px 12px 12px;
+            border: 1px solid #2c2c2c;
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.02), 0 6px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .player-box .platform-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: #999;
+            margin-bottom: 8px;
+            padding-right: 4px;
+        }
+
+        .player-box .platform-label i {
+            font-size: 1rem;
+        }
+
+        .player-box iframe {
+            width: 100%;
+            height: 80px;
+            border-radius: 12px;
+            border: none;
+            background: #000;
+        }
+
+        /* Spotify-specific iframe height is a bit different */
+        .player-box.spotify iframe {
+            height: 80px;
+        }
+
+        .player-box.youtube iframe {
+            height: 200px; /* YouTube player needs more height for controls */
+        }
+
         /* Description with Medium Font */
         .description {
-            font-size: 1rem; /* اندازه متوسط */
+            font-size: 1rem;
             line-height: 1.8;
             color: #c8c8c8;
             background: #1a1a1a;
@@ -115,7 +166,7 @@
             font-weight: 300;
         }
 
-        /* Meta Info (Release, Label, etc) */
+        /* Meta Info */
         .meta-grid {
             display: flex;
             flex-wrap: wrap;
@@ -153,6 +204,7 @@
             justify-content: center;
             gap: 16px;
             flex-wrap: wrap;
+            margin-top: 6px;
         }
 
         .btn {
@@ -160,56 +212,42 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 12px 28px;
+            padding: 12px 24px;
             border-radius: 60px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             text-decoration: none;
             transition: all 0.2s ease;
             border: 1px solid transparent;
-            min-width: 140px;
-            background: #2a2a2a;
-            color: #f0f0f0;
-            border-color: #3a3a3a;
+            min-width: 130px;
         }
 
-        .btn i {
-            font-size: 1.1rem;
-        }
-
-        .btn-spotify {
+        .btn-spotify-follow {
             background: #1DB954;
             color: #000;
             border-color: #1DB954;
         }
 
-        .btn-spotify:hover {
+        .btn-spotify-follow:hover {
             background: #1ed760;
             transform: scale(1.02);
             box-shadow: 0 0 15px rgba(29, 185, 84, 0.3);
         }
 
-        .btn-youtube {
+        .btn-youtube-sub {
             background: #FF0000;
             color: #fff;
             border-color: #FF0000;
         }
 
-        .btn-youtube:hover {
+        .btn-youtube-sub:hover {
             background: #e60000;
             transform: scale(1.02);
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
         }
 
-        .btn-follow {
-            background: #333;
-            color: #fff;
-            border-color: #555;
-        }
-
-        .btn-follow:hover {
-            background: #444;
-            border-color: #777;
+        .btn i {
+            font-size: 1.1rem;
         }
 
         /* Responsive */
@@ -221,49 +259,73 @@
                 font-size: 1.7rem;
             }
             .btn {
-                padding: 10px 20px;
-                min-width: 120px;
-                font-size: 0.85rem;
+                padding: 10px 16px;
+                min-width: 100px;
+                font-size: 0.8rem;
             }
             .meta-grid {
                 gap: 6px 12px;
                 font-size: 0.75rem;
                 padding: 10px 8px;
             }
+            .player-box.youtube iframe {
+                height: 160px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="card">
+        <!-- Home Link -->
+        <a href="#" class="home-link" onclick="alert('بازگشت به صفحه اصلی'); return false;">
+            <i class="fas fa-arrow-left"></i> خانه
+        </a>
+
         <!-- Cover Art -->
         <div class="cover-wrapper">
             <img src="photo3.jpg" alt="MoTenaferam - Fahwa Cover Art" />
-        </div>
-
-        <!-- Online Music Player Box (YouTube & Spotify integrated) -->
-        <div class="player-box">
-            <!-- YouTube Player (with controls, ability to seek, etc) -->
-            <iframe 
-                src="https://www.youtube.com/embed/m5hJuIq3ePM?si=yAI5bIUsIgoovl8D&autoplay=0&controls=1&rel=0&modestbranding=1" 
-                title="MoTenaferam - Fahwa (YouTube)"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen>
-            </iframe>
-            <!-- Note: Spotify embed could be added below if needed, but we focus on YouTube for views -->
         </div>
 
         <!-- Track Info -->
         <h1 class="track-title">MoTenaferam</h1>
         <div class="artist-name">Fahwa</div>
 
-        <!-- Introduction / Description with medium font -->
+        <!-- TWO Separate Player Boxes: Spotify & YouTube -->
+        <div class="player-section">
+            <!-- Spotify Player Box -->
+            <div class="player-box spotify">
+                <div class="platform-label">
+                    <i class="fab fa-spotify" style="color: #1DB954;"></i> پخش از اسپاتیفای
+                </div>
+                <iframe 
+                    src="https://open.spotify.com/embed/album/2yMgRZVc6l15bjd4Oae2Hg?utm_source=generator&theme=0" 
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    loading="lazy">
+                </iframe>
+            </div>
+
+            <!-- YouTube Player Box -->
+            <div class="player-box youtube">
+                <div class="platform-label">
+                    <i class="fab fa-youtube" style="color: #FF0000;"></i> پخش از یوتیوب
+                </div>
+                <iframe 
+                    src="https://www.youtube.com/embed/m5hJuIq3ePM?si=yAI5bIUsIgoovl8D&autoplay=0&controls=1&rel=0&modestbranding=1" 
+                    title="MoTenaferam - Fahwa (YouTube)"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <!-- Description -->
         <div class="description">
             <strong>یک ترک احساسی و عمیق</strong> در سبک <strong>ترپ</strong> که توسط <strong>فهوا</strong> ساخته و تنظیم شده است. 
             «متنافرم» روایتی از دل‌تنگی، ناهماهنگی و جست‌وجوی هویت در میان تضادهای درونی است. 
             <span class="highlight">با بافت‌های صوتی مدرن و ملودی‌های گیرا، این قطعه شما را به سفری درونی می‌برد.</span>
         </div>
 
-        <!-- Meta: Release Date, Poet, Composer, Label -->
+        <!-- Meta: Release, Poet, Composer, Label -->
         <div class="meta-grid">
             <div class="meta-item"><i class="fas fa-calendar-alt"></i> انتشار: <span>۲۰۲۵</span></div>
             <div class="meta-item"><i class="fas fa-feather-alt"></i> شاعر: <span>Fahwa</span></div>
@@ -271,25 +333,21 @@
             <div class="meta-item"><i class="fas fa-tag"></i> لیبل: <span>Fahwa</span></div>
         </div>
 
-        <!-- Action Buttons: Follow & Subscribe + Direct links to Spotify & YouTube -->
+        <!-- Action Buttons: Follow for Spotify & Subscribe for YouTube -->
         <div class="action-buttons">
             <!-- Spotify Follow (links to album) -->
-            <a href="https://open.spotify.com/album/2yMgRZVc6l15bjd4Oae2Hg?si=RwKqPDaARWyeciPlYVD69w" target="_blank" class="btn btn-spotify">
-                <i class="fab fa-spotify"></i> اسپاتیفای
+            <a href="https://open.spotify.com/album/2yMgRZVc6l15bjd4Oae2Hg?si=RwKqPDaARWyeciPlYVD69w" target="_blank" class="btn btn-spotify-follow">
+                <i class="fab fa-spotify"></i> فالو در اسپاتیفای
             </a>
             <!-- YouTube Subscribe (links to video) -->
-            <a href="https://youtu.be/m5hJuIq3ePM?si=yAI5bIUsIgoovl8D" target="_blank" class="btn btn-youtube">
-                <i class="fab fa-youtube"></i> یوتیوب
-            </a>
-            <!-- Custom Follow Button (simulated action) -->
-            <a href="#" class="btn btn-follow" onclick="alert('برای دنبال کردن، لطفاً در اسپاتیفای یا یوتیوب فالو کنید!'); return false;">
-                <i class="fas fa-heart"></i> فالو
+            <a href="https://youtu.be/m5hJuIq3ePM?si=yAI5bIUsIgoovl8D" target="_blank" class="btn btn-youtube-sub">
+                <i class="fab fa-youtube"></i> ساب‌اسکرایب یوتیوب
             </a>
         </div>
 
-        <!-- Extra note: encourage subscribe/follow -->
-        <p style="margin-top: 20px; font-size: 0.7rem; color: #555; letter-spacing: 0.5px;">
-            <i class="fas fa-headphones-alt"></i> برای حمایت، در یوتیوب ساب‌اسکرایب و در اسپاتیفای فالو کنید.
+        <!-- Small note -->
+        <p style="margin-top: 24px; font-size: 0.65rem; color: #444; letter-spacing: 0.5px;">
+            <i class="fas fa-headphones-alt"></i> با پخش و دنبال کردن، از این تک‌ترک حمایت کنید.
         </p>
     </div>
 </body>
