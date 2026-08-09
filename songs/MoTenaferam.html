@@ -1,1 +1,380 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoTenaferam | Fahwa</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0b0a0c;
+            color: #eee;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: radial-gradient(circle at 10% 20%, #1a1518 0%, #070607 90%);
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(18, 16, 20, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 30px 25px;
+            box-shadow: 0 25px 50px -8px rgba(0,0,0,0.8), 0 0 0 1px rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 200, 50, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        /* هدر با دکمه هوم */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .home-btn {
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #f5c842;
+            padding: 10px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(4px);
+            text-decoration: none;
+        }
+
+        .home-btn i {
+            font-size: 1rem;
+        }
+
+        .home-btn:hover {
+            background: #f5c842;
+            color: #0b0a0c;
+            border-color: #f5c842;
+            transform: scale(1.03);
+            box-shadow: 0 0 20px rgba(245, 200, 66, 0.3);
+        }
+
+        .badge {
+            background: rgba(245, 200, 66, 0.15);
+            color: #f5c842;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(245, 200, 66, 0.2);
+        }
+
+        /* کاور آرت */
+        .cover {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 28px;
+            overflow: hidden;
+            margin: 12px 0 20px;
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.7);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .cover:hover img {
+            transform: scale(1.02);
+        }
+
+        /* اطلاعات ترک */
+        .track-info {
+            margin: 10px 0 18px;
+        }
+
+        .track-title {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(245, 200, 66, 0.15);
+        }
+
+        .track-title span {
+            color: #f5c842;
+        }
+
+        .artist {
+            font-size: 1.1rem;
+            color: #b0aab5;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .artist i {
+            color: #f5c842;
+            font-size: 0.9rem;
+        }
+
+        .genre-tag {
+            background: #1f1b21;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            color: #d4c9d9;
+            border: 1px solid #332d35;
+        }
+
+        .composer {
+            font-size: 0.9rem;
+            color: #9a8f9f;
+            margin-top: 6px;
+        }
+
+        .composer i {
+            color: #f5c842;
+            margin-left: 6px;
+        }
+
+        /* معرفی کوتاه */
+        .description {
+            background: rgba(255, 215, 0, 0.04);
+            border-right: 3px solid #f5c842;
+            padding: 14px 16px;
+            border-radius: 16px;
+            margin: 18px 0 22px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #cfc6d4;
+            backdrop-filter: blur(4px);
+            border-left: 1px solid rgba(255, 215, 0, 0.05);
+        }
+
+        .description strong {
+            color: #f5c842;
+            font-weight: 600;
+        }
+
+        /* پلیرهای جاسازی شده */
+        .players {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 22px 0 20px;
+        }
+
+        .player-card {
+            background: rgba(12, 10, 14, 0.6);
+            border-radius: 20px;
+            padding: 12px 6px 6px 6px;
+            border: 1px solid #2a242b;
+            transition: all 0.2s;
+            backdrop-filter: blur(4px);
+        }
+
+        .player-card:hover {
+            border-color: #f5c84240;
+            box-shadow: 0 0 20px rgba(245, 200, 66, 0.03);
+        }
+
+        .player-card iframe {
+            width: 100%;
+            border-radius: 16px;
+            border: none;
+            height: 80px;
+        }
+
+        .spotify iframe {
+            height: 80px;
+        }
+
+        .youtube iframe {
+            height: 200px;
+        }
+
+        /* دکمه‌های فالو و ساب */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin: 18px 0 8px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 120px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid #33303a;
+            color: #ddd;
+            padding: 12px 10px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            backdrop-filter: blur(4px);
+            text-decoration: none;
+        }
+
+        .action-btn i {
+            font-size: 1rem;
+            color: #f5c842;
+        }
+
+        .action-btn:hover {
+            background: #f5c842;
+            color: #0b0a0c;
+            border-color: #f5c842;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -8px rgba(245, 200, 66, 0.2);
+        }
+
+        .action-btn:hover i {
+            color: #0b0a0c;
+        }
+
+        .action-btn.subscribe {
+            background: rgba(245, 200, 66, 0.08);
+            border-color: #f5c84240;
+        }
+
+        .action-btn.subscribe:hover {
+            background: #f5c842;
+        }
+
+        /* فوتر */
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #5b535f;
+            border-top: 1px solid #1f1b21;
+            padding-top: 18px;
+            letter-spacing: 0.3px;
+        }
+
+        .footer i {
+            color: #f5c842;
+            margin: 0 4px;
+        }
+
+        /* ریسپانسیو */
+        @media (max-width: 480px) {
+            .container { padding: 20px 16px; }
+            .track-title { font-size: 1.7rem; }
+            .action-btn { font-size: 0.8rem; padding: 10px 8px; min-width: 100px; }
+            .youtube iframe { height: 170px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- هدر با دکمه بازگشت به خانه -->
+        <div class="header">
+            <div class="badge">
+                <i class="fas fa-microphone-alt" style="margin-left: 6px;"></i> جدید
+            </div>
+            <a href="#" class="home-btn" onclick="alert('بازگشت به صفحه اصلی');">
+                <i class="fas fa-home"></i> خانه
+            </a>
+        </div>
+
+        <!-- کاور آرت (photo4.jpg) -->
+        <div class="cover">
+            <img src="photo4.jpg" alt="MoTenaferam Cover Art" onerror="this.src='https://via.placeholder.com/500/1a181c/f5c842?text=MoTenaferam'">
+        </div>
+
+        <!-- اطلاعات اصلی ترک -->
+        <div class="track-info">
+            <div class="track-title">
+                Mo<span>Tenaferam</span>
+            </div>
+            <div class="artist">
+                <i class="fas fa-user-circle"></i> Fahwa
+                <span class="genre-trap">ترپ · 2026</span>
+            </div>
+            <div class="composer">
+                <i class="fas fa-music"></i> آهنگساز: Fahwa
+            </div>
+        </div>
+
+        <!-- معرفی کوتاه (سبک ترپ احسلسی) -->
+        <div class="description">
+            <i class="fas fa-headphones" style="color: #f5c842; margin-left: 10px;"></i>
+            <strong>«MoTenaferam»</strong> یک ترک <strong>ترپ احسلسی</strong> با بافت‌های الکترونیک و ریتم‌های سنگین است. 
+            فضای تاریک و ملودی گیرا، همراه با اجرای خاص <strong>Fahwa</strong>، این قطعه را به یک تجربه‌ی شنیداری منحصر‌به‌فرد تبدیل کرده است.
+        </div>
+
+        <!-- پلیرهای جاسازی شده (یوتیوب و اسپاتیفای) -->
+        <div class="players">
+            <!-- اسپاتیفای -->
+            <div class="player-card spotify">
+                <iframe src="https://open.spotify.com/embed/album/2yMgRZVc6l15bjd4Oae2Hg?utm_source=generator" 
+                        allowfullscreen="" 
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                        loading="lazy">
+                </iframe>
+            </div>
+
+            <!-- یوتیوب -->
+            <div class="player-card youtube">
+                <iframe src="https://www.youtube.com/embed/m5hJuIq3ePM?si=yAI5bIUsIgoovl8D" 
+                        title="YouTube video player" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <!-- دکمه‌های فالو / ساب‌اسکرایب -->
+        <div class="action-buttons">
+            <a href="https://open.spotify.com/album/2yMgRZVc6l15bjd4Oae2Hg?si=RwKqPDaARWyeciPlYVD69w" target="_blank" class="action-btn subscribe">
+                <i class="fab fa-spotify"></i> دنبال در اسپاتیفای
+            </a>
+            <a href="https://youtu.be/m5hJuIq3ePM?si=yAI5bIUsIgoovl8D" target="_blank" class="action-btn subscribe">
+                <i class="fab fa-youtube"></i> ساب‌اسکرایب
+            </a>
+        </div>
+
+        <!-- فوتر با کامور موزیک -->
+        <div class="footer">
+            <i class="fas fa-crown"></i> کامور موزیک · <i class="fas fa-headphones-alt"></i> Fahwa 
+        </div>
+    </div>
+
+    <script>
+        // در صورت نیاز، هر گونه تنظیمات اضافی برای پلیرها یا تعاملات
+        // (هیچ اسکریپت خاصی نیاز نیست، همه چیز از طریق iframeها کار می‌کند)
+        console.log('MoTenaferam | Fahwa | Trap Music');
+    </script>
+</body>
+  </html>
