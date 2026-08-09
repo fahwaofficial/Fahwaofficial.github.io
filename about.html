@@ -1,114 +1,320 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<a href="index.html" class="back-home">← Home</a>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منوی بالای سایت</title>
+    <style>
+        /* ===== ریشه و استایل کلی ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<title>About Fahwa | Official Website</title>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding-top: 80px; /* فاصله برای دیدن محتوا در زیر منوی ثابت */
+        }
 
-<meta name="description" content="Learn more about Fahwa, an independent Persian Trap artist from Karaj, Iran. Discover his musical journey, releases, and artistic vision.">
+        /* ===== منوی اصلی (بالای بالای صفحه) ===== */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 9999;
+            background: #1e2a3a;
+            padding: 12px 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center; /* وسط‌چین شدن آیتم‌ها */
+            gap: 8px 18px;
+            border-bottom: 3px solid #f39c12;
+        }
 
-<link rel="stylesheet" href="style.css">
+        /* آیتم‌های اصلی منو */
+        .nav-item {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 500;
+            padding: 8px 14px;
+            border-radius: 30px;
+            transition: all 0.2s ease;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            white-space: nowrap;
+        }
 
+        .nav-item:hover {
+            background: #2c3e50;
+            color: #f1c40f;
+            transform: scale(1.02);
+        }
+
+        /* آیتم موزیک با آیکون و موقعیت خاص */
+        .music-toggle {
+            background: #2c3e50;
+            color: #f1c40f;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .music-toggle:hover {
+            background: #34495e;
+        }
+
+        /* ===== زیرمنوی موزیک ===== */
+        .sub-menu {
+            position: absolute;
+            top: 100%;          /* دقیقاً زیر آیتم موزیک */
+            right: 0;
+            background: #2c3e50;
+            min-width: 200px;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+            padding: 8px 0;
+            display: none;      /* پنهان به‌صورت پیش‌فرض */
+            flex-direction: column;
+            border-top: 3px solid #f39c12;
+            z-index: 99999;
+        }
+
+        /* وقتی زیرمنو باز است (کلاس open) */
+        .sub-menu.open {
+            display: flex;
+        }
+
+        /* آیتم‌های زیرمنو */
+        .sub-item {
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+            border-bottom: 1px solid #3a4a5a;
+            white-space: nowrap;
+        }
+
+        .sub-item:last-child {
+            border-bottom: none;
+        }
+
+        .sub-item:hover {
+            background: #1e2a3a;
+            color: #f1c40f;
+        }
+
+        /* ===== موقعیت‌دهی آیتم موزیک ===== */
+        .music-wrapper {
+            position: relative;  /* زیرمنو نسبت به این والد مطلق می‌شود */
+            display: inline-block;
+        }
+
+        /* ===== ریسپانسیو ===== */
+        @media (max-width: 700px) {
+            .top-nav {
+                padding: 10px 12px;
+                gap: 6px 10px;
+            }
+            .nav-item {
+                font-size: 0.9rem;
+                padding: 6px 10px;
+            }
+            .sub-menu {
+                min-width: 170px;
+                right: 0;
+            }
+            .sub-item {
+                padding: 10px 16px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* ===== محتوای ساختگی برای نمایش صفحات ===== */
+        .page-content {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .page-content h2 {
+            color: #1e2a3a;
+            border-bottom: 3px solid #f39c12;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .page-content p {
+            line-height: 1.8;
+            color: #2c3e50;
+        }
+
+        /* برای دمو چند صفحه */
+        .page-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .page-card {
+            background: #ecf0f1;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: #1e2a3a;
+            box-shadow: inset 0 -2px 0 #bdc3c7;
+        }
+
+        .badge {
+            background: #f39c12;
+            color: #1e2a3a;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .note {
+            background: #fef9e7;
+            border-right: 6px solid #f39c12;
+            padding: 14px 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+        }
+    </style>
 </head>
-
 <body>
 
-<header>
+    <!-- ============================================================ -->
+    <!--  منوی بالای بالای صفحه (همه صفحات)                           -->
+    <!--  این کد رو در فایل‌های زیر قرار بدید:                         -->
+    <!--  contact.html , about.html , music.html , biography.html ,    -->
+    <!--  Social.html , forsatmahdod.html , MoTenaferam.html ,        -->
+    <!--  Dictator.html                                               -->
+    <!--                                                              -->
+    <!--  دقیقاً بعد از تگ <body> در هر صفحه قرار بدید.              -->
+    <!-- ============================================================ -->
+    <nav class="top-nav" id="mainNav">
 
-<h1>About Fahwa</h1>
+        <!-- لینک‌های اصلی (به جز موزیک که wrapper دارد) -->
+        <a href="contact.html" class="nav-item">تماس</a>
+        <a href="about.html" class="nav-item">درباره</a>
+        <a href="biography.html" class="nav-item">بیوگرافی</a>
+        <a href="Social.html" class="nav-item">شبکه‌های اجتماعی</a>
 
-<nav>
+        <!-- آیتم موزیک با زیرمنو -->
+        <div class="music-wrapper" id="musicWrapper">
+            <button class="nav-item music-toggle" id="musicToggle">
+                🎵 موزیک
+                <span style="font-size:0.7rem; margin-right:4px;">▼</span>
+            </button>
 
-<a href="index.html">Home</a>
+            <!-- زیرمنو (شامل سه صفحه) -->
+            <div class="sub-menu" id="subMenu">
+                <a href="forsatmahdod.html" class="sub-item">فرصت محدود</a>
+                <a href="MoTenaferam.html" class="sub-item">متنافرم</a>
+                <a href="Dictator.html" class="sub-item">دیکتاتور</a>
+            </div>
+        </div>
 
-<a href="about.html">About</a>
+        <!-- (اختیاری) می‌تونید آیتم‌های دیگه هم اضافه کنید -->
+    </nav>
+    <!-- ===== پایان منوی بالای بالای صفحه ===== -->
 
-<a href="music.html">Music</a>
 
-</nav>
+    <!-- ============================================================ -->
+    <!--  محتوای دمو برای نمایش (این بخش رو در صفحات واقعی حذف کنید)   -->
+    <!-- ============================================================ -->
+    <div class="page-content">
+        <h2>📄 صفحه اصلی (دمو)</h2>
+        <p>
+            این یک نمونه صفحه است. منوی بالا در تمام صفحات شما (contact, about, music, biography, Social, 
+            forsatmahdod, MoTenaferam, Dictator) به‌صورت یکسان نمایش داده می‌شود.
+        </p>
+        <div class="note">
+            <strong>📍 جای گذاری دقیق:</strong>
+            <ul style="margin-right: 20px; margin-top: 10px; list-style: square;">
+                <li>کد <strong>&lt;nav class="top-nav" ...&gt;</strong> تا <strong>&lt;/nav&gt;</strong> را در تمام فایل‌های HTML مورد نظر (<code>contact.html</code> ، <code>about.html</code> ، <code>music.html</code> ، <code>biography.html</code> ، <code>Social.html</code> ، <code>forsatmahdod.html</code> ، <code>MoTenaferam.html</code> ، <code>Dictator.html</code>) دقیقاً بعد از تگ <code>&lt;body&gt;</code> قرار دهید.</li>
+                <li>زیرمنوی موزیک شامل لینک‌های <strong>forsatmahdod.html</strong> ، <strong>MoTenaferam.html</strong> ، <strong>Dictator.html</strong> می‌باشد که با کلیک روی "موزیک" باز و بسته می‌شوند.</li>
+                <li>همه استایل‌های مربوط به منو در بخش <code>&lt;style&gt;</code> قرار دارند. می‌توانید آن را در یک فایل CSS جداگانه هم قرار دهید.</li>
+            </ul>
+        </div>
 
-</header>
+        <div class="page-list">
+            <span class="page-card">📌 contact.html</span>
+            <span class="page-card">📌 about.html</span>
+            <span class="page-card">📌 music.html</span>
+            <span class="page-card">📌 biography.html</span>
+            <span class="page-card">📌 Social.html</span>
+            <span class="page-card" style="background:#f1c40f;">🎵 forsatmahdod.html</span>
+            <span class="page-card" style="background:#f1c40f;">🎵 MoTenaferam.html</span>
+            <span class="page-card" style="background:#f1c40f;">🎵 Dictator.html</span>
+        </div>
 
-<section class="about">
+        <p style="margin-top: 30px; color: #7f8c8d;">
+            <span class="badge">توجه</span> برای تست زیرمنو، روی دکمه <strong>موزیک</strong> کلیک کنید. باز و بسته می‌شود.
+        </p>
+    </div>
 
-<h2>Who is Fahwa?</h2>
 
-<p>
+    <!-- ============================================================ -->
+    <!--  اسکریپت باز و بسته کردن زیرمنو (فقط یک جا قرار بدید)        -->
+    <!--  می‌توانید این اسکریپت را در فایل جداگانه‌ای قرار دهید یا      -->
+    <!--  در انتهای هر صفحه (قبل از </body>) قرار دهید.               -->
+    <!-- ============================================================ -->
+    <script>
+        (function() {
+            const musicToggle = document.getElementById('musicToggle');
+            const subMenu = document.getElementById('subMenu');
 
-Fahwa is an independent Persian Trap artist from Karaj, Iran.
+            // تابع برای بستن زیرمنو (در صورت باز بودن)
+            function closeSubMenu() {
+                if (subMenu.classList.contains('open')) {
+                    subMenu.classList.remove('open');
+                }
+            }
 
-He officially began his music career in 2020 with the goal of creating a unique sound that blends emotion, storytelling, and modern trap production.
+            // باز/بسته کردن با کلیک روی دکمه موزیک
+            if (musicToggle && subMenu) {
+                musicToggle.addEventListener('click', function(e) {
+                    e.stopPropagation(); // جلوگیری از بسته شدن ناخواسته توسط کلیک روی داکیومنت
+                    subMenu.classList.toggle('open');
+                });
+            }
 
-</p>
+            // اگر روی هر جای دیگری از صفحه کلیک شود، زیرمنو بسته شود
+            document.addEventListener('click', function(e) {
+                const wrapper = document.getElementById('musicWrapper');
+                // اگر کلیک داخل wrapper (دکمه یا خود زیرمنو) نباشد، ببند
+                if (wrapper && !wrapper.contains(e.target)) {
+                    closeSubMenu();
+                }
+            });
 
-<p>
+            // (اختیاری) اگر روی لینک‌های زیرمنو کلیک شود، زیرمنو بسته شود
+            const subItems = document.querySelectorAll('.sub-item');
+            subItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    closeSubMenu();
+                });
+            });
 
-Since starting his journey, Fahwa has independently released six official tracks across major streaming platforms. His music reflects personal experiences, ambition, and the pursuit of artistic identity.
-
-</p>
-
-<h2>Musical Style</h2>
-
-<p>
-
-Genre: Trap
-
-<br>
-
-Language: Persian
-
-<br>
-
-Based in: Karaj, Iran
-
-</p>
-
-<h2>Career</h2>
-
-<p>
-Age: 33
-Since 2020, Fahwa has been consistently developing his artistic vision and expanding his presence across digital music platforms. Every release represents a new chapter in his evolution as an independent artist.
-
-</p>
-
-<h2>Vision</h2>
-
-<p>
-FAHWA was born in 1993 
-Fahwa aims to build a lasting artistic identity through authentic music, high-quality production, and continuous creative growth. His long-term vision is to reach international audiences while representing Persian trap music on a global stage.
-
-</p>
-
-<h2>Quick Facts</h2>
-
-<ul>
-
-<li><strong>Artist Name:</strong> Fahwa</li>
-
-<li><strong>Genre:</strong> Trap</li>
-
-<li><strong>Language:</strong> Persian</li>
-
-<li><strong>Started:</strong> 2020</li>
-
-<li><strong>Official Releases:</strong> 6</li>
-
-<li><strong>Location:</strong> Karaj, Iran</li>
-  
-<li><strong>Age</strong>33</li>
-</ul>
-
-</section>
-
-<footer>
-
-<p>© 2026 Fahwa. All Rights Reserved.</p>
-
-</footer>
+        })();
+    </script>
+    <!-- ===== پایان اسکریپت ===== -->
 
 </body>
-
 </html>
