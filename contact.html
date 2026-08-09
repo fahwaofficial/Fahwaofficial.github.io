@@ -1,71 +1,344 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تماس با ما | طراحی دارک</title>
+  <style>
+    /* Reset & base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    body {
+      background-color: #0b0b0b;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      color: #f0f0f0;
+    }
 
-<title>تماس با فهوا | Fahwa</title>
+    .contact-card {
+      max-width: 700px;
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid #2e2e2e;
+      border-radius: 2rem;
+      padding: 2rem 2rem 2.5rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px #2a2a2a inset;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(2px);
+    }
 
-<meta name="description" content="راه‌های ارتباط با فهوا (Fahwa)، خواننده رپ فارسی. برای همکاری، پیشنهاد کاری و ارتباط رسمی از این صفحه استفاده کنید.">
+    /* تصویر با فریم سفید نازک */
+    .image-wrapper {
+      width: 100%;
+      border-radius: 1.2rem;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      border: 1px solid #3a3a3a;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+      background: #111;
+    }
 
-<link rel="stylesheet" href="style.css">
+    .image-wrapper img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      filter: grayscale(0.2) contrast(1.05);
+      transition: transform 0.3s ease;
+    }
 
+    .image-wrapper img:hover {
+      transform: scale(1.01);
+      filter: grayscale(0) contrast(1.1);
+    }
+
+    /* عنوان و توضیحات */
+    .contact-header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid #2c2c2c;
+      padding-bottom: 1rem;
+    }
+
+    .contact-header h1 {
+      font-size: 2rem;
+      font-weight: 300;
+      letter-spacing: 2px;
+      color: #ffffff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .contact-header h1 span {
+      background: #2a2a2a;
+      padding: 0 12px;
+      border-radius: 40px;
+      font-size: 1.2rem;
+      color: #aaa;
+      border: 1px solid #3d3d3d;
+    }
+
+    .contact-header p {
+      color: #b0b0b0;
+      font-size: 1rem;
+      margin-top: 6px;
+      font-weight: 300;
+    }
+
+    /* کانال‌های ارتباطی */
+    .contact-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .method-item {
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 1.4rem;
+      padding: 1rem 1.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+
+    .method-item:hover {
+      background: #1f1f1f;
+      border-color: #4a4a4a;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.02);
+    }
+
+    .method-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 400;
+      color: #e0e0e0;
+    }
+
+    .method-label i {
+      font-size: 1.7rem;
+      color: #ccc;
+      width: 2rem;
+      text-align: center;
+    }
+
+    .method-link {
+      background: #252525;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      border: 1px solid #3a3a3a;
+      transition: all 0.15s ease;
+      font-size: 0.95rem;
+    }
+
+    .method-link a {
+      color: #f0f0f0;
+      text-decoration: none;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .method-link a:hover {
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .method-link:hover {
+      background: #323232;
+      border-color: #5a5a5a;
+      transform: scale(1.02);
+    }
+
+    /* لینک تلگرام (دو مسیر) */
+    .telegram-highlight {
+      background: #0f0f0f;
+      border: 1px solid #3a3a3a;
+      border-radius: 1.4rem;
+      padding: 1.2rem 1.6rem;
+      margin-top: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .telegram-highlight .label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #d0d0d0;
+      font-weight: 300;
+    }
+
+    .telegram-highlight .label i {
+      font-size: 1.8rem;
+      color: #aaa;
+    }
+
+    .telegram-buttons {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .tg-btn {
+      background: #1f1f1f;
+      padding: 0.5rem 1.3rem;
+      border-radius: 60px;
+      border: 1px solid #3f3f3f;
+      transition: all 0.15s ease;
+      font-weight: 400;
+    }
+
+    .tg-btn a {
+      color: #eee;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tg-btn:hover {
+      background: #2d2d2d;
+      border-color: #5f5f5f;
+      transform: scale(1.02);
+    }
+
+    .tg-btn a i {
+      font-size: 1.2rem;
+    }
+
+    /* فوتر کوچک */
+    .footer-note {
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: #4a4a4a;
+      text-align: center;
+      border-top: 1px solid #242424;
+      padding-top: 1.2rem;
+      letter-spacing: 1px;
+      font-weight: 300;
+    }
+
+    /* آیکون‌ها (از یونی کد یا ایموجی استفاده شده) */
+    .icon {
+      font-style: normal;
+    }
+
+    /* ریسپانسیو */
+    @media (max-width: 550px) {
+      .contact-card {
+        padding: 1.5rem;
+      }
+      .telegram-highlight {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .telegram-buttons {
+        justify-content: center;
+      }
+      .method-item {
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+      }
+      .contact-header h1 {
+        font-size: 1.6rem;
+        flex-wrap: wrap;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="contact-card">
 
-<section class="contact-page">
+    <!-- تصویر photo2.jpg (دقیقاً با همین نام) -->
+    <div class="image-wrapper">
+      <img src="photo2.jpg" alt="تصویر تماس" loading="lazy">
+    </div>
 
-<h1>تماس با فهوا</h1>
+    <!-- هدر -->
+    <div class="contact-header">
+      <h1>
+        📬 ارتباط با ما
+        <span>#دارک</span>
+      </h1>
+      <p>از دو راه زیر می‌توانید با من در تماس باشید.</p>
+    </div>
 
-<p class="contact-text">
+    <!-- دو روش ارتباطی (همانطور که خواسته‌اید) -->
+    <div class="contact-methods">
 
-برای همکاری، پیشنهادهای کاری، مسائل مربوط به انتشار موسیقی، رسانه یا سایر درخواست‌های رسمی، می‌توانید از طریق پی وی تلگرام من در ارتباط باشید.
+      <!-- روش اول: لینک تلگرام مستقیم -->
+      <div class="method-item">
+        <span class="method-label">
+          <i class="icon">✈️</i> 
+          تلگرام (مستقیم)
+        </span>
+        <span class="method-link">
+          <a href="https://t.me/fahwaam" target="_blank" rel="noopener">
+            <span>@fahwaam</span> 
+            <span style="font-size:1.2rem;">↗</span>
+          </a>
+        </span>
+      </div>
 
-</p>
+      <!-- روش دوم: لینک تلگرام با آیکون و توضیح (همان لینک) -->
+      <div class="method-item">
+        <span class="method-label">
+          <i class="icon">💬</i> 
+          پیام در تلگرام
+        </span>
+        <span class="method-link">
+          <a href="https://t.me/fahwaam" target="_blank" rel="noopener">
+            <span>t.me/fahwaam</span>
+            <span style="font-size:1.2rem;">↗</span>
+          </a>
+        </span>
+      </div>
+    </div>
 
-<div class="pv telgeram">
+    <!-- بخش اختصاصی تلگرام با دو مسیر (همان لینک، اما با دو دکمه متفاوت) -->
+    <div class="telegram-highlight">
+      <span class="label">
+        <i class="icon">📱</i> 
+        <span>ارتباط از طریق تلگرام</span>
+      </span>
+      <div class="telegram-buttons">
+        <span class="tg-btn">
+          <a href="https://t.me/fahwaam" target="_blank" rel="noopener">
+            <i>👤</i> پیام مستقیم
+          </a>
+        </span>
+        <span class="tg-btn">
+          <a href="https://t.me/fahwaam" target="_blank" rel="noopener">
+            <i>🔗</i> لینک کانال
+          </a>
+        </span>
+      </div>
+    </div>
 
-📧
-
-<br><br>
-
-<a href="https://t.me/fahwaam">
-
-pv telgeram
-
-</a>
-
-  <p>
-📧
-
-💬
-<a href="https://fahwaiman@gmil.com">
-Gmali Fahwa
-</a>
-  </p>
-</div>
-
-<p class="contact-note">
-
-لطفاً هنگام ارسال موضوع پیام را به‌صورت واضح بنویسید تا پاسخ سریع‌تر انجام شود.
-
-</p>
-
-<div class="back-home">
-
-<a href="index.html">
-
-( home ) بازگشت به صفحه اصلی
-
-</a>
-
-</div>
-
-</section>
-
+    <!-- یک یادآوری کوچک (اختیاری) -->
+    <div class="footer-note">
+      طراحی شده با ❤️ · تم دارک مشکی-سفید
+    </div>
+  </div>
 </body>
-
-  </html>
+</html>
