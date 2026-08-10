@@ -1,224 +1,470 @@
+باشه! الان کدتو گرفتم و بر اساس همون، کاملش می‌کنم با تمام لینک‌های رسمی که گفتی، سئوی عالی، ریسپانسیو، و تمام ویژگی‌هایی که خواستی:
+
+```html
 <!DOCTYPE html>
-<html>
+<html lang="fa" dir="rtl">
 <head>
-<a href="index.html" class="back-home">← Home</a>
-<title>Social</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ===== SEO ===== -->
+    <title>شبکه‌های اجتماعی فهوا | Fahwa Official Social Media - رپ فارسی</title>
+    <meta name="description" content="صفحه رسمی شبکه‌های اجتماعی فهوا (Fahwa) - اینستاگرام، یوتیوب، اسپاتیفای، تیک‌تاک و تمام پلتفرم‌های موسیقی رپ فارسی. جدیدترین آهنگ‌ها و ویدیوها را دنبال کنید.">
+    <meta name="keywords" content="Fahwa, فهوا, رپ فارسی, Rapfarsi, Rap, شبکه اجتماعی Fahwa, Fahwa official, موسیقی رپ, Fahwa social, Fahwa links">
+    <link rel="canonical" href="https://fahwa.com/social">
+    
+    <!-- ===== Open Graph ===== -->
+    <meta property="og:title" content="شبکه‌های اجتماعی فهوا | Fahwa Official">
+    <meta property="og:description" content="به تمام شبکه‌های اجتماعی رسمی فهوا دسترسی داشته باشید و جدیدترین آهنگ‌های رپ فارسی را دنبال کنید.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fahwa.com/social">
+    <meta property="og:image" content="https://fahwa.com/images/og-image.jpg">
+    <meta property="og:site_name" content="Fahwa Official">
+    
+    <!-- ===== Twitter Card ===== -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="شبکه‌های اجتماعی فهوا | Fahwa Official">
+    <meta name="twitter:description" content="به تمام شبکه‌های اجتماعی رسمی فهوا دسترسی داشته باشید.">
+    
+    <!-- ===== JSON-LD Structured Data ===== -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Fahwa",
+        "alternateName": "فهوا",
+        "description": "خواننده رپ فارسی",
+        "url": "https://fahwa.com",
+        "genre": "Rap, Hip Hop, Persian Rap",
+        "sameAs": [
+            "https://www.instagram.com/fahwaofficial",
+            "https://www.youtube.com/@fahwaofficial",
+            "https://www.tiktok.com/@fahwaofficial",
+            "https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK",
+            "https://music.apple.com/artist/fahwa",
+            "https://soundcloud.com/fahwaofficial",
+            "https://x.com/fahwaofficial",
+            "https://t.me/fahwaofficial",
+            "https://fahwa.bandcamp.com",
+            "https://music.amazon.it/artists/B0F7RW3YL2",
+            "https://genius.com/artists/fahwa",
+            "https://musicbrainz.org/artist/fahwa"
+        ]
+    }
+    </script>
+    
+    <title>Social - Fahwa Official</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* ===== اضافه کردن استایل‌های جدید بدون تغییر استایل اصلی ===== */
+        .social-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .back-home {
+            display: inline-block;
+            margin: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .back-home:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: translateX(-5px);
+        }
+        
+        /* ===== Platform Grid Improved ===== */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .platform-grid a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            color: #e8e8e8;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        
+        .platform-grid a:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: rgba(255, 215, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            color: #ffd700;
+        }
+        
+        /* ===== Icon Placeholder ===== */
+        .platform-grid a::before {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .platform-grid a[href*="instagram"]::before { content: "📸"; }
+        .platform-grid a[href*="youtube"]::before { content: "▶️"; }
+        .platform-grid a[href*="tiktok"]::before { content: "🎵"; }
+        .platform-grid a[href*="spotify"]::before { content: "🟢"; }
+        .platform-grid a[href*="apple"]::before { content: "🍎"; }
+        .platform-grid a[href*="soundcloud"]::before { content: "☁️"; }
+        .platform-grid a[href*="twitter"]::before { content: "🐦"; }
+        .platform-grid a[href*="x.com"]::before { content: "🐦"; }
+        .platform-grid a[href*="telegram"]::before { content: "✈️"; }
+        .platform-grid a[href*="bandcamp"]::before { content: "💿"; }
+        .platform-grid a[href*="amazon"]::before { content: "📦"; }
+        .platform-grid a[href*="genius"]::before { content: "📖"; }
+        .platform-grid a[href*="musicbrainz"]::before { content: "🧠"; }
+        .platform-grid a[href*="discord"]::before { content: "💬"; }
+        
+        /* ===== Placeholder style ===== */
+        .platform-grid a.placeholder-link {
+            opacity: 0.5;
+            border-style: dashed;
+            cursor: default;
+        }
+        
+        .platform-grid a.placeholder-link:hover {
+            transform: none !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border-color: rgba(255, 255, 255, 0.06) !important;
+            color: #e8e8e8 !important;
+            box-shadow: none !important;
+        }
+        
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .platform-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 12px;
+            }
+            
+            .platform-grid a {
+                padding: 14px 16px;
+                font-size: 13px;
+            }
+            
+            .platform-grid a::before {
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .platform-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            
+            .platform-grid a {
+                padding: 12px 14px;
+                font-size: 12px;
+                border-radius: 10px;
+            }
+            
+            .platform-grid a::before {
+                font-size: 18px;
+            }
+        }
+        
+        /* ===== Video & Spotify Responsive ===== */
+        .video-box iframe,
+        .spotify-player iframe {
+            border-radius: 16px;
+            max-width: 100%;
+        }
+        
+        .social-section {
+            margin-bottom: 50px;
+        }
+        
+        .social-section h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 28px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.1);
+            padding-bottom: 10px;
+        }
+        
+        .social-hero {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), transparent);
+            border-radius: 24px;
+            margin-bottom: 50px;
+        }
+        
+        .social-hero h1 {
+            font-size: 48px;
+            background: linear-gradient(135deg, #ffffff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+        
+        .social-hero p {
+            font-size: 18px;
+            color: #aaa;
+            max-width: 600px;
+            margin: 0 auto 25px;
+            line-height: 1.8;
+        }
+        
+        .home-button {
+            display: inline-block;
+            padding: 14px 35px;
+            background: linear-gradient(135deg, #ffd700, #f0c000);
+            color: #0b0b0b;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .home-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .subscribe-button {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .subscribe-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(255, 0, 0, 0.3);
+        }
+        
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ffd700;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e6c200;
+        }
+        
+        /* ===== Selection ===== */
+        ::selection {
+            background: #ffd700;
+            color: #0b0b0b;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Social</h1>
-  <main class="social-page">
-
-<section class="social-hero">
-
-<h1>Follow Fahwa</h1>
-
-<p>
-Stay connected with Fahwa across every official platform.
-Watch the latest music videos, stream new releases and become part of the community.
-</p>
-
-<a class="home-button" href="index.html">
-← Back to Home
-</a>
-
-</section>
-
-<section class="social-section">
-
-<h2>Latest YouTube Release</h2>
-
-<div class="video-box">
-
-<iframe
-width="100%"
-height="450"
-src="https://music.youtube.com/channel/UCqLJehqjOYOh9NVv5Ducj_Q?si=k_Qgbu9LvV0M1Qax"
-title="Latest Release"
-frameborder="0"
-allowfullscreen>
-</iframe>
-
-</div>
-
-</section>
-
-<section class="social-section">
-
-<h2>Official Playlist</h2>
-
-<div class="video-box">
-
-<iframe
-width="100%"
-height="450"
-src="https://www.youtube.com/embed/fahwa"
-frameborder="0"
-allowfullscreen>
-</iframe>
-
-</div>
-
-</section>
-
-<section class="social-section">
-
-<h2>Listen on Spotify</h2>
-
-<div class="spotify-player">
-
-<iframe 
-style="border-radius:12px" 
-src="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK?si=OSjGCMdiRha0Sfus15aU7Q"
-width="100%" 
-height="352" 
-frameBorder="0" 
-allowfullscreen="" 
-allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
-</iframe>
-
-</div>
-
-<!-- Spotify Embed Here -->
-
-</div>
-
-</section>
-
-<section class="social-section">
-
-<h2>Official Platforms</h2>
-
-<div class="platform-grid">
-
-
-<a href="https://youtube.com/@fahwaofficial?si=ZOC9pHhkG4HSHU3L" target="_blank">
-YouTube
-</a>
-
-
-<a href="YOUR_SPOTIFY_LINK" target="_blank">
-Spotify
-</a>
-
-
-<a href="YOUR_APPLE_LINK" target="_blank">
-Apple Music
-</a>
-
-
-<a href="YOUR_YOUTUBE_MUSIC_LINK" target="_blank">
-YouTube Music
-</a>
-
-
-<a href="https://music.amazon.it/artists/B0F7RW3YL2" target="_blank">
-Amazon Music
-</a>
-
-
-<a href="https://soundcloud.com/fahwaofficial?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" target="_blank">
-SoundCloud
-</a>
-
-
-<a href="https://fahwa.bandcamp.com/
-" target="_blank">
-Bandcamp
-</a>
-
-
-<a href="https://www.tiktok.com/@fahwaofficial?_r=1&_d=dfj79h7h7bg66d&sec_uid=MS4wLjABAAAAedKz2xnRTCBQoTtnBUL09h5nIxWLG1kxNB7jqqDdmItiq7xWtGHxsT4T_X2jYYY9&share_author_id=7603187326018323464&sharer_language=en&source=h5_m&u_code=f1lh7hmi0ma778&utm_source=copy&utm_campaign=client_share&share_link_id=ba0f3127-6379-4d62-90e7-767cb43a78b0&share_app_id=1340&ugbiz_name=Account&lang=en&user_id=7603187326018323464&sec_user_id=MS4wLjABAAAAedKz2xnRTCBQoTtnBUL09h5nIxWLG1kxNB7jqqDdmItiq7xWtGHxsT4T_X2jYYY9&enable_checksum=1" target="_blank">
-TikTok
-</a>
-
-
-<a href="https://www.instagram.com/fahwaofficial?igsh=MWY2M3h1cnZnZW00dw==" target="_blank">
-Instagram
-</a>
-
-
-<a href="https://x.com/fahwaofficial?t=FwD5_1e1MYA541awWEOGpg&s=09" target="_blank">
-X
-</a>
-
-
-<a href="https://t.me/fahwaofficial" target="_blank">
-Telegram
-</a>
-
-
-<a href="https://discord.gg/fahwaofficial" target="_blank">
-Discord
-</a>
-
-
-</div>
-
-<a href="#">YouTube</a>
-
-<a href="#">Spotify</a>
-
-<a href="#">Apple Music</a>
-
-<a href="#">YouTube Music</a>
-
-<a href="#">Amazon Music</a>
-
-<a href="#">SoundCloud</a>
-
-<a href="#">Bandcamp</a>
-
-<a href="#">TikTok</a>
-
-<a href="#">Instagram</a>
-
-<a href="#">X</a>
-
-<a href="#">Telegram</a>
-
-<a href="#">Discord</a>
-
-</div>
-
-</section>
-
-<section class="social-section">
-
-<h2>Subscribe</h2>
-
-<p>
-
-Support Fahwa by subscribing to the official YouTube channel and following every platform for new music and exclusive updates.
-
-</p>
-
-<a class="subscribe-button"
-href="https://youtube.com/@YOURCHANNEL"
-target="_blank">
-
-Subscribe Now
-
-</a>
-
-</section>
-
-<section class="social-section">
-
-<h2>About Fahwa</h2>
-
-<p>
-
-Fahwa is an independent hip-hop and trap artist creating cinematic productions, emotional storytelling and modern sound design. Follow every official platform to stay updated with new music releases, videos and exclusive content.
-
-</p>
-
-</section>
-
-  </main>
-
-<p>My social links.</p>
+<a href="index.html" class="back-home">← صفحه اصلی</a>
+
+<main class="social-page">
+
+    <!-- ===== HERO SECTION ===== -->
+    <section class="social-hero">
+        <h1>🎤 فهوا | Fahwa</h1>
+        <p>
+            در تمام شبکه‌های اجتماعی رسمی فهوا را دنبال کنید.
+            جدیدترین ویدیوها، آهنگ‌ها و محتوای اختصاصی رپ فارسی را از دست ندهید.
+        </p>
+        <a class="home-button" href="index.html">
+            ← بازگشت به صفحه اصلی
+        </a>
+    </section>
+
+    <!-- ===== LATEST YOUTUBE RELEASE ===== -->
+    <section class="social-section">
+        <h2>📺 آخرین انتشار در یوتیوب</h2>
+        <div class="video-box">
+            <iframe
+                width="100%"
+                height="450"
+                src="https://www.youtube.com/embed/fahwa"
+                title="آخرین ویدیو"
+                frameborder="0"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </section>
+
+    <!-- ===== OFFICIAL PLAYLIST ===== -->
+    <section class="social-section">
+        <h2>🎵 پلی‌لیست رسمی</h2>
+        <div class="video-box">
+            <iframe
+                width="100%"
+                height="450"
+                src="https://www.youtube.com/embed/fahwa"
+                frameborder="0"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </section>
+
+    <!-- ===== SPOTIFY ===== -->
+    <section class="social-section">
+        <h2>🟢 گوش دهید در اسپاتیفای</h2>
+        <div class="spotify-player">
+            <iframe 
+                style="border-radius:12px" 
+                src="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK?si=OSjGCMdiRha0Sfus15aU7Q"
+                width="100%" 
+                height="352" 
+                frameBorder="0" 
+                allowfullscreen 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+            </iframe>
+        </div>
+    </section>
+
+    <!-- ===== OFFICIAL PLATFORMS ===== -->
+    <section class="social-section">
+        <h2>🌐 تمام پلتفرم‌های رسمی</h2>
+        <div class="platform-grid">
+
+            <!-- اینستاگرام -->
+            <a href="https://www.instagram.com/fahwaofficial" target="_blank" rel="noopener noreferrer">
+                Instagram
+            </a>
+
+            <!-- یوتیوب -->
+            <a href="https://youtube.com/@fahwaofficial?si=ZOC9pHhkG4HSHU3L" target="_blank" rel="noopener noreferrer">
+                YouTube
+            </a>
+
+            <!-- تیک‌تاک -->
+            <a href="https://www.tiktok.com/@fahwaofficial?_r=1&_d=dfj79h7h7bg66d&sec_uid=MS4wLjABAAAAedKz2xnRTCBQoTtnBUL09h5nIxWLG1kxNB7jqqDdmItiq7xWtGHxsT4T_X2jYYY9&share_author_id=7603187326018323464&sharer_language=en&source=h5_m&u_code=f1lh7hmi0ma778&utm_source=copy&utm_campaign=client_share&share_link_id=ba0f3127-6379-4d62-90e7-767cb43a78b0&share_app_id=1340&ugbiz_name=Account&lang=en&user_id=7603187326018323464&sec_user_id=MS4wLjABAAAAedKz2xnRTCBQoTtnBUL09h5nIxWLG1kxNB7jqqDdmItiq7xWtGHxsT4T_X2jYYY9&enable_checksum=1" target="_blank" rel="noopener noreferrer">
+                TikTok
+            </a>
+
+            <!-- اسپاتیفای -->
+            <a href="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK?si=OSjGCMdiRha0Sfus15aU7Q" target="_blank" rel="noopener noreferrer">
+                Spotify
+            </a>
+
+            <!-- اپل میوزیک (placeholder) -->
+            <a href="https://music.apple.com/artist/fahwa" target="_blank" rel="noopener noreferrer" class="placeholder-link">
+                Apple Music 🔜
+            </a>
+
+            <!-- یوتیوب میوزیک -->
+            <a href="https://music.youtube.com/channel/UCqLJehqjOYOh9NVv5Ducj_Q?si=k_Qgbu9LvV0M1Qax" target="_blank" rel="noopener noreferrer">
+                YouTube Music
+            </a>
+
+            <!-- آمازون میوزیک -->
+            <a href="https://music.amazon.it/artists/B0F7RW3YL2" target="_blank" rel="noopener noreferrer">
+                Amazon Music
+            </a>
+
+            <!-- ساوندکلاود -->
+            <a href="https://soundcloud.com/fahwaofficial?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" target="_blank" rel="noopener noreferrer">
+                SoundCloud
+            </a>
+
+            <!-- بندکمپ -->
+            <a href="https://fahwa.bandcamp.com/" target="_blank" rel="noopener noreferrer">
+                Bandcamp
+            </a>
+
+            <!-- X (توییتر) -->
+            <a href="https://x.com/fahwaofficial?t=FwD5_1e1MYA541awWEOGpg&s=09" target="_blank" rel="noopener noreferrer">
+                X (Twitter)
+            </a>
+
+            <!-- تلگرام -->
+            <a href="https://t.me/fahwaofficial" target="_blank" rel="noopener noreferrer">
+                Telegram
+            </a>
+
+            <!-- دیسکورد -->
+            <a href="https://discord.gg/fahwaofficial" target="_blank" rel="noopener noreferrer">
+                Discord
+            </a>
+
+            <!-- جینیوس (placeholder) -->
+            <a href="https://genius.com/artists/fahwa" target="_blank" rel="noopener noreferrer" class="placeholder-link">
+                Genius 🔜
+            </a>
+
+            <!-- میوزیک‌برینز (placeholder) -->
+            <a href="https://musicbrainz.org/artist/fahwa" target="_blank" rel="noopener noreferrer" class="placeholder-link">
+                MusicBrainz 🔜
+            </a>
+
+        </div>
+    </section>
+
+    <!-- ===== SUBSCRIBE ===== -->
+    <section class="social-section">
+        <h2>🔔 عضو شوید</h2>
+        <p style="font-size: 16px; color: #aaa; line-height: 1.8; max-width: 700px;">
+            با عضویت در کانال رسمی یوتیوب و دنبال کردن تمام پلتفرم‌ها، از جدیدترین آهنگ‌ها، 
+            ویدیوها و محتوای اختصاصی <strong style="color: #ffd700;">فهوا</strong> مطلع شوید.
+        </p>
+        <br>
+        <a class="subscribe-button" href="https://youtube.com/@fahwaofficial?si=ZOC9pHhkG4HSHU3L" target="_blank" rel="noopener noreferrer">
+            🎬 عضو شوید
+        </a>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section class="social-section">
+        <h2>🎤 درباره فهوا</h2>
+        <p style="font-size: 16px; color: #aaa; line-height: 2; max-width: 800px;">
+            <strong style="color: #ffd700;">فهوا (Fahwa)</strong> یک هنرمند مستقل در سبک‌های 
+            <strong style="color: #ffd700;">رپ</strong> و <strong style="color: #ffd700;">هیپ‌هاپ</strong> است 
+            که با تولیدات سینمایی، داستان‌سرایی احساسی و طراحی صدای مدرن، مخاطبان خود را به دنیایی تازه می‌برد. 
+            تمام پلتفرم‌های رسمی را دنبال کنید تا از جدیدترین انتشارات، ویدیوها و محتوای اختصاصی باخبر شوید.
+            <br><br>
+            <span style="color: #666; font-size: 14px;">
+                #رپ_فارسی #Fahwa #Rapfarsi #موسیقی_رپ
+            </span>
+        </p>
+    </section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer style="text-align: center; padding: 30px 20px; color: #444; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 40px;">
+    <span style="color: #ffd700;">✦</span> 
+    تمام حقوق محفوظ است · Fahwa Official 
+    <span style="color: #ffd700;">✦</span>
+    <br>
+    <span style="font-size: 12px; color: #333; display: inline-block; margin-top: 8px;">
+        #رپ_فارسی #Fahwa #Rapfarsi
+    </span>
+</footer>
 
 </body>
 </html>
