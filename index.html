@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -15,7 +16,7 @@
     <link rel="canonical" href="https://fahwaofficial.github.io/" />
     
     <!-- ===== FAVICON ===== -->
-    <link rel="icon" type="image/jpg" href="favicon.jpg" />
+    <link rel="icon" type="image/jpeg" href="favicon.jpg" />
 
     <!-- ===== OPEN GRAPH ===== -->
     <meta property="og:type" content="website" />
@@ -83,6 +84,10 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
         }
         body {
             font-family: 'Inter', sans-serif;
@@ -251,7 +256,7 @@
             box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
         }
 
-        /* ===== ARTIST INFO STRIP (بالای صفحه، وسط‌چین، فونت خوب) ===== */
+        /* ===== ARTIST INFO STRIP ===== */
         .artist-strip {
             background: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(59, 130, 246, 0.05));
             border-top: 1px solid rgba(124, 58, 237, 0.15);
@@ -603,6 +608,41 @@
             color: #94a3b8;
         }
 
+        /* ===== BLACK BOTTOM STRIP ===== */
+        .black-strip {
+            background: #000000;
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid rgba(124, 58, 237, 0.2);
+        }
+        .black-strip .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+        .black-strip .social-icons a {
+            color: #94a3b8;
+            font-size: 1.6rem;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .black-strip .social-icons a:hover {
+            color: #a78bfa;
+            transform: translateY(-3px);
+        }
+        .black-strip .social-icons span {
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+        .black-strip p {
+            color: #64748b;
+            font-size: 0.8rem;
+            margin-top: 12px;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 992px) {
             .about-grid {
@@ -654,6 +694,12 @@
                 font-size: 1rem;
                 gap: 10px 24px;
             }
+            .black-strip .social-icons {
+                gap: 18px;
+            }
+            .black-strip .social-icons a {
+                font-size: 1.3rem;
+            }
         }
         @media (max-width: 480px) {
             .hero-content h1 {
@@ -677,6 +723,12 @@
                 flex-direction: column;
                 gap: 6px;
                 font-size: 0.95rem;
+            }
+            .black-strip .social-icons a {
+                font-size: 1.1rem;
+            }
+            .black-strip .social-icons span {
+                font-size: 0.75rem;
             }
         }
     </style>
@@ -702,7 +754,7 @@
                 <li><a href="index.html">Home</a></li>
                 <!-- Music Dropdown -->
                 <li class="music-dropdown">
-                    <a href="#music">
+                    <a href="music.html">
                         MUSIC <i class="fas fa-chevron-down"></i>
                     </a>
                     <div class="dropdown-menu">
@@ -711,7 +763,7 @@
                         <a href="Dictator.html">Dictator</a>
                     </div>
                 </li>
-                <li><a href="about">ABOUT</a></li>
+                <li><a href="about.html">ABOUT</a></li>
                 <li><a href="biography.html">BIOGRAPHY</a></li>
                 <li><a href="contact.html">CONTACT</a></li>
                 <li><a href="social.html">SOCIAL</a></li>
@@ -721,7 +773,7 @@
     </div>
 </header>
 
-<!-- ===== ARTIST INFO STRIP (بالای صفحه، وسط‌چین، فونت خوب) ===== -->
+<!-- ===== ARTIST INFO STRIP ===== -->
 <div class="artist-strip">
     <div class="info-line">
         <span class="info-item"><i class="fas fa-user"></i> <span class="label">Name:</span> <span class="highlight">Fahwa</span></span>
@@ -740,7 +792,7 @@
         <p>از لینک های زیر وارد پلتفرم‌های رسمی فهوا بشید لطفا دنبال کنید</p>
         <div class="hero-buttons">
             <a href="social.html" class="btn-primary">دنبال کنید <i class="fas fa-arrow-left"></i></a>
-            <a href="#music" class="btn-outline">گوش دادن</a>
+            <a href="music.html" class="btn-outline">گوش دادن</a>
         </div>
 
         <!-- Official Links -->
@@ -812,36 +864,7 @@
             <div class="about-content">
                 <span>About Fahwa</span>
                 <h2>Independent Hip-Hop Artist</h2>
-                <p>Fahwa creates original music inspired by emotion, storytelling and modern hip-hop. This website is the official source for new releases, streaming links and artist updates.</p>
-                <p>Follow the official channels to stay connected with upcoming music, videos and exclusive content.</p>
-                <a href="social.html" class="about-btn">Follow Now</a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== SOCIAL (Preview) ===== -->
-<section id="social" class="social">
-    <div class="container">
-        <div class="section-title">
-            <span>FOLLOW</span>
-            <h2>Official Platforms</h2>
-            <p>Follow Fahwa on all official platforms and stay updated with every new release.</p>
-        </div>
-        <div class="social-grid">
-            <a class="social-card" href="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK" target="_blank">
-                <div class="social-icon">🎧</div>
-                <h3>Spotify</h3>
-                <p>Official Artist Profile</p>
-            </a>
-            <a class="social-card" href="https://youtube.com/@fahwaofficial" target="_blank">
-                <div class="social-icon">▶</div>
-                <h3>YouTube</h3>
-                <p>Official Channel</p>
-            </a>
-            <a class="social-card" href="https://instagram.com/fahwaofficial" target="_blank">
-                <div class="social-icon">📷</div>
-                <
+                <p>Fahwa creates original music inspired by emotion, storytelling and modern hip-hop. This website is the official source
     <footer>
         <div class="container footer-content">
             <div>
