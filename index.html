@@ -901,22 +901,31 @@
     </div>
 </div>
 
-<style>
+<script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+            <style>
+/* رنگ متن داخل باکس‌های کامنت Cusdis */
 #cusdis_thread textarea,
 #cusdis_thread input {
     color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
     background-color: #111111 !important;
     caret-color: #ffffff !important;
 }
 
+/* رنگ متن placeholder */
 #cusdis_thread textarea::placeholder,
 #cusdis_thread input::placeholder {
     color: #aaaaaa !important;
     opacity: 1 !important;
 }
-</style>
 
-<script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+/* مخصوص حالت فوکوس */
+#cusdis_thread textarea:focus,
+#cusdis_thread input:focus {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+            </style>
     </footer>
     </div> 
 </div>
