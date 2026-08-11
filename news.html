@@ -1,0 +1,439 @@
+This is a complete HTML page for your news section. It's designed as a clean, artist-style news hub with a dark footer, making it easy to add text and images.
+```html
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اخبار · هنرمندان</title>
+    <!-- Font Awesome for social icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f8f6f2;
+            font-family: 'Segoe UI', 'Helvetica Neue', system-ui, -apple-system, sans-serif;
+            color: #1e1e1e;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* wrapper to push footer down */
+        .site-wrapper {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 30px;
+            flex: 1 0 auto;
+            width: 100%;
+        }
+
+        /* header / brand – minimal like artist sites */
+        .news-header {
+            padding: 40px 0 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .news-header h1 {
+            font-weight: 400;
+            font-size: 2.2rem;
+            letter-spacing: -0.5px;
+            color: #0a0a0a;
+        }
+
+        .news-header h1 span {
+            font-weight: 300;
+            color: #6b6b6b;
+        }
+
+        .news-header .date-tag {
+            font-size: 0.9rem;
+            color: #5a5a5a;
+            background: #eae8e2;
+            padding: 6px 18px;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+        }
+
+        /* news grid – clean, spacious, like music artists news */
+        .news-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            margin: 30px 0 60px;
+        }
+
+        .news-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 28px 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02), 0 1px 3px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+            border: 1px solid #f0ede8;
+        }
+
+        .news-card:hover {
+            box-shadow: 0 12px 30px rgba(0,0,0,0.04);
+            border-color: #ddd8cf;
+        }
+
+        .news-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .news-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            background: #d9d3c9;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #2a2a2a;
+        }
+
+        .news-date {
+            font-size: 0.85rem;
+            color: #6f6b63;
+        }
+
+        .news-card h2 {
+            font-size: 1.9rem;
+            font-weight: 400;
+            margin-bottom: 12px;
+            line-height: 1.2;
+            letter-spacing: -0.3px;
+            color: #151515;
+        }
+
+        .news-card p {
+            font-size: 1.05rem;
+            color: #2f2d2a;
+            margin-bottom: 18px;
+            max-width: 90%;
+        }
+
+        .news-card .read-more {
+            display: inline-block;
+            font-weight: 500;
+            color: #1a1a1a;
+            border-bottom: 1.5px solid #b3aba0;
+            padding-bottom: 2px;
+            text-decoration: none;
+            transition: border-color 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .news-card .read-more:hover {
+            border-bottom-color: #000;
+        }
+
+        /* highlight card – feature (like an artist's main news) */
+        .news-card.featured {
+            background: #fcfaf7;
+            border-left: 6px solid #b3a48c;
+            padding: 32px 36px;
+        }
+
+        .news-card.featured h2 {
+            font-size: 2.3rem;
+        }
+
+        /* image placeholder – fahwafavicon.jpg (bottom) */
+        .favicon-section {
+            margin: 30px 0 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .favicon-section img {
+            max-width: 120px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.03);
+            transition: transform 0.2s;
+            border: 1px solid #e2dcd2;
+            padding: 6px;
+            background: white;
+        }
+
+        .favicon-section img:hover {
+            transform: scale(1.02);
+        }
+
+        /* ----- FOOTER – DARK, with social links (Instagram & YouTube) ----- */
+        .dark-footer {
+            background-color: #101010;
+            color: #e8e4de;
+            padding: 28px 30px 24px;
+            margin-top: 30px;
+            width: 100%;
+            border-top: 1px solid #2b2b2b;
+            flex-shrink: 0;
+        }
+
+        .footer-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px 30px;
+        }
+
+        .footer-copy {
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+            color: #a8a29b;
+        }
+
+        .footer-copy a {
+            color: #cbc4bb;
+            text-decoration: none;
+            border-bottom: 1px dotted #4a4a4a;
+            padding-bottom: 1px;
+        }
+
+        .footer-copy a:hover {
+            color: #ffffff;
+            border-bottom-color: #aaa;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .social-links a {
+            color: #d6d0c8;
+            font-size: 1.6rem;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.2rem;
+            font-weight: 400;
+        }
+
+        .social-links a i {
+            font-size: 1.9rem;
+        }
+
+        .social-links a span {
+            font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        .social-links a.instagram-link {
+            color: #d6d0c8;
+        }
+
+        .social-links a.youtube-link {
+            color: #d6d0c8;
+        }
+
+        .social-links a:hover {
+            color: #ffffff;
+            transform: scale(1.02);
+        }
+
+        .social-links a.instagram-link:hover {
+            color: #e95950;
+        }
+
+        .social-links a.youtube-link:hover {
+            color: #ff0000;
+        }
+
+        /* responsive */
+        @media (max-width: 700px) {
+            .site-wrapper {
+                padding: 0 16px;
+            }
+
+            .news-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .news-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .news-card {
+                padding: 22px 20px;
+            }
+
+            .news-card h2 {
+                font-size: 1.5rem;
+            }
+
+            .news-card p {
+                max-width: 100%;
+                font-size: 1rem;
+            }
+
+            .news-card.featured h2 {
+                font-size: 1.7rem;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+                gap: 16px;
+            }
+
+            .social-links {
+                gap: 24px;
+            }
+
+            .social-links a {
+                font-size: 1rem;
+            }
+
+            .social-links a i {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .news-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="site-wrapper">
+        <!-- header -->
+        <header class="news-header">
+            <h1>اخبار <span>·</span> روز</h1>
+            <div class="date-tag">
+                <i class="far fa-calendar-alt" style="margin-left: 6px;"></i> ۱۱ اوت ۲۰۲۶
+            </div>
+        </header>
+
+        <!-- news content – easy to add / edit text -->
+        <main class="news-grid">
+            <!-- featured news (like an artist's main story) -->
+            <article class="news-card featured">
+                <div class="news-meta">
+                    <span class="news-category">ویژه</span>
+                    <span class="news-date">۱۴ تیر ۱۴۰۵</span>
+                </div>
+                <h2>آلبوم جدید “افق روشن” در هفته اول صدرنشین شد</h2>
+                <p>
+                    با استقبال بی‌نظیر مخاطبان، آلبوم جدید گروه موسیقی “آوای خاور” تنها در ۷۲ ساعت 
+                    به جایگاه نخست جدول پرفروش‌ترین آثار هفته دست یافت. این اثر با الهام از 
+                    موسیقی سنتی و تلفیق با صداهای مدرن، توانسته نگاه‌ها را به خود جلب کند.
+                </p>
+                <a href="#" class="read-more">ادامه مطلب <i class="fas fa-arrow-left" style="margin-right: 6px;"></i></a>
+            </article>
+
+            <!-- regular news item 1 -->
+            <article class="news-card">
+                <div class="news-meta">
+                    <span class="news-category">کنسرت</span>
+                    <span class="news-date">۱۰ تیر ۱۴۰۵</span>
+                </div>
+                <h2>تور تابستانی “شب‌های بی‌خواب” به ۵ شهر کشور می‌رسد</h2>
+                <p>
+                    گروه هنری “مهتاب” از ۲۰ مرداد تا ۱۰ شهریور در تهران، اصفهان، شیراز، تبریز و 
+                    مشهد روی صحنه می‌روند. بلیت‌ها از هفته آینده به صورت محدود عرضه می‌شوند.
+                </p>
+                <a href="#" class="read-more">ادامه مطلب <i class="fas fa-arrow-left" style="margin-right: 6px;"></i></a>
+            </article>
+
+            <!-- regular news item 2 -->
+            <article class="news-card">
+                <div class="news-meta">
+                    <span class="news-category">انتشار</span>
+                    <span class="news-date">۰۸ تیر ۱۴۰۵</span>
+                </div>
+                <h2>موزیک ویدئوی جدید “سایه‌ها” از امشب پخش می‌شود</h2>
+                <p>
+                    ویدئوی قطعه «سایه‌ها» به کارگردانی سارا کریمی، امشب ساعت ۲۱ از پلتفرم 
+                    موسیقی ما منتشر خواهد شد. این اثر روایتی بصری از قطعه محبوب گروه “ریتم” است.
+                </p>
+                <a href="#" class="read-more">ادامه مطلب <i class="fas fa-arrow-left" style="margin-right: 6px;"></i></a>
+            </article>
+
+            <!-- extra news to show easy text adding -->
+            <article class="news-card">
+                <div class="news-meta">
+                    <span class="news-category">گفتگو</span>
+                    <span class="news-date">۰۵ تیر ۱۴۰۵</span>
+                </div>
+                <h2>گفتگوی اختصاصی با خواننده جوان “آرمین”</h2>
+                <p>
+                    در جدیدترین شماره مجله “نوای معاصر”، آرمین از روند ساخت آهنگ‌های جدید، 
+                    تأثیر فضای مجازی بر موسیقی و برنامه‌های آینده‌اش می‌گوید.
+                </p>
+                <a href="#" class="read-more">ادامه مطلب <i class="fas fa-arrow-left" style="margin-right: 6px;"></i></a>
+            </article>
+        </main>
+
+        <!-- fahwafavicon.jpg – displayed at the bottom (before footer) -->
+        <div class="favicon-section">
+            <img src="fahwafavicon.jpg" alt="fahwafavicon" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span style=\'background:#e9e5dd; padding:10px 24px; border-radius:40px; font-size:0.9rem; color:#3b3b3b;\'>fahwafavicon.jpg</span>';">
+        </div>
+    </div>
+
+    <!-- DARK FOOTER with Instagram & YouTube links -->
+    <footer class="dark-footer">
+        <div class="footer-inner">
+            <div class="footer-copy">
+                <span>© ۲۰۲۶ · اخبار هنرمندان</span>
+                <span style="margin: 0 10px; color: #3d3d3d;">|</span>
+                <span>طراحی با الهام از سایت‌های بزرگ موسیقی</span>
+            </div>
+            <div class="social-links">
+                <!-- Instagram Link -->
+                <a href="#" class="instagram-link" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                    <span>Instagram</span>
+                </a>
+                <!-- YouTube Link -->
+                <a href="#" class="youtube-link" target="_blank">
+                    <i class="fab fa-youtube"></i>
+                    <span>YouTube</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- optional: simple hint for easy text editing -->
+    <div style="position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #1f1f1f; color: #d4cdc2; padding: 6px 18px; border-radius: 60px; font-size: 0.7rem; letter-spacing: 0.5px; opacity: 0.4; pointer-events: none; white-space: nowrap; backdrop-filter: blur(4px);">
+        ✎  به‌راحتی متن و اخبار را ویرایش کنید
+    </div>
+</body>
+</html>
+```
+### Layout and Content Management
+The page is structured to help you manage news articles efficiently. The main content area uses a vertical list of cards, each representing a news item, making it straightforward to add, edit, or remove stories.
+
+-   **News Cards:** Each article is contained within a `.news-card` block. You can easily add a new story by copying an existing card and updating the title, date, category, and text.
+-   **Visual Hierarchy:** A "featured" card with a left border highlights the most important story. The clean typography and generous spacing create a calm, professional reading experience.
+-   **Footer and Social Links:** The dark footer at the bottom contains your specified Instagram and YouTube links. The links are styled with icons and text, and they change color on hover for clear interaction.
