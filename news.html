@@ -1,4 +1,5 @@
-This is a complete HTML page for your news section. It's designed as a clean, artist-style news hub with a dark footer, making it easy to add text and images.
+این کد HTML صفحه اخبار شماست که با تغییرات درخواستی شما به‌روزرسانی شده است. تصویر مورد نظر شما اکنون در پایین صفحه و با اندازه کوچک‌تر نمایش داده می‌شود.
+
 ```html
 <!DOCTYPE html>
 <html lang="fa">
@@ -154,7 +155,7 @@ This is a complete HTML page for your news section. It's designed as a clean, ar
             font-size: 2.3rem;
         }
 
-        /* image placeholder – fahwafavicon.jpg (bottom) */
+        /* image placeholder – favicon.jpg (bottom) */
         .favicon-section {
             margin: 30px 0 40px;
             display: flex;
@@ -163,7 +164,7 @@ This is a complete HTML page for your news section. It's designed as a clean, ar
         }
 
         .favicon-section img {
-            max-width: 120px;
+            max-width: 80px; /* smaller size */
             height: auto;
             border-radius: 20px;
             box-shadow: 0 6px 18px rgba(0,0,0,0.03);
@@ -395,9 +396,9 @@ This is a complete HTML page for your news section. It's designed as a clean, ar
             </article>
         </main>
 
-        <!-- fahwafavicon.jpg – displayed at the bottom (before footer) -->
+        <!-- favicon.jpg – displayed at the bottom (before footer) -->
         <div class="favicon-section">
-            <img src="fahwafavicon.jpg" alt="fahwafavicon" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span style=\'background:#e9e5dd; padding:10px 24px; border-radius:40px; font-size:0.9rem; color:#3b3b3b;\'>fahwafavicon.jpg</span>';">
+            <img src="favicon.jpg" alt="favicon" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span style=\'background:#e9e5dd; padding:10px 24px; border-radius:40px; font-size:0.9rem; color:#3b3b3b;\'>favicon.jpg</span>';">
         </div>
     </div>
 
@@ -431,9 +432,3 @@ This is a complete HTML page for your news section. It's designed as a clean, ar
 </body>
 </html>
 ```
-### Layout and Content Management
-The page is structured to help you manage news articles efficiently. The main content area uses a vertical list of cards, each representing a news item, making it straightforward to add, edit, or remove stories.
-
--   **News Cards:** Each article is contained within a `.news-card` block. You can easily add a new story by copying an existing card and updating the title, date, category, and text.
--   **Visual Hierarchy:** A "featured" card with a left border highlights the most important story. The clean typography and generous spacing create a calm, professional reading experience.
--   **Footer and Social Links:** The dark footer at the bottom contains your specified Instagram and YouTube links. The links are styled with icons and text, and they change color on hover for clear interaction.
