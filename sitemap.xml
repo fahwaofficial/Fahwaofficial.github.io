@@ -6,5 +6,16 @@
 <changefreq>weekly</changefreq>
 <priority>1.0</priority>
 </url>
+  <url>
+  <loc>https://fahwaofficial.github.io/music.html</loc>
+</url>
 
 </urlset>
+<url>
+  <loc>https://fahwaofficial.github.io/about.html</loc>
+</url>
+
+
+<url>
+  <loc>https://fahwaofficial.github.io/biography.html</loc>
+</url>
