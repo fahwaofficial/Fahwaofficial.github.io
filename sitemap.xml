@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-<url>
-<loc>https://fahwaofficial.github.io/</loc>
-<changefreq>weekly</changefreq>
-<priority>1.0</priority>
-</url>
   <url>
-  <loc>https://fahwaofficial.github.io/music.html</loc>
-</url>
+    <loc>https://fahwaofficial.github.io/</loc>
+  </url>
+
+  <url>
+    <loc>https://fahwaofficial.github.io/about.html</loc>
+  </url>
+
+  <url>
+    <loc>https://fahwaofficial.github.io/biography.html</loc>
+  </url>
+
+  <url>
+    <loc>https://fahwaofficial.github.io/contact.html</loc>
+  </url>
+
+  <url>
+    <loc>https://fahwaofficial.github.io/music.html</loc>
+  </url>
+
+  <url>
+    <loc>https://fahwaofficial.github.io/news.html</loc>
+  </url>
+
+  <url>
+    <loc>https://fahwaofficial.github.io/songs/MoTenaferam.html</loc>
+  </url>
 
 </urlset>
-<url>
-  <loc>https://fahwaofficial.github.io/about.html</loc>
-</url>
-
-
-<url>
-  <loc>https://fahwaofficial.github.io/biography.html</loc>
-</url>
