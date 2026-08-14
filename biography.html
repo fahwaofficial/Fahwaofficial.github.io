@@ -1,83 +1,541 @@
+```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
-<link rel="canonical" href="https://fahwaofficial.github.io/biography.html">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بیوگرافی فهوا (Fahwa) | خواننده و ترانه‌سرای رپ فارسی</title>
+    <meta name="description" content="بیوگرافی رسمی فهوا (Fahwa)، خواننده و ترانه‌سرای مستقل رپ فارسی از ایران؛ معرفی سبک موسیقی، آثار، فعالیت هنری و لینک‌های رسمی.">
+    <link rel="canonical" href="https://fahwaofficial.github.io/biography.html">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0a0a0a">
+    
+    <style>
+        /* CSS Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<title>بیوگرافی فهوا | Fahwa</title>
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #0b0b0b;
+            color: #e8e8e8;
+            line-height: 1.7;
+            padding: 0 1.5rem;
+        }
 
-<meta name="description" content="بیوگرافی فهوا (Fahwa)، خواننده، ترانه‌سرا و هنرمند مستقل رپ فارسی. معرفی کامل، سبک موسیقی، فعالیت هنری و لینک شبکه‌های اجتماعی رسمی.">
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 0 4rem;
+        }
 
-<meta name="keywords" content="فهوا, Fahwa, بیوگرافی فهوا, رپ فارسی, ترپ, خواننده رپ, موزیک فهوا">
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-weight: 600;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+        }
 
-<link rel="stylesheet" href="style.css">
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.75rem;
+            color: #fff;
+        }
 
+        h2 {
+            font-size: 2rem;
+            margin-top: 3.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #2a2a2a;
+            color: #f0f0f0;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 0.8rem;
+            color: #d4d4d4;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            color: #cfcfcf;
+        }
+
+        a {
+            color: #b4a6ff;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: #d6ccff;
+            text-decoration: underline;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2.5rem;
+            padding: 2.5rem 0 1.5rem;
+            border-bottom: 1px solid #222;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-content {
+            flex: 2 1 300px;
+        }
+
+        .hero-content h1 {
+            font-size: 2.6rem;
+        }
+
+        .hero-content .subhead {
+            font-size: 1.15rem;
+            color: #b8b8b8;
+            max-width: 700px;
+            margin-top: 0.5rem;
+        }
+
+        .hero-image-placeholder {
+            flex: 1 1 180px;
+            min-height: 180px;
+            background: #1e1e1e;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #3a3a3a;
+            color: #6a6a6a;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+        }
+
+        /* Cards & Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.8rem;
+            background: #131313;
+            padding: 2rem 1.8rem;
+            border-radius: 28px;
+            margin: 1.5rem 0 1rem;
+            border: 1px solid #252525;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-item .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #8a8a8a;
+            margin-bottom: 0.2rem;
+        }
+
+        .info-item .value {
+            font-weight: 500;
+            color: #f0f0f0;
+            font-size: 1.05rem;
+        }
+
+        /* Cards for news, platforms, social */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.8rem;
+            margin: 1.8rem 0;
+        }
+
+        .card {
+            background: #151515;
+            border-radius: 20px;
+            padding: 1.5rem 1.3rem;
+            border: 1px solid #282828;
+            transition: transform 0.2s ease, border-color 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #4a3f6b;
+        }
+
+        .card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+            color: #f0f0f0;
+        }
+
+        .card .meta {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 0.6rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: #c0c0c0;
+            margin-bottom: 0.8rem;
+        }
+
+        .card a {
+            font-weight: 500;
+        }
+
+        /* FAQ */
+        .faq-item {
+            background: #121212;
+            border-radius: 16px;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #252525;
+        }
+
+        .faq-item h4 {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            margin-bottom: 0.2rem;
+        }
+
+        .faq-item p {
+            margin-bottom: 0;
+            color: #bebebe;
+        }
+
+        /* Platform & social links */
+        .platform-links, .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.8rem;
+            margin: 1.5rem 0 1rem;
+            padding: 0.5rem 0;
+        }
+
+        .platform-links a, .social-links a {
+            background: #1a1a1a;
+            padding: 0.4rem 1.4rem;
+            border-radius: 40px;
+            border: 1px solid #2e2e2e;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+        }
+
+        .platform-links a:hover, .social-links a:hover {
+            background: #2a2a3a;
+            text-decoration: none;
+            border-color: #5a4e7a;
+        }
+
+        /* internal links */
+        .internal-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem 2rem;
+            background: #111;
+            padding: 1.2rem 1.8rem;
+            border-radius: 40px;
+            margin: 3rem 0 1rem;
+            border: 1px solid #282828;
+            justify-content: center;
+        }
+
+        .internal-nav a {
+            font-weight: 500;
+            color: #c8bfff;
+        }
+
+        .internal-nav a:hover {
+            color: #fff;
+        }
+
+        /* utility */
+        .text-muted {
+            color: #7a7a7a;
+            font-size: 0.95rem;
+        }
+
+        .note-box {
+            background: #141414;
+            padding: 1.2rem 1.8rem;
+            border-radius: 16px;
+            border-right: 4px solid #4f3f7a;
+            margin: 1.8rem 0;
+            color: #cacaca;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #282828;
+            margin: 2.5rem 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            body { padding: 0 1rem; }
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.7rem; }
+            .hero { flex-direction: column-reverse; text-align: center; }
+            .hero-content .subhead { margin-left: auto; margin-right: auto; }
+            .info-grid { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: 1fr; }
+            .platform-links, .social-links { justify-content: center; }
+            .internal-nav { flex-direction: column; align-items: center; gap: 0.4rem; }
+        }
+    </style>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "name": "بیوگرافی فهوا (Fahwa) | خواننده و ترانه‌سرای رپ فارسی",
+      "description": "بیوگرافی رسمی فهوا (Fahwa)، خواننده و ترانه‌سرای مستقل رپ فارسی از ایران.",
+      "url": "https://fahwaofficial.github.io/biography.html",
+      "mainEntity": {
+        "@type": "Person",
+        "name": "Fahwa",
+        "alternateName": "فهوا",
+        "birthDate": "1993-07-04",
+        "nationality": {
+          "@type": "Country",
+          "name": "ایران"
+        },
+        "jobTitle": "خواننده، ترانه‌سرا، تهیه‌کننده موسیقی",
+        "genre": ["رپ فارسی", "ترپ", "هیپ‌هاپ", "موسیقی اعتراضی"],
+        "description": "فهوا (Fahwa) خواننده، ترانه‌سرا و هنرمند مستقل رپ فارسی از ایران است که در زمینه رپ فارسی، ترپ و هیپ‌هاپ فعالیت می‌کند.",
+        "sameAs": [
+          "https://www.instagram.com/fahwaofficial",
+          "https://www.tiktok.com/@fahwaofficial",
+          "https://x.com/fahwaofficial",
+          "https://t.me/fahwaofficial",
+          "https://www.youtube.com/@fahwaofficial",
+          "https://soundcloud.com/fahwaofficial"
+        ]
+      }
+    }
+    </script>
 </head>
-
 <body>
+<div class="container">
 
-<section class="bio-container">
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>بیوگرافی فهوا | Fahwa</h1>
+            <p class="subhead">
+                فهوا (Fahwa) خواننده، ترانه‌سرا و هنرمند مستقل رپ فارسی از ایران است که در زمینه رپ فارسی، ترپ و هیپ‌هاپ فعالیت می‌کند. آثار او با تمرکز بر روایت‌های شخصی، دغدغه‌های اجتماعی و تجربه‌های انسانی شکل می‌گیرند.
+            </p>
+        </div>
+        <div class="hero-image-placeholder">
+            <span>تصویر رسمی Fahwa<br><small style="color:#555;">(در صورت وجود اضافه شود)</small></span>
+        </div>
+    </section>
 
-<h1>بیوگرافی فهوا</h1>
+    <!-- ============ معرفی کوتاه ============ -->
+    <section>
+        <h2>فهوا کیست؟</h2>
+        <p>
+            فهوا (Fahwa) یک هنرمند مستقل در موسیقی رپ فارسی است. فعالیت او بر خوانندگی، ترانه‌سرایی و تولید آثار موسیقی متمرکز است. 
+            او با نگاهی شخصی و اجتماعی، داستان‌هایی از زندگی، احساسات و واقعیت‌های پیرامون را در قالب موسیقی روایت می‌کند. 
+            فضای هنری فهوا ترکیبی از واقع‌گرایی، حس سینمایی و کیفیت صوتی دقیق است.
+        </p>
+        <p>
+            پروژه هنری Fahwa بر توسعه یک هویت مستقل در موسیقی رپ فارسی، روایت تجربه‌های انسانی و پرداختن به دغدغه‌های اجتماعی تمرکز دارد.
+        </p>
+    </section>
 
-<p class="bio-intro">
-فهوا (Fahwa) خواننده، ترانه‌سرا و هنرمند مستقل رپ فارسی از ایران است که با تمرکز بر موسیقی اعتراضی، ترپ و هیپ‌هاپ مدرن فعالیت می‌کند. آثار او بازتابی از تجربه‌های شخصی، دغدغه‌های اجتماعی و نگاه متفاوت به زندگی هستند و تلاش می‌کند موسیقی را به ابزاری برای بیان حقیقت و احساس تبدیل کند.
-</p>
+    <!-- ============ مشخصات ============ -->
+    <section>
+        <h2>مشخصات فهوا</h2>
+        <div class="info-grid">
+            <div class="info-item"><span class="label">نام هنری</span><span class="value">Fahwa (فهوا)</span></div>
+            <div class="info-item"><span class="label">تاریخ تولد</span><span class="value">۴ ژوئیه ۱۹۹۳</span></div>
+            <div class="info-item"><span class="label">کشور</span><span class="value">ایران</span></div>
+            <div class="info-item"><span class="label">حوزه فعالیت</span><span class="value">خوانندگی، ترانه‌سرایی، تولید موسیقی</span></div>
+            <div class="info-item"><span class="label">سبک‌های موسیقی</span><span class="value">رپ فارسی، ترپ، هیپ‌هاپ، موسیقی اعتراضی</span></div>
+        </div>
+    </section>
 
-<h2>مشخصات</h2>
+    <!-- ============ مسیر هنری ============ -->
+    <section>
+        <h2>مسیر هنری فهوا</h2>
+        <p>
+            پروژه هنری Fahwa بر توسعه یک هویت مستقل در موسیقی رپ فارسی، روایت تجربه‌های انسانی و شخصی و پرداختن به دغدغه‌های اجتماعی تمرکز دارد.
+            این مسیر با رویکردی صادقانه و بدون پیروی از کلیشه‌ها، به دنبال خلق آثاری ماندگار و ارتباط با مخاطبان فارسی‌زبان در سراسر جهان است.
+        </p>
+        <div class="note-box">
+            <span style="color:#b0b0b0;">📌 اطلاعات تکمیلی درباره آغاز فعالیت و مراحل مختلف مسیر هنری Fahwa در صورت انتشار رسمی به این بخش اضافه خواهد شد.</span>
+        </div>
+    </section>
 
-<ul class="bio-list">
-<li><strong>نام هنری:</strong> Fahwa (فهوا)</li>
-<li><strong>متولد:</strong>1993/07/04</li>
-<li><strong>کشور:</strong> ایران</li>
-<li><strong>سبک:</strong> رپ فارسی، ترپ، موسیقی اعتراضی</li>
-<li><strong>زمینه فعالیت:</strong> خوانندگی، ترانه‌سرایی و تولید محتوای موسیقی</li>
-</ul>
+    <!-- ============ سبک و هویت موسیقی ============ -->
+    <section>
+        <h2>سبک موسیقی فهوا</h2>
+        <p>
+            موسیقی Fahwa در چهارچوب رپ فارسی، ترپ و هیپ‌هاپ شکل می‌گیرد. اما آنچه آثار او را متمایز می‌کند، فضای سینمایی، روایت‌های شخصی و توجه به دغدغه‌های اجتماعی است.
+            ترانه‌ها اغلب دارای لایه‌های احساسی عمیق، نگاهی تاریک و جدی به زندگی و روایت واقعیت‌های انسانی هستند. 
+        </p>
+        <p>
+            کیفیت تولید، میکس و مسترینگ برای Fahwa اهمیت بالایی دارد و تلاش می‌کند هر اثر از نظر صوتی در سطحی حرفه‌ای ارائه شود. 
+            ترانه‌سرایی در مرکز آثار قرار دارد و کلمات با دقت انتخاب می‌شوند تا پیام و حس مورد نظر به بهترین شکل منتقل شود.
+        </p>
+    </section>
 
-<h2>درباره فهوا</h2>
+    <!-- ============ موضوعات آثار ============ -->
+    <section>
+        <h2>موضوعات و روایت‌های آثار Fahwa</h2>
+        <p>
+            در آثار Fahwa می‌توان به موضوعاتی مانند تجربه‌های شخصی، احساسات، روابط انسانی، دغدغه‌های اجتماعی، نگاه به زندگی و روایت واقعیت توجه کرد. 
+            این موضوعات با زبانی صریح و تصاویری زنده، شنونده را به تفکر و همذات‌پنداری دعوت می‌کنند.
+        </p>
+    </section>
 
-<p>
-فهوا با تمرکز بر فضای تاریک، روایت‌های واقعی و بیت‌های مدرن تلاش می‌کند هویت مستقلی در موسیقی رپ فارسی ایجاد کند. آثار او ترکیبی از روایت‌های شخصی، نقد اجتماعی و فضای سینمایی هستند و همواره کیفیت تولید، میکس و مسترینگ در اولویت پروژه‌های او قرار دارد.
-</p>
+    <!-- ============ آثار و ترانه‌ها ============ -->
+    <section>
+        <h2>آثار و ترانه‌های فهوا</h2>
+        <p>
+            در این بخش آثار منتشر شده Fahwa معرفی می‌شوند. برای اطلاعات بیشتر درباره هر اثر، روی لینک مربوطه کلیک کنید.
+        </p>
 
-<p>
-هدف اصلی این پروژه هنری، تولید آثار ماندگار، ارتباط با مخاطبان فارسی‌زبان در سراسر جهان و گسترش حضور در پلتفرم‌های بین‌المللی موسیقی است.
-</p>
+        <!-- نمونه کارت برای آهنگ (در صورت وجود اطلاعات) -->
+        <div class="card-grid">
+            <!-- کارت نمونه (آهنگ فرصت محدود) -->
+            <div class="card">
+                <h4>فرصت محدود</h4>
+                <div class="meta">تک آهنگ</div>
+                <p>یکی از آثار منتشر شده Fahwa که با امضای صوتی و روایت خاص خود ارائه شده است.</p>
+                <a href="/songs/forsatmahdod.html">مشاهده صفحه آهنگ →</a>
+            </div>
+            <!-- در صورت وجود آثار دیگر، کارت‌ها را اضافه کنید -->
+        </div>
 
-<h2>شبکه‌های اجتماعی رسمی</h2>
+        <p>
+            برای دسترسی به تمام آثار و دانلود، به صفحه 
+            <a href="/download.html">دانلود</a> 
+            مراجعه کنید.
+        </p>
+    </section>
 
-<div class="social-grid">
+    <!-- ============ آهنگ «فرصت محدود» ============ -->
+    <section>
+        <h3>فرصت محدود</h3>
+        <p>
+            «فرصت محدود» یکی از آثار منتشرشده Fahwa است که با حال و هوای خاص خود، روایتی شخصی از زمان و انتخاب‌ها را به تصویر می‌کشد.
+            برای اطلاعات بیشتر و شنیدن اثر، به صفحه اختصاصی آن بروید.
+        </p>
+        <p>
+            <a href="/songs/forsatmahdod.html">🎵 صفحه آهنگ فرصت محدود</a>
+        </p>
+    </section>
 
-<a href="https://www.instagram.com/fahwaofficial?igsh=MWY2M3h1cnZnZW00dw==">Instagram</a>
+    <!-- ============ فعالیت و اخبار ============ -->
+    <section>
+        <h2>آخرین فعالیت‌ها</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>به‌زودی: انتشار جدید</h4>
+                <div class="meta">تیر ۱۴۰۵</div>
+                <p>Fahwa در حال کار روی پروژه‌ای جدید است. اطلاعات تکمیلی به زودی اعلام خواهد شد.</p>
+                <a href="/news.html">ادامه مطلب</a>
+            </div>
+            <div class="card">
+                <h4>حضور در پلتفرم‌های بین‌المللی</h4>
+                <div class="meta">خرداد ۱۴۰۵</div>
+                <p>آثار Fahwa از طریق پلتفرم‌های موسیقی بین‌المللی در دسترس قرار گرفته‌اند.</p>
+                <a href="/news.html">ادامه مطلب</a>
+            </div>
+            <div class="card">
+                <h4>به‌روزرسانی وب‌سایت</h4>
+                <div class="meta">اردیبهشت ۱۴۰۵</div>
+                <p>وب‌سایت رسمی Fahwa با طراحی جدید و بخش‌های بیشتر به‌روزرسانی شد.</p>
+                <a href="/news.html">ادامه مطلب</a>
+            </div>
+        </div>
+        <p><a href="/news.html">مشاهده همه اخبار →</a></p>
+    </section>
 
-<a href="https://youtube.com/@fahwaofficial?si=ZOC9pHhkG4HSHU3L">YouTube</a>
+    <!-- ============ حضور در پلتفرم‌های موسیقی ============ -->
+    <section>
+        <h2>Fahwa در پلتفرم‌های موسیقی</h2>
+        <p>برای شنیدن و دنبال کردن آثار Fahwa، از طریق لینک‌های زیر به صفحات رسمی او در پلتفرم‌های معتبر موسیقی دسترسی داشته باشید:</p>
+        <div class="platform-links">
+            <a href="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK?si=OSjGCMdiRha0Sfus15aU7Q" target="_blank">Spotify</a>
+            <a href="https://music.apple.com/mx/artist/fahwa/1813073821" target="_blank">Apple Music</a>
+            <a href="https://music.amazon.it/artists/B0F7RW3YL2" target="_blank">Amazon Music</a>
+            <a href="https://soundcloud.com/fahwaofficial?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" target="_blank">SoundCloud</a>
+            <a href="https://fahwa.bandcamp.com/
+" target="_blank">Bandcamp</a>
+            <a href="https://youtube.com/@fahwaofficial?si=ZOC9pHhkG4HSHU3L" target="_blank">YouTube</a>
+            <a href="https://genius.com/artists/Fahwa" target="_blank">Genius</a>
+            <a href="https://musicbrainz.org/artist/85623249-de16-4582-ab32-a73b7aff093a" target="_blank">MusicBrainz</a>
+        </div>
+        <p class="text-muted">* لینک‌های رسمی به‌زودی تکمیل می‌شوند.</p>
+    </section>
 
-<a href="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK?si=OSjGCMdiRha0Sfus15aU7Q">Spotify</a>
+    <!-- ============ شبکه‌های اجتماعی رسمی ============ -->
+    <section>
+        <h2>شبکه‌های اجتماعی رسمی Fahwa</h2>
+        <p>Fahwa را در شبکه‌های اجتماعی زیر دنبال کنید:</p>
+        <div class="social-links">
+            <a href="https://www.instagram.com/fahwaofficial" target="_blank">Instagram</a>
+            <a href="https://www.tiktok.com/@fahwaofficial" target="_blank">TikTok</a>
+            <a href="https://x.com/fahwaofficial" target="_blank">X</a>
+            <a href="https://t.me/fahwaofficial" target="_blank">Telegram</a>
+            <a href="https://www.youtube.com/@fahwaofficial" target="_blank">YouTube</a>
+            <a href="https://soundcloud.com/fahwaofficial" target="_blank">SoundCloud</a>
+        </div>
+    </section>
 
-<a href="https://soundcloud.com/fahwaofficial?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing">SoundCloud</a>
+    <!-- ============ FAQ ============ -->
+    <section>
+        <h2>سوالات متداول درباره فهوا</h2>
 
-<a href="https://t.me/fahwaofficial">Telegram</a>
+        <div class="faq-item">
+            <h4>فهوا کیست؟</h4>
+            <p>فهوا (Fahwa) یک خواننده، ترانه‌سرا و هنرمند مستقل در حوزه رپ فارسی از ایران است.</p>
+        </div>
+        <div class="faq-item">
+            <h4>سبک موسیقی فهوا چیست؟</h4>
+            <p>موسیقی Fahwa در حوزه رپ فارسی، ترپ و هیپ‌هاپ قرار می‌گیرد و در برخی آثار، فضای اعتراضی و اجتماعی نیز دیده می‌شود.</p>
+        </div>
+        <div class="faq-item">
+            <h4>فهوا در چه زمینه‌ای فعالیت می‌کند؟</h4>
+            <p>فعالیت او شامل خوانندگی، ترانه‌سرایی و تولید محتوای موسیقی است.</p>
+        </div>
+        <div class="faq-item">
+            <h4>آثار فهوا را از کجا می‌توان شنید؟</h4>
+            <p>آثار Fahwa از طریق صفحات رسمی او در پلتفرم‌های موسیقی و شبکه‌های اجتماعی قابل دسترسی است.</p>
+        </div>
+    </section>
 
+    <!-- ============ لینک‌های داخلی ============ -->
+    <nav class="internal-nav">
+        <a href="/">خانه</a>
+        <a href="/biography.html">بیوگرافی</a>
+        <a href="/news.html">اخبار</a>
+        <a href="/download.html">دانلود</a>
+        <a href="/about.html">درباره</a>
+        <a href="/contact.html">تماس</a>
+        <a href="/Social.html">شبکه‌های اجتماعی</a>
+        <a href="/songs/forsatmahdod.html">فرصت محدود</a>
+    </nav>
+
+    <hr>
+    <p style="text-align:center; color:#666; font-size:0.85rem; margin-top:2rem;">
+        © 2026 Fahwa — تمامی حقوق محفوظ است.
+    </p>
 </div>
-
-<h2>دنبال کردن فهوا</h2>
-
-<p>
-برای شنیدن جدیدترین آهنگ‌ها، موزیک‌ویدئوها و اطلاع از انتشار آثار آینده، صفحات رسمی فهوا را در شبکه‌های اجتماعی دنبال کنید.
-</p>
-
-<div class="back-home">
-
-<a href="index.html">
- بازگشت به صفحه اصلی
-</a>
-
-</div>
-
-</section>
-
 </body>
-
-    </html>
+</html>
+```
