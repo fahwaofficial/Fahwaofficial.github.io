@@ -1,539 +1,350 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fahwa Official News & Updates | Music, Releases, Media and Career</title>
-    <meta name="description" content="Official news, press and updates from Fahwa. The central source for music releases, media, interviews and career announcements.">
-    <link rel="canonical" href="https://fahwaofficial.github.io/news.html">
-    <meta name="robots" content="index, follow">
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="Fahwa Official News & Updates | Music, Releases, Media and Career">
-    <meta property="og:description" content="Official news, press and updates from Fahwa. The central source for music releases, media, interviews and career announcements.">
-    <meta property="og:url" content="https://fahwaofficial.github.io/news.html">
-    <meta property="og:type" content="article">
-    <meta property="og:image" content="https://fahwaofficial.github.io/images/news-hero.jpg">
-    <meta property="og:site_name" content="Fahwa Official">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Fahwa Official News & Updates | Music, Releases, Media and Career">
-    <meta name="twitter:description" content="Official news, press and updates from Fahwa. The central source for music releases, media, interviews and career announcements.">
-    <meta name="twitter:image" content="https://fahwaofficial.github.io/images/news-hero.jpg">
-
-    <!-- JSON-LD: BreadcrumbList -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "https://fahwaofficial.github.io/"
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "News",
-                "item": "https://fahwaofficial.github.io/news.html"
-            }
-        ]
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fahwa Official News Hub &amp; Archive | Music, Media, Career</title>
+  <meta name="description" content="Official news hub for Fahwa: music, releases, videos, interviews, and career updates. Read the latest announcements and stories.">
+  <link rel="canonical" href="https://fahwaofficial.github.io/news.html">
+  <meta name="robots" content="index, follow">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Fahwa Official News &amp; Updates | Music, Releases, Media and Career">
+  <meta property="og:description" content="Official news hub for Fahwa: music, releases, videos, interviews, and career updates. Read the latest announcements and stories.">
+  <meta property="og:url" content="https://fahwaofficial.github.io/news.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://fahwaofficial.github.io/assets/og-news-hub.jpg">
+  <meta property="og:site_name" content="Fahwa Official">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fahwa Official News &amp; Updates | Music, Releases, Media and Career">
+  <meta name="twitter:description" content="Official news hub for Fahwa: music, releases, videos, interviews, and career updates. Read the latest announcements and stories.">
+  <meta name="twitter:image" content="https://fahwaofficial.github.io/assets/og-news-hub.jpg">
+  <style>
+    /* Reset & Base */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0b0b0b;
+      color: #f0f0f0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      padding: 1.5rem;
     }
-    </script>
-
-    <!-- JSON-LD: NewsArticle -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "NewsArticle",
-        "headline": "Fahwa Expands His Official Digital Presence With a Dedicated Home for Music, Media and Career Updates",
-        "description": "Fahwa launches his official website as the central hub for verified news, music releases, media appearances, and career updates.",
-        "image": ["https://fahwaofficial.github.io/images/news-hero.jpg"],
-        "datePublished": "2026-08-16T14:30:00+00:00",
-        "dateModified": "2026-08-16T14:30:00+00:00",
-        "author": {
-            "@type": "Organization",
-            "name": "Fahwa Official",
-            "url": "https://fahwaofficial.github.io/"
-        },
-        "publisher": {
-            "@type": "Organization",
-            "name": "Fahwa Official",
-            "url": "https://fahwaofficial.github.io/"
-        },
-        "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": "https://fahwaofficial.github.io/news.html"
-        },
-        "url": "https://fahwaofficial.github.io/news.html",
-        "articleSection": "News",
-        "inLanguage": "en",
-        "isAccessibleForFree": true,
-        "keywords": "Fahwa, official news, music, releases, media, interviews, career updates",
-        "about": {
-            "@type": "MusicGroup",
-            "name": "Fahwa",
-            "sameAs": "https://musicbrainz.org/artist/85623249-de16-4582-ab32-a73b7aff093a"
-        },
-        "sameAs": [
-            "https://musicbrainz.org/artist/85623249-de16-4582-ab32-a73b7aff093a",
-            "https://www.tiktok.com/@fahwaofficial",
-            "https://www.instagram.com/fahwaofficial/",
-            "https://x.com/fahwaofficial",
-            "https://soundcloud.com/fahwaofficial",
-            "https://www.youtube.com/@fahwaofficial",
-            "https://t.me/fahwaofficial"
-        ]
+    a { color: #b0b0ff; text-decoration: none; transition: color 0.2s; }
+    a:hover { color: #ffffff; text-decoration: underline; }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
     }
-    </script>
-
-    <style>
-        /* Reset & Base */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background-color: #0b0b0b;
-            color: #eaeaea;
-            font-family: 'Georgia', 'Times New Roman', serif;
-            line-height: 1.7;
-            padding: 0 1rem;
-        }
-        .container {
-            max-width: 880px;
-            margin: 0 auto;
-            padding: 2rem 0 3rem;
-        }
-
-        /* Header / Navigation */
-        .site-header {
-            border-bottom: 1px solid #2a2a2a;
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .site-title {
-            font-size: 1.8rem;
-            font-weight: 400;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: #ffffff;
-        }
-        .site-title a {
-            color: #ffffff;
-            text-decoration: none;
-        }
-        .site-title a:hover {
-            color: #bbbbbb;
-        }
-        .nav-links a {
-            color: #aaaaaa;
-            text-decoration: none;
-            margin-left: 1.8rem;
-            font-size: 0.95rem;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid transparent;
-            transition: border-color 0.2s;
-        }
-        .nav-links a:hover {
-            border-bottom-color: #aaaaaa;
-            color: #ffffff;
-        }
-        .nav-links a.current {
-            color: #ffffff;
-            border-bottom-color: #ffffff;
-        }
-
-        /* Breadcrumb */
-        .breadcrumb {
-            font-size: 0.85rem;
-            color: #888;
-            margin-bottom: 2.5rem;
-            letter-spacing: 0.3px;
-        }
-        .breadcrumb a {
-            color: #aaa;
-            text-decoration: none;
-        }
-        .breadcrumb a:hover {
-            color: #fff;
-        }
-        .breadcrumb span {
-            margin: 0 0.4rem;
-        }
-
-        /* News label */
-        .news-label {
-            display: inline-block;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: #aaa;
-            border: 1px solid #333;
-            padding: 0.2rem 0.8rem;
-            margin-bottom: 1.8rem;
-        }
-
-        /* Article */
-        article {
-            margin-bottom: 4rem;
-        }
-        h1 {
-            font-size: 2.8rem;
-            font-weight: 400;
-            line-height: 1.2;
-            margin-bottom: 0.8rem;
-            color: #ffffff;
-            letter-spacing: -0.5px;
-        }
-        .article-summary {
-            font-size: 1.2rem;
-            color: #bbbbbb;
-            margin-bottom: 2rem;
-            border-left: 3px solid #444;
-            padding-left: 1.2rem;
-            font-style: italic;
-        }
-        .hero-image {
-            width: 100%;
-            height: auto;
-            background-color: #1a1a1a;
-            margin: 1.5rem 0 2rem;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .hero-image img {
-            display: block;
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-        }
-        .byline-date {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem 1.5rem;
-            font-size: 0.9rem;
-            color: #999;
-            border-bottom: 1px solid #2a2a2a;
-            padding-bottom: 1.2rem;
-            margin-bottom: 2rem;
-        }
-        .byline-date .author {
-            color: #ccc;
-        }
-        .byline-date .author a {
-            color: #ccc;
-            text-decoration: none;
-            border-bottom: 1px dotted #555;
-        }
-        .byline-date .author a:hover {
-            color: #fff;
-            border-bottom-color: #aaa;
-        }
-        .byline-date .date {
-            margin-left: auto;
-        }
-
-        /* Article content */
-        .article-body {
-            font-size: 1.1rem;
-            color: #d4d4d4;
-        }
-        .article-body p {
-            margin-bottom: 1.6rem;
-        }
-        .article-body h2 {
-            font-size: 1.8rem;
-            font-weight: 400;
-            margin: 2.8rem 0 1rem;
-            color: #f0f0f0;
-            letter-spacing: -0.3px;
-        }
-        .article-body h3 {
-            font-size: 1.3rem;
-            font-weight: 400;
-            margin: 2rem 0 0.8rem;
-            color: #e0e0e0;
-        }
-        .article-body ul {
-            margin: 1rem 0 1.8rem 1.8rem;
-            list-style: none;
-        }
-        .article-body ul li {
-            margin-bottom: 0.6rem;
-            position: relative;
-            padding-left: 1.5rem;
-        }
-        .article-body ul li::before {
-            content: "—";
-            position: absolute;
-            left: 0;
-            color: #777;
-        }
-        .article-body a {
-            color: #bbbbff;
-            text-decoration: none;
-            border-bottom: 1px solid #444;
-            transition: border-color 0.2s;
-        }
-        .article-body a:hover {
-            color: #ffffff;
-            border-bottom-color: #aaa;
-        }
-        .article-body .official-links {
-            background: #141414;
-            padding: 1.8rem 2rem;
-            border-radius: 6px;
-            margin: 2.5rem 0;
-            border-left: 3px solid #555;
-        }
-        .article-body .official-links strong {
-            display: block;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #aaa;
-            margin-bottom: 0.8rem;
-        }
-        .article-body .official-links a {
-            display: inline-block;
-            margin-right: 1.2rem;
-            margin-bottom: 0.4rem;
-            font-size: 0.95rem;
-            border-bottom: 0;
-        }
-        .article-body .official-links a:hover {
-            border-bottom: 1px solid #aaa;
-        }
-
-        /* About / Related */
-        .about-section {
-            border-top: 1px solid #2a2a2a;
-            padding-top: 2.5rem;
-            margin-top: 2rem;
-        }
-        .about-section h2 {
-            font-size: 1.6rem;
-            font-weight: 400;
-            margin-bottom: 1rem;
-            color: #f0f0f0;
-        }
-        .about-section p {
-            color: #bcbcbc;
-            margin-bottom: 1rem;
-        }
-        .related-pages {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem 2rem;
-            margin: 1.5rem 0 0.5rem;
-        }
-        .related-pages a {
-            color: #bbbbff;
-            text-decoration: none;
-            border-bottom: 1px solid #333;
-            font-size: 0.95rem;
-        }
-        .related-pages a:hover {
-            color: #fff;
-            border-bottom-color: #aaa;
-        }
-
-        /* Footer */
-        .site-footer {
-            border-top: 1px solid #222;
-            padding-top: 2rem;
-            margin-top: 2rem;
-            font-size: 0.85rem;
-            color: #666;
-            text-align: center;
-        }
-        .site-footer a {
-            color: #888;
-            text-decoration: none;
-            border-bottom: 1px solid #333;
-        }
-        .site-footer a:hover {
-            color: #ccc;
-            border-bottom-color: #777;
-        }
-        .site-footer .footer-links {
-            margin-bottom: 1rem;
-        }
-        .site-footer .footer-links a {
-            margin: 0 0.8rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 680px) {
-            .site-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            .nav-links a {
-                margin-left: 0;
-                margin-right: 1.5rem;
-            }
-            h1 {
-                font-size: 2rem;
-            }
-            .article-summary {
-                font-size: 1rem;
-            }
-            .byline-date {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .byline-date .date {
-                margin-left: 0;
-            }
-            .article-body {
-                font-size: 1rem;
-            }
-            .article-body .official-links {
-                padding: 1.2rem;
-            }
-            .article-body .official-links a {
-                display: block;
-                margin-right: 0;
-            }
-        }
-        @media (max-width: 480px) {
-            .container {
-                padding: 1rem 0 2rem;
-            }
-            h1 {
-                font-size: 1.7rem;
-            }
-            .nav-links a {
-                font-size: 0.85rem;
-                margin-right: 1rem;
-            }
-        }
-    </style>
+    /* Header / Nav */
+    .site-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 0;
+      border-bottom: 1px solid #2a2a2a;
+      margin-bottom: 2.5rem;
+    }
+    .logo a {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #fff;
+      text-decoration: none;
+    }
+    .logo span { color: #a0a0ff; }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      font-weight: 500;
+    }
+    .nav-links a { color: #ccc; font-size: 0.95rem; }
+    .nav-links a:hover { color: #fff; }
+    /* News Hub intro */
+    .hub-intro {
+      margin-bottom: 3rem;
+      border-left: 4px solid #6a6aff;
+      padding-left: 1.5rem;
+    }
+    .hub-intro h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 0.5rem;
+    }
+    .hub-intro p {
+      font-size: 1.2rem;
+      color: #b0b0b0;
+      max-width: 700px;
+    }
+    /* Featured article */
+    .featured {
+      background: #161616;
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: center;
+      border: 1px solid #2a2a2a;
+    }
+    .featured-image {
+      flex: 1 1 300px;
+    }
+    .featured-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      display: block;
+      background: #222;
+    }
+    .featured-content {
+      flex: 2 1 300px;
+    }
+    .featured-content .category {
+      background: #3a3a7a;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: inline-block;
+      margin-bottom: 0.75rem;
+      color: #ddd;
+    }
+    .featured-content h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+    .featured-content time {
+      color: #888;
+      font-size: 0.9rem;
+    }
+    .featured-content p {
+      margin: 1rem 0 1.2rem;
+      color: #c0c0c0;
+    }
+    .btn {
+      display: inline-block;
+      background: #4a4aff;
+      color: #fff;
+      padding: 0.6rem 1.8rem;
+      border-radius: 40px;
+      font-weight: 500;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+    .btn:hover { background: #6a6aff; text-decoration: none; }
+    /* Article cards grid */
+    .cards-section {
+      margin-top: 2rem;
+    }
+    .cards-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 0.75rem;
+    }
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    /* ============================================
+       NEWS ARTICLES: ADD NEW ARTICLES HERE 
+       ============================================ */
+    .news-card {
+      background: #141414;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #262626;
+      transition: transform 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .news-card:hover { transform: translateY(-4px); border-color: #4a4a7a; }
+    .news-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: #1f1f1f;
+    }
+    .news-card .card-body {
+      padding: 1.2rem 1.5rem 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .news-card .category {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #9a9aff;
+      margin-bottom: 0.4rem;
+    }
+    .news-card time {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 0.5rem;
+    }
+    .news-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+    .news-card p {
+      color: #b0b0b0;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+    .news-card .read-link {
+      font-weight: 500;
+      color: #a0a0ff;
+      align-self: flex-start;
+      border-bottom: 1px solid transparent;
+    }
+    .news-card .read-link:hover { border-bottom-color: #a0a0ff; text-decoration: none; }
+    /* Footer */
+    .site-footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid #2a2a2a;
+      color: #777;
+      font-size: 0.9rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .site-footer a { color: #999; }
+    .site-footer a:hover { color: #fff; }
+    /* Responsive */
+    @media (max-width: 700px) {
+      .site-header { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+      .nav-links { gap: 1rem; font-size: 0.9rem; }
+      .hub-intro h1 { font-size: 2rem; }
+      .featured { flex-direction: column; }
+      .featured-content h2 { font-size: 1.6rem; }
+      .news-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="site-header">
-            <div class="site-title"><a href="https://fahwaofficial.github.io/">Fahwa</a></div>
-            <nav class="nav-links">
-                <a href="https://fahwaofficial.github.io/">Home</a>
-                <a href="https://fahwaofficial.github.io/news.html" class="current">News</a>
-                <a href="https://fahwaofficial.github.io/biography.html">Biography</a>
-                <a href="https://fahwaofficial.github.io/music.html">Music</a>
-                <a href="https://fahwaofficial.github.io/social.html">Social</a>
-            </nav>
-        </header>
+  <div class="container">
+    <!-- Header -->
+    <header class="site-header">
+      <div class="logo"><a href="/">Fahwa<span>Official</span></a></div>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/news.html">News</a>
+        <a href="/biography.html">Biography</a>
+        <a href="/music.html">Music</a>
+        <a href="/releases.html">Releases</a>
+        <a href="/videos.html">Videos</a>
+        <a href="/interviews.html">Interviews</a>
+        <a href="/social.html">Social</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+    </header>
 
-        <!-- Breadcrumb -->
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-            <a href="https://fahwaofficial.github.io/">Home</a>
-            <span>›</span>
-            <span>News</span>
-        </nav>
+    <!-- News Hub intro -->
+    <section class="hub-intro">
+      <h1>Official Fahwa News</h1>
+      <p>The latest updates, announcements, and stories from Fahwa — music, media, and career.</p>
+    </section>
 
-        <!-- Main article -->
-        <main>
-            <article>
-                <header>
-                    <div class="news-label">News / Announcement</div>
-                    <h1>Fahwa Expands His Official Digital Presence With a Dedicated Home for Music, Media and Career Updates</h1>
-                    <p class="article-summary">The official website now serves as the central, verified hub for all news, releases, and media related to the artist project.</p>
-                </header>
+    <!-- Featured / Latest article -->
+    <section class="featured">
+      <div class="featured-image">
+        <img src="/assets/news/fahwa-digital-presence-hero.jpg" alt="Fahwa official digital presence announcement visual" loading="eager">
+      </div>
+      <div class="featured-content">
+        <span class="category">Announcements</span>
+        <h2>Fahwa Expands His Official Digital Presence With a Dedicated Home for Music, Media and Career Updates</h2>
+        <time datetime="2026-08-16T14:30:00+04:00">August 16, 2026</time>
+        <p>Fahwa launches a comprehensive digital hub, bringing together music, media, and career updates in one official space.</p>
+        <a href="/news/fahwa-official-digital-presence.html" class="btn">Read Article →</a>
+      </div>
+    </section>
 
-                <div class="hero-image">
-                    <img src="https://fahwaofficial.github.io/images/news-hero.jpg" alt="Fahwa official news feature image" width="880" height="440">
-                </div>
+    <!-- All news cards -->
+    <section class="cards-section">
+      <h2>Latest News</h2>
+      <div class="news-grid">
+        <!-- ============================================
+             NEWS ARTICLES: ADD NEW ARTICLES HERE 
+             ============================================ -->
+        <!-- ARTICLE CARD 1 (most recent) -->
+        <article class="news-card">
+          <img src="/assets/news/fahwa-digital-presence-thumb.jpg" alt="Fahwa digital presence announcement thumbnail" loading="lazy">
+          <div class="card-body">
+            <span class="category">Announcements</span>
+            <time datetime="2026-08-16T14:30:00+04:00">August 16, 2026</time>
+            <h3>Fahwa Expands His Official Digital Presence With a Dedicated Home for Music, Media and Career Updates</h3>
+            <p>Fahwa launches a comprehensive digital hub, bringing together music, media, and career updates in one official space.</p>
+            <a href="/news/fahwa-official-digital-presence.html" class="read-link">Read Article →</a>
+          </div>
+        </article>
+        <!-- 
+          To add a new article, duplicate the <article> block above,
+          update the image src, category, datetime, title, description, and href.
+          Place the newest article at the top of this section.
+        -->
+      </div>
+      <!-- note: only one genuine article exists; future cards can be added here -->
+    </section>
 
-                <div class="byline-date">
-                    <span class="author">By <a href="https://fahwaofficial.github.io/">Fahwa Official Editorial</a></span>
-                    <span class="date">Published: August 16, 2026 &nbsp;|&nbsp; Updated: August 16, 2026</span>
-                </div>
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div>&copy; 2026 Fahwa Official. All rights reserved.</div>
+      <div>
+        <a href="/">Home</a> · 
+        <a href="/news.html">News Hub</a> · 
+        <a href="/biography.html">Biography</a> · 
+        <a href="/contact.html">Contact</a>
+      </div>
+    </footer>
+  </div>
 
-                <div class="article-body">
-                    <p>Fahwa, the independent artist and producer, has formally expanded his official digital infrastructure with the launch of a dedicated news and media hub at <a href="https://fahwaofficial.github.io/news.html">fahwaofficial.github.io/news</a>. This page is now the primary source for verified announcements, press materials, career updates, and media resources related to the project.</p>
-
-                    <p>For followers, industry professionals, and media outlets, the new news section provides a clear, authoritative alternative to fragmented information spread across social platforms. All official statements, release schedules, and project developments will be published here first, ensuring accuracy and transparency.</p>
-
-                    <h2>An Official Home for Fahwa</h2>
-                    <p>The decision to centralize news and media content reflects Fahwa's commitment to building a sustainable, long-term artistic presence. While streaming platforms and social networks remain vital for distribution, the official website now functions as the foundational reference point for all factual information about the artist's work and career trajectory.</p>
-                    <p>Visitors to the news section can expect regular updates covering new music, visual projects, official statements, and curated media appearances. The page is designed to evolve alongside the project, with future articles and announcements added as they occur.</p>
-
-                    <h2>Music, Releases and Visual Work</h2>
-                    <p>Fahwa's official website provides a comprehensive overview of his music catalog and visual output. The news section will document new releases, including singles, EPs, and longer-form projects, with contextual editorial coverage. Additionally, the page will feature information about music videos, cover art, and other visual elements that accompany the artist's sonic identity.</p>
-                    <p>All release-related news will include direct links to official streaming and purchase platforms, ensuring that audiences can access the music through legitimate channels. The goal is to create a seamless bridge between news, discovery, and listening.</p>
-
-                    <h2>Media, Interviews and Official Updates</h2>
-                    <p>As Fahwa continues to develop his public presence, the news page will serve as a repository for interviews, podcast appearances, and press features. Rather than relying on third-party reposts, the official site will provide original editorial context and direct links to verified media coverage.</p>
-                    <p>Official updates—including tour announcements, collaborations, or changes in creative direction—will be communicated with clarity and consistency through this channel. The site is intended to be the definitive source for any journalist, blogger, or fan seeking accurate information about the project.</p>
-
-                    <h2>A Direct Connection Between Fahwa and His Audience</h2>
-                    <p>One of the primary motivations behind the news hub is to reduce reliance on algorithm-driven social platforms, which often obscure or distort artist messaging. By owning and controlling the primary news channel, Fahwa can communicate directly with his audience without intermediaries.</p>
-                    <p>This direct connection also fosters a more meaningful relationship with listeners. The news page is not merely a bulletin board; it is a space where the artist's vision, context, and personality can be conveyed in a thoughtful, editorial format that reflects the care invested in the music itself.</p>
-
-                    <h2>Where to Find Fahwa Online</h2>
-                    <p>For the most reliable and up-to-date information, bookmark the official news page. Below are the primary official platforms associated with the Fahwa project:</p>
-
-                    <div class="official-links">
-                        <strong>Official Profiles</strong>
-                        <a href="https://musicbrainz.org/artist/85623249-de16-4582-ab32-a73b7aff093a" target="_blank" rel="noopener">MusicBrainz</a>
-                        <a href="https://www.tiktok.com/@fahwaofficial" target="_blank" rel="noopener">TikTok</a>
-                        <a href="https://www.instagram.com/fahwaofficial/" target="_blank" rel="noopener">Instagram</a>
-                        <a href="https://x.com/fahwaofficial" target="_blank" rel="noopener">X</a>
-                        <a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener">SoundCloud</a>
-                        <a href="https://www.youtube.com/@fahwaofficial" target="_blank" rel="noopener">YouTube</a>
-                        <a href="https://t.me/fahwaofficial" target="_blank" rel="noopener">Telegram</a>
-                    </div>
-
-                    <p>Additional music platform links are available on the main <a href="https://fahwaofficial.github.io/music.html">Music</a> page. For media inquiries or professional requests, please refer to the <a href="https://fahwaofficial.github.io/contact.html">Contact</a> page.</p>
-
-                    <h3>Looking Ahead</h3>
-                    <p>Fans and media are encouraged to check the news page regularly for upcoming announcements. The editorial team at Fahwa Official is committed to maintaining a high standard of clarity and accuracy, ensuring that the news section remains a trustworthy resource for anyone interested in the artist's journey.</p>
-                    <p>As the project develops, this page will grow to include detailed coverage of new releases, visual projects, collaborations, and any other significant milestones. The official website is not just a static archive—it is a living document of Fahwa's artistic evolution.</p>
-                </div>
-            </article>
-
-            <!-- About & Related -->
-            <section class="about-section">
-                <h2>About Fahwa</h2>
-                <p>Fahwa is an independent artist and producer whose work spans electronic, ambient, and experimental music. With a focus on immersive sound design and visual storytelling, the project continues to evolve through releases, collaborations, and multimedia presentations. The official website serves as the primary source for all verified information about the artist.</p>
-                <p>For full biography and career overview, visit the <a href="https://fahwaofficial.github.io/biography.html">Biography</a> page.</p>
-
-                <div class="related-pages">
-                    <a href="https://fahwaofficial.github.io/biography.html">Biography</a>
-                    <a href="https://fahwaofficial.github.io/music.html">Music</a>
-                    <a href="https://fahwaofficial.github.io/releases.html">Releases</a>
-                    <a href="https://fahwaofficial.github.io/videos.html">Videos</a>
-                    <a href="https://fahwaofficial.github.io/social.html">Social</a>
-                    <a href="https://fahwaofficial.github.io/contact.html">Contact</a>
-                </div>
-            </section>
-        </main>
-
-        <!-- Footer -->
-        <footer class="site-footer">
-            <div class="footer-links">
-                <a href="https://fahwaofficial.github.io/">Home</a>
-                <a href="https://fahwaofficial.github.io/news.html">News</a>
-                <a href="https://fahwaofficial.github.io/biography.html">Biography</a>
-                <a href="https://fahwaofficial.github.io/music.html">Music</a>
-                <a href="https://fahwaofficial.github.io/social.html">Social</a>
-            </div>
-            <p>&copy; 2026 Fahwa Official. All rights reserved.</p>
-            <p style="margin-top: 0.5rem; font-size: 0.75rem; color: #555;">Official source for news, music, and media.</p>
-        </footer>
-    </div>
+  <!-- Structured data: CollectionPage / WebPage (News Hub) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Fahwa Official News & Updates | Music, Releases, Media and Career",
+    "description": "Official news hub for Fahwa: music, releases, videos, interviews, and career updates. Read the latest announcements and stories.",
+    "url": "https://fahwaofficial.github.io/news.html",
+    "about": {
+      "@type": "Person",
+      "name": "Fahwa",
+      "sameAs": [
+        "https://musicbrainz.org/artist/85623249-de16-4582-ab32-a73b7aff093a",
+        "https://www.tiktok.com/@fahwaofficial",
+        "https://www.instagram.com/fahwaofficial/",
+        "https://x.com/fahwaofficial",
+        "https://soundcloud.com/fahwaofficial",
+        "https://www.youtube.com/@fahwaofficial",
+        "https://t.me/fahwaofficial"
+      ]
+    },
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "url": "https://fahwaofficial.github.io/news/fahwa-official-digital-presence.html"
+        }
+      ]
+    }
+  }
+  </script>
 </body>
 </html>
-``` 
