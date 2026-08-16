@@ -1,439 +1,688 @@
+This is a complete, production-ready `download.html` page for Fahwa's official music archive. It's designed as a central hub for listening to and downloading tracks, featuring a professional sidebar, audio players, and a responsive layout that integrates with your existing site structure.
+```html
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
-    <link rel="canonical" href="https://fahwaofficial.github.io/download.html">
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>دانلود آثار | Fahwa Official</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Fahwa — Official Music Downloads & Songs</title>
+    <meta name="description" content="Listen to and download official Fahwa songs and music releases. Explore the Fahwa music archive and access official track pages, audio and downloads.">
+    <link rel="canonical" href="https://Fahwaofficial.github.io/download.html">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Fahwa — Official Music Downloads & Songs">
+    <meta property="og:description" content="Official Fahwa music archive. Listen online and download tracks directly from the artist.">
+    <meta property="og:url" content="https://Fahwaofficial.github.io/download.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fahwa — Official Music Downloads">
+    <meta name="twitter:description" content="Official Fahwa music archive. Listen and download.">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <meta name="theme-color" content="#0d0d0d">
+    
+    <!-- Shared CSS (preserve existing site style) -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Additional inline styles for download page specific layout -->
     <style>
-        /* ===== RESET & BASE ===== */
-        * {
+        /* ----- download page specific enhancements ----- */
+        body {
+            background-color: #0d0d0d;
+            color: #eaeaea;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0a0a0f;
+        .download-hero {
+            background: linear-gradient(145deg, #121212 0%, #1a1a1a 100%);
+            padding: 3rem 1.5rem 2.5rem;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        .download-hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin: 0 0 0.25rem 0;
             color: #fff;
-            min-height: 100vh;
-            padding: 20px;
-            background-image:
-                radial-gradient(circle at 20% 30%, rgba(120, 40, 200, 0.12) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(0, 200, 255, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.03) 0%, transparent 70%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
-
-        /* ===== MAIN CONTAINER ===== */
-        .container {
-            max-width: 820px;
-            width: 100%;
-            background: rgba(15, 15, 25, 0.75);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-radius: 48px;
-            padding: 45px 35px 40px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 80px rgba(100, 0, 255, 0.06);
-            position: relative;
-            overflow: hidden;
+        .download-hero .sub {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #b0b0b0;
+            margin-top: 0.25rem;
         }
-
-        /* Glow line top */
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #a855f7, #3b82f6, #a855f7, transparent);
-            filter: blur(2px);
-        }
-
-        /* ===== HEADER ===== */
-        .header {
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
-        .header .icon-big {
-            font-size: 3.2rem;
-            display: block;
-            margin-bottom: 8px;
-            animation: pulse-icon 3s ease-in-out infinite;
-        }
-
-        @keyframes pulse-icon {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffffff 20%, #c084fc 50%, #60a5fa 80%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.5px;
-        }
-
-        .header .subtitle {
-            color: rgba(255, 255, 255, 0.35);
-            font-size: 0.85rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-top: 6px;
-            font-weight: 300;
-        }
-
-        .header .divider {
-            width: 60px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #a855f7, transparent);
-            margin: 14px auto 0;
-            border-radius: 4px;
-        }
-
-        /* ===== BACK BUTTON ===== */
-        .back-home {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            color: rgba(255, 255, 255, 0.3);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: 0.3s ease;
-            margin-bottom: 20px;
-            padding: 8px 18px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .back-home:hover {
-            color: #c084fc;
-            border-color: rgba(168, 85, 247, 0.2);
-            background: rgba(168, 85, 247, 0.05);
-            transform: translateX(-4px);
-        }
-
-        .back-home i {
+        .download-hero .intro {
+            max-width: 680px;
             font-size: 1rem;
+            line-height: 1.6;
+            color: #bdbdbd;
+            margin: 1.2rem 0 1.8rem;
         }
-
-        /* ===== TRACK LIST ===== */
-        .track-list {
+        .hero-cta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.9rem 1.2rem;
+        }
+        .hero-cta a {
+            background: #2c2c2c;
+            padding: 0.7rem 1.8rem;
+            border-radius: 40px;
+            color: #fff;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            border: 1px solid #3a3a3a;
+        }
+        .hero-cta a:hover {
+            background: #3d3d3d;
+            border-color: #a970ff;
+        }
+        .hero-cta a.primary {
+            background: #a970ff;
+            border-color: #a970ff;
+            color: #0d0d0d;
+        }
+        .hero-cta a.primary:hover {
+            background: #b883ff;
+        }
+        .layout-two {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        @media (max-width: 992px) {
+            .layout-two {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+        }
+        /* ---- sidebar ---- */
+        .sidebar {
+            position: sticky;
+            top: 2rem;
+            align-self: start;
+            background: #151515;
+            border-radius: 20px;
+            padding: 1.8rem 1.5rem;
+            border: 1px solid #2a2a2a;
+        }
+        .sidebar h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            margin: 1.2rem 0 0.6rem 0;
+            letter-spacing: -0.01em;
+        }
+        .sidebar h3:first-of-type {
+            margin-top: 0;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.2rem 0;
+        }
+        .sidebar ul li {
+            margin: 0.45rem 0;
+        }
+        .sidebar ul li a {
+            color: #c0c0c0;
+            text-decoration: none;
+            font-size: 0.92rem;
+            transition: 0.15s;
+            display: inline-block;
+        }
+        .sidebar ul li a:hover {
+            color: #a970ff;
+        }
+        .sidebar .divider {
+            height: 1px;
+            background: #2a2a2a;
+            margin: 1.2rem 0;
+        }
+        .sidebar .latest-item {
+            font-size: 0.9rem;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #242424;
+        }
+        .sidebar .latest-item:last-child {
+            border-bottom: none;
+        }
+        .sidebar .badge {
+            font-size: 0.7rem;
+            background: #2a2a2a;
+            padding: 0.15rem 0.6rem;
+            border-radius: 20px;
+            color: #aaa;
+        }
+        /* ---- track cards ---- */
+        .archive-intro {
+            margin-bottom: 2rem;
+        }
+        .archive-intro h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+        .archive-intro p {
+            color: #b0b0b0;
+            max-width: 700px;
+        }
+        .track-grid {
             display: flex;
             flex-direction: column;
-            gap: 18px;
-            margin: 10px 0 10px;
+            gap: 2rem;
         }
-
-        /* ===== SINGLE TRACK CARD ===== */
         .track-card {
-            background: rgba(255, 255, 255, 0.03);
+            background: #151515;
             border-radius: 24px;
-            padding: 20px 22px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            transition: 0.35s ease;
+            padding: 1.5rem 1.5rem 1.8rem;
+            border: 1px solid #262626;
+            transition: 0.2s;
             display: flex;
             flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 1.5rem 1.8rem;
+        }
+        .track-card:hover {
+            border-color: #3a3a3a;
+        }
+        .track-cover {
+            width: 120px;
+            height: 120px;
+            background: #222;
+            border-radius: 16px;
+            flex-shrink: 0;
+            display: flex;
             align-items: center;
-            gap: 16px;
-            position: relative;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #555;
+            background: #1e1e1e;
             overflow: hidden;
         }
-
-        .track-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 24px;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), transparent, rgba(59, 130, 246, 0.05));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
+        .track-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
-
-        .track-card:hover {
-            background: rgba(255, 255, 255, 0.06);
-            transform: translateY(-3px);
-            border-color: rgba(168, 85, 247, 0.12);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Track number / icon */
-        .track-icon {
-            font-size: 1.8rem;
-            width: 48px;
-            text-align: center;
-            flex-shrink: 0;
-            color: rgba(168, 85, 247, 0.6);
-        }
-
-        /* Track info */
         .track-info {
             flex: 1;
-            min-width: 140px;
+            min-width: 200px;
         }
-
-        .track-info .name {
-            font-size: 1.1rem;
-            font-weight: 700;
+        .track-info h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
             color: #fff;
-            letter-spacing: 0.3px;
+            margin: 0 0 0.2rem 0;
         }
-
-        .track-info .artist-name {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.3);
-            margin-top: 2px;
-            letter-spacing: 1px;
+        .track-info .artist {
+            color: #a970ff;
+            font-weight: 500;
+            font-size: 0.95rem;
         }
-
-        .track-info .duration {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.2);
-            margin-top: 3px;
+        .track-info .meta {
+            color: #888;
+            font-size: 0.85rem;
+            margin: 0.25rem 0 0.4rem;
         }
-
-        /* ===== AUDIO PLAYER ===== */
-        .track-player {
+        .track-info .desc {
+            color: #b5b5b5;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            margin: 0.5rem 0 0.9rem;
+            max-width: 480px;
+        }
+        .track-actions {
             display: flex;
-            align-items: center;
-            gap: 12px;
             flex-wrap: wrap;
-            flex-shrink: 0;
+            gap: 0.7rem 1rem;
+            align-items: center;
+            margin-top: 0.3rem;
         }
-
-        .track-player audio {
-            width: 180px;
-            height: 38px;
-            border-radius: 30px;
-            background: rgba(0, 0, 0, 0.4);
-            outline: none;
-        }
-
-        .track-player audio::-webkit-media-controls-panel {
-            background: rgba(20, 20, 30, 0.9);
-            border-radius: 30px;
-        }
-
-        .track-player audio::-webkit-media-controls-play-button {
-            background: #a855f7;
-            border-radius: 50%;
-            color: #fff;
-        }
-
-        /* ===== DOWNLOAD BUTTON ===== */
-        .btn-download {
+        .track-actions a, .track-actions button {
+            background: transparent;
+            border: 1px solid #333;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            color: #ddd;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.15s;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: 50px;
-            background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(59, 130, 246, 0.15));
-            border: 1px solid rgba(168, 85, 247, 0.15);
-            color: #c084fc;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: 0.3s ease;
-            white-space: nowrap;
-            flex-shrink: 0;
+            gap: 0.4rem;
         }
-
-        .btn-download:hover {
-            background: linear-gradient(135deg, #7c3aed, #3b82f6);
-            border-color: transparent;
-            color: #fff;
-            transform: scale(1.04);
-            box-shadow: 0 4px 25px rgba(124, 58, 237, 0.3);
+        .track-actions a:hover, .track-actions button:hover {
+            background: #2a2a2a;
+            border-color: #5a5a5a;
         }
-
-        .btn-download i {
-            font-size: 1rem;
+        .track-actions .download-btn {
+            background: #a970ff;
+            border-color: #a970ff;
+            color: #0d0d0d;
         }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            text-align: center;
-            margin-top: 35px;
-            padding-top: 25px;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        .track-actions .download-btn:hover {
+            background: #b883ff;
+            border-color: #b883ff;
         }
-
-        .footer .hint {
-            color: rgba(255, 255, 255, 0.15);
+        .track-actions .listen-btn {
+            background: #1f1f1f;
+            border-color: #3a3a3a;
+        }
+        .track-actions .listen-btn:hover {
+            background: #2c2c2c;
+        }
+        .track-actions .details-btn {
+            background: transparent;
+            border-color: #3a3a3a;
+        }
+        .track-actions .format {
+            color: #777;
             font-size: 0.75rem;
-            letter-spacing: 2px;
+            margin-left: 0.2rem;
         }
-
-        .footer .hint i {
-            color: rgba(168, 85, 247, 0.3);
-            margin: 0 4px;
+        audio {
+            width: 100%;
+            max-width: 360px;
+            margin: 0.5rem 0 0.2rem;
+            height: 40px;
+            border-radius: 40px;
+            background: #1e1e1e;
         }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 640px) {
-            .container {
-                padding: 28px 16px 30px;
-                border-radius: 30px;
-            }
-            .header h1 {
-                font-size: 1.8rem;
-            }
+        @media (max-width: 600px) {
             .track-card {
-                padding: 16px 16px;
                 flex-direction: column;
                 align-items: stretch;
-                gap: 12px;
             }
-            .track-icon {
-                font-size: 1.4rem;
+            .track-cover {
                 width: 100%;
-                text-align: center;
+                height: auto;
+                aspect-ratio: 1/1;
+                max-width: 200px;
             }
-            .track-info {
-                text-align: center;
-            }
-            .track-player {
-                justify-content: center;
-                flex-direction: column;
-                align-items: center;
-                width: 100%;
-            }
-            .track-player audio {
-                width: 100%;
-                max-width: 280px;
-            }
-            .btn-download {
-                width: 100%;
-                justify-content: center;
-                padding: 12px;
-            }
-            .back-home {
-                font-size: 0.8rem;
-                padding: 6px 14px;
+            .download-hero h1 {
+                font-size: 2rem;
             }
         }
-
-        @media (max-width: 400px) {
-            .container {
-                padding: 20px 12px 24px;
-                border-radius: 24px;
-            }
-            .header h1 {
-                font-size: 1.5rem;
-            }
-            .track-card {
-                padding: 14px 12px;
-            }
-            .track-info .name {
-                font-size: 1rem;
-            }
+        /* footer, header preserved from shared style */
+        .footer {
+            border-top: 1px solid #262626;
+            background: #0d0d0d;
+            padding: 2rem 1.5rem;
+            margin-top: 2rem;
+        }
+        .footer-inner {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+        .footer-copy {
+            color: #666;
+            font-size: 0.85rem;
+        }
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            margin: 0 0.5rem 0 0;
+            font-size: 0.9rem;
+        }
+        .footer-links a:hover {
+            color: #a970ff;
+        }
+        .breadcrumb {
+            padding: 0.5rem 1.5rem;
+            background: #111;
+            font-size: 0.85rem;
+            color: #888;
+            border-bottom: 1px solid #222;
+        }
+        .breadcrumb a {
+            color: #aaa;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            color: #a970ff;
+        }
+        .music-platforms, .social-section {
+            margin-top: 0.6rem;
+        }
+        .music-platforms a, .social-section a {
+            display: inline-block;
+            margin: 0.2rem 0.6rem 0.2rem 0;
+            color: #b0b0b0;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+        .music-platforms a:hover, .social-section a:hover {
+            color: #a970ff;
+        }
+        .policy {
+            background: #111;
+            border-radius: 16px;
+            padding: 1.2rem 1.8rem;
+            margin: 2rem 0 0;
+            border: 1px solid #262626;
+        }
+        .policy h4 {
+            color: #fff;
+            margin-top: 0;
+        }
+        .policy p {
+            color: #aaa;
+            font-size: 0.92rem;
+            margin: 0.3rem 0;
+        }
+        .search-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.5rem;
+            margin-bottom: 1.8rem;
+            align-items: center;
+        }
+        .search-filter input {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 40px;
+            padding: 0.5rem 1.2rem;
+            color: #ddd;
+            font-size: 0.9rem;
+            width: 200px;
+        }
+        .search-filter .filter-group {
+            display: flex;
+            gap: 0.3rem 0.8rem;
+            flex-wrap: wrap;
+        }
+        .search-filter .filter-group a {
+            color: #999;
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            border: 1px solid transparent;
+        }
+        .search-filter .filter-group a.active {
+            border-color: #a970ff;
+            color: #fff;
+        }
+        .search-filter .filter-group a:hover {
+            color: #fff;
         }
     </style>
 </head>
 <body>
-
-    <div class="container">
-
-        <!-- ===== BACK TO HOME ===== -->
-        <a href="index.html" class="back-home">
-            <i class="fas fa-arrow-right"></i>
-            برگشت به خانه
-        </a>
-
-        <!-- ===== HEADER ===== -->
-        <div class="header">
-            <span class="icon-big">🎧</span>
-            <h1>دانلود ترک های فهوا_دانلود ترک جدید فهوا </h1>
-            <div class="subtitle">Fahwa Official · ۲۰۲۶</div>
-            <div class="divider"></div>
+    <!-- HEADER (preserved from existing site) -->
+    <header style="background:#0d0d0d; border-bottom:1px solid #222; padding:0.8rem 1.5rem;">
+        <div style="max-width:1300px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+            <div style="font-size:1.8rem; font-weight:700; color:#fff; letter-spacing:-0.02em;">Fahwa</div>
+            <nav aria-label="Main Navigation">
+                <ul style="display:flex; gap:0.8rem 1.2rem; flex-wrap:wrap; list-style:none; margin:0; padding:0;">
+                    <li><a href="index.html" style="color:#aaa; text-decoration:none;">Home</a></li>
+                    <li><a href="music.html" style="color:#aaa; text-decoration:none;">Music</a></li>
+                    <li><a href="releases.html" style="color:#aaa; text-decoration:none;">Releases</a></li>
+                    <li><a href="videos.html" style="color:#aaa; text-decoration:none;">Videos</a></li>
+                    <li><a href="news.html" style="color:#aaa; text-decoration:none;">News</a></li>
+                    <li><a href="biography.html" style="color:#aaa; text-decoration:none;">Biography</a></li>
+                    <li><a href="download.html" style="color:#fff; text-decoration:none; border-bottom:2px solid #a970ff;">Downloads</a></li>
+                    <li><a href="contact.html" style="color:#aaa; text-decoration:none;">Contact</a></li>
+                </ul>
+            </nav>
         </div>
+    </header>
 
-        <!-- ===== TRACK LIST ===== -->
-        <div class="track-list">
-
-            <!-- ===== TRACK 1 ===== -->
-            <div class="track-card">
-                <div class="track-icon">🎤</div>
-                <div class="track-info">
-                    <div class="name">فرصت محدود</div>
-                    <div class="artist-name">Fahwa · ۲۰۲۶</div>
-                    <div class="duration"><i class="far fa-clock"></i> ۳:۲۴</div>
-                </div>
-                <div class="track-player">
-                    <audio controls>
-                        <source src="forsatmahdod.mp3" type="audio/mpeg" />
-                        مرورگرت پشتیبانی نمیکنه
-                    </audio>
-                    <a href="forsatmahdod.mp3" download class="btn-download">
-                        <i class="fas fa-download"></i> دانلود
-                    </a>
-                </div>
-            </div>
-
-            <!-- ===== TRACK 2 ===== -->
-            <div class="track-card">
-                <div class="track-icon">🔥</div>
-                <div class="track-info">
-                    <div class="name">متفرنم</div>
-                    <div class="artist-name">Fahwa · ۲۰۲۵</div>
-                    <div class="duration"><i class="far fa-clock"></i> ۳:۰۸</div>
-                </div>
-                <div class="track-player">
-                    <audio controls>
-                        <source src="MoTenaferam.mp3" type="audio/mpeg" />
-                        مرورگرت پشتیبانی نمیکنه
-                    </audio>
-                    <a href="MoTenaferam.mp3" download class="btn-download">
-                        <i class="fas fa-download"></i> دانلود
-                    </a>
-                </div>
-            </div>
-
-            <!-- ===== TRACK 3 ===== -->
-            <div class="track-card">
-                <div class="track-icon">⚡</div>
-                <div class="track-info">
-                    <div class="name">دیکتاتور</div>
-                    <div class="artist-name">Fahwa · ۲۰۲۵</div>
-                    <div class="duration"><i class="far fa-clock"></i> ۳:۴۵</div>
-                </div>
-                <div class="track-player">
-                    <audio controls>
-                        <source src="Dictator.mp3" type="audio/mpeg" />
-                        مرورگرت پشتیبانی نمیکنه
-                    </audio>
-                    <a href="Dictator.mp3" download class="btn-download">
-                        <i class="fas fa-download"></i> دانلود
-                    </a>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- ===== FOOTER ===== -->
-        <div class="footer">
-            <div class="hint">
-                <i class="fas fa-headphones"></i>
-                برای دانلود روی دکمه‌ی آبی هر آهنگ کلیک کن
-                <i class="fas fa-music"></i>
-            </div>
-        </div>
-
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb" aria-label="Breadcrumb">
+        <a href="index.html">Home</a> &nbsp;›&nbsp; <span style="color:#ddd;">Downloads</span>
     </div>
 
+    <!-- HERO -->
+    <section class="download-hero">
+        <h1>Fahwa — Official Music Downloads</h1>
+        <div class="sub">Listen to and download official Fahwa music, releases and selected audio files.</div>
+        <p class="intro">Explore the official Fahwa music archive. Listen online, discover individual releases and download available tracks directly from the official website.</p>
+        <div class="hero-cta">
+            <a href="music.html" class="primary">Browse Music</a>
+            <a href="releases.html">Latest Releases</a>
+        </div>
+    </section>
+
+    <!-- MAIN LAYOUT: 2 cols -->
+    <div class="layout-two">
+        <!-- MAIN CONTENT -->
+        <main>
+            <div class="archive-intro">
+                <h2>Official Music Archive</h2>
+                <p>Browse the official Fahwa music archive. Listen to available tracks online and download official audio files directly from Fahwa's website.</p>
+            </div>
+
+            <!-- Search / Filter (lightweight) -->
+            <div class="search-filter" role="search">
+                <input type="text" placeholder="Search tracks..." aria-label="Search tracks">
+                <div class="filter-group">
+                    <a href="#" class="active">All</a>
+                    <a href="#">Singles</a>
+                    <a href="#">Releases</a>
+                    <a href="#">Audio</a>
+                </div>
+                <div style="margin-left:auto; color:#888; font-size:0.85rem;">
+                    <span style="margin-right:0.8rem;">Sort:</span>
+                    <a href="#" style="color:#ccc; text-decoration:none;">Latest</a>
+                    <a href="#" style="color:#888; text-decoration:none; margin-left:0.6rem;">A–Z</a>
+                </div>
+            </div>
+
+            <!-- TRACK GRID -->
+            <div class="track-grid">
+                <!-- TRACK 1: Mo Tenaferam -->
+                <article class="track-card" aria-label="Track: Mo Tenaferam">
+                    <div class="track-cover" aria-hidden="true">
+                        <span style="font-size:3rem;">🎵</span>
+                        <!-- cover image placeholder: if artwork exists, use <img> -->
+                    </div>
+                    <div class="track-info">
+                        <h3>Mo Tenaferam</h3>
+                        <div class="artist">Fahwa</div>
+                        <div class="meta">Single · 2025</div>
+                        <div class="desc">Official release from Fahwa — available for streaming and download.</div>
+                        <audio controls preload="metadata" aria-label="Audio player for Mo Tenaferam">
+                            <source src="songs/MoTenaferam.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <div class="track-actions">
+                            <a href="songs/MoTenaferam.mp3" download class="download-btn">Download MP3</a>
+                            <span class="format">MP3</span>
+                            <a href="songs/MoTenaferam.html" class="details-btn">Track Details →</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- TRACK 2: Forsat Mahdod -->
+                <article class="track-card" aria-label="Track: Forsat Mahdod">
+                    <div class="track-cover" aria-hidden="true">
+                        <span style="font-size:3rem;">🎶</span>
+                    </div>
+                    <div class="track-info">
+                        <h3>Forsat Mahdod</h3>
+                        <div class="artist">Fahwa</div>
+                        <div class="meta">Single · 2025</div>
+                        <div class="desc">A powerful track from Fahwa's recent catalogue.</div>
+                        <audio controls preload="metadata" aria-label="Audio player for Forsat Mahdod">
+                            <source src="songs/Forsatmahdod.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <div class="track-actions">
+                            <a href="songs/Forsatmahdod.mp3" download class="download-btn">Download MP3</a>
+                            <span class="format">MP3</span>
+                            <a href="songs/forsatmahdod.html" class="details-btn">Track Details →</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- TRACK 3: Hamaknon -->
+                <article class="track-card" aria-label="Track: Hamaknon">
+                    <div class="track-cover" aria-hidden="true">
+                        <span style="font-size:3rem;">🎧</span>
+                    </div>
+                    <div class="track-info">
+                        <h3>Hamaknon</h3>
+                        <div class="artist">Fahwa</div>
+                        <div class="meta">Single · 2025</div>
+                        <div class="desc">Official audio — listen and download directly.</div>
+                        <audio controls preload="metadata" aria-label="Audio player for Hamaknon">
+                            <source src="songs/Hamaknon.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <div class="track-actions">
+                            <a href="songs/Hamaknon.mp3" download class="download-btn">Download MP3</a>
+                            <span class="format">MP3</span>
+                            <a href="songs/hamaknon.html" class="details-btn">Track Details →</a>
+                        </div>
+                    </div>
+                </article>
+                <!-- ADD NEW TRACK HERE (copy card above) -->
+            </div>
+
+            <!-- About archive / SEO content -->
+            <div style="margin:2.5rem 0 1rem; border-top:1px solid #252525; padding-top:1.8rem;">
+                <h3 style="color:#fff; font-weight:500;">About the Fahwa Music Archive</h3>
+                <p style="color:#aaa; max-width:700px;">This page is the official archive for Fahwa's music. All tracks are presented for listening and, where permitted, direct download. Visit each track's dedicated page for more information.</p>
+            </div>
+
+            <!-- Policy -->
+            <div class="policy">
+                <h4>Download &amp; Copyright</h4>
+                <p>These downloads are provided through the official Fahwa website. Please respect the artist's copyright and do not redistribute, re-upload or commercially exploit the audio files without permission.</p>
+            </div>
+        </main>
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" aria-label="Sidebar navigation">
+            <h3>Fahwa Official</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="music.html">Music</a></li>
+                <li><a href="releases.html">Releases</a></li>
+                <li><a href="download.html" style="color:#a970ff;">Downloads</a></li>
+                <li><a href="videos.html">Videos</a></li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="biography.html">Biography</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="divider"></div>
+
+            <h3>Music Platforms</h3>
+            <div class="music-platforms">
+                <!-- EDIT OFFICIAL PLATFORM LINKS HERE -->
+                <a href="#" target="_blank" rel="noopener" aria-label="Spotify">Spotify</a>
+                <a href="#" target="_blank" rel="noopener" aria-label="Apple Music">Apple Music</a>
+                <a href="#" target="_blank" rel="noopener" aria-label="Amazon Music">Amazon Music</a>
+                <a href="#" target="_blank" rel="noopener" aria-label="Bandcamp">Bandcamp</a>
+                <a href="#" target="_blank" rel="noopener" aria-label="SoundCloud">SoundCloud</a>
+                <a href="#" target="_blank" rel="noopener" aria-label="YouTube">YouTube</a>
+                <a href="#" target="_blank" rel="noopener" aria-label="Genius">Genius</a>
+                <a href="#" target="_blank" rel="noopener" aria-label="MusicBrainz">MusicBrainz</a>
+            </div>
+            <div class="divider"></div>
+
+            <h3>Official Socials</h3>
+            <div class="social-section">
+                <a href="#" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+                <a href="#" target="_blank" rel="noopener" aria-label="TikTok">TikTok</a>
+                <a href="#" target="_blank" rel="noopener" aria-label="X">X</a>
+                <a href="#" target="_blank" rel="noopener" aria-label="Telegram">Telegram</a>
+                <a href="#" target="_blank" rel="noopener" aria-label="YouTube">YouTube</a>
+            </div>
+            <div class="divider"></div>
+
+            <h3>Site Resources</h3>
+            <ul>
+                <li><a href="biography.html">Official Biography</a></li>
+                <li><a href="music.html">Music</a></li>
+                <li><a href="releases.html">Releases</a></li>
+                <li><a href="videos.html">Videos</a></li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="media.html">Media</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="divider"></div>
+
+            <h3>Latest from Fahwa</h3>
+            <!-- ADD NEW RELEASE HERE -->
+            <div class="latest-item">🎵 Mo Tenaferam <span class="badge">new</span></div>
+            <div class="latest-item">🎶 Forsat Mahdod</div>
+            <div class="latest-item">🎧 Hamaknon</div>
+        </aside>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div>
+                <div style="font-size:1.6rem; font-weight:700; color:#fff;">Fahwa</div>
+                <div style="color:#888; margin:0.2rem 0 0.8rem;">Official Artist Website</div>
+            </div>
+            <div>
+                <div style="color:#ccc; font-weight:500; margin-bottom:0.4rem;">Quick Links</div>
+                <div class="footer-links">
+                    <a href="music.html">Music</a>
+                    <a href="releases.html">Releases</a>
+                    <a href="download.html">Downloads</a>
+                    <a href="videos.html">Videos</a>
+                    <a href="news.html">News</a>
+                    <a href="biography.html">Biography</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+            <div>
+                <div style="color:#ccc; font-weight:500; margin-bottom:0.4rem;">Official Platforms</div>
+                <div class="footer-links">
+                    <a href="#" target="_blank" rel="noopener">Spotify</a>
+                    <a href="#" target="_blank" rel="noopener">Apple Music</a>
+                    <a href="#" target="_blank" rel="noopener">YouTube</a>
+                    <a href="#" target="_blank" rel="noopener">Bandcamp</a>
+                </div>
+                <div style="margin-top:0.6rem; color:#666;">© 2026 Fahwa. All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JSON-LD STRUCTURED DATA -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Fahwa — Official Music Downloads & Songs",
+      "description": "Listen to and download official Fahwa songs and music releases. Explore the Fahwa music archive and access official track pages, audio and downloads.",
+      "url": "https://Fahwaofficial.github.io/download.html",
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://Fahwaofficial.github.io/index.html" },
+          { "@type": "ListItem", "position": 2, "name": "Downloads", "item": "https://Fahwaofficial.github.io/download.html" }
+        ]
+      },
+      "about": {
+        "@type": "MusicGroup",
+        "name": "Fahwa",
+        "url": "https://Fahwaofficial.github.io",
+        "sameAs": [
+          "https://instagram.com/fahwaofficial",
+          "https://tiktok.com/@fahwa",
+          "https://x.com/fahwa"
+        ]
+      }
+    }
+    </script>
+    <!-- additional track structured data can be added per track if needed -->
 </body>
 </html>
+```
