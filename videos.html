@@ -1,1 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Fahwa — Official Videos | Music Videos, Visualizers & Performances</title>
+  <meta name="description" content="Watch Fahwa's official music videos, visualizers, performances, and latest video releases. Explore Fahwa's official YouTube and Instagram video content.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://fahwaofficial.github.io/videos.html">
+  <meta name="theme-color" content="#0a0a0a">
 
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fahwaofficial.github.io/videos.html">
+  <meta property="og:title" content="Fahwa — Official Videos | Music Videos, Visualizers & Performances">
+  <meta property="og:description" content="Watch Fahwa's official music videos, visualizers, performances, and latest video releases. Explore Fahwa's official YouTube and Instagram video content.">
+  <meta property="og:image" content="hero.jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="Fahwa Official">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fahwa — Official Videos | Music Videos, Visualizers & Performances">
+  <meta name="twitter:description" content="Watch Fahwa's official music videos, visualizers, performances, and latest video releases.">
+  <meta name="twitter:image" content="hero.jpeg">
+
+  <!-- Favicon & web app -->
+  <link rel="icon" href="fahwafavicon.jpg" sizes="any">
+  <link rel="apple-touch-icon" href="fahwafavicon.jpg">
+
+  <!-- JSON-LD: BreadcrumbList + WebPage + MusicGroup + VideoObject (placeholders) -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://fahwaofficial.github.io/index.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Videos",
+          "item": "https://fahwaofficial.github.io/videos.html"
+        }
+      ]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Fahwa — Official Videos",
+      "description": "Watch Fahwa's official music videos, visualizers, performances, and video content.",
+      "url": "https://fahwaofficial.github.io/videos.html",
+      "isPartOf": {
+        "@type": "MusicGroup",
+        "name": "Fahwa",
+        "url": "https://fahwaofficial.github.io"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MusicGroup",
+      "name": "Fahwa",
+      "url": "https://fahwaofficial.github.io",
+      "sameAs": [
+        "https://www.youtube.com/@fahwaofficial",
+        "https://www.instagram.com/fahwaofficial/",
+        "https://x.com/fahwaofficial",
+        "https://soundcloud.com/fahwaofficial",
+        "https://musicbrainz.org/artist/85623249-de16-4582-ab32-a73b7aff093a",
+        "https://www.tiktok.com/@fahwaofficial",
+        "https://t.me/fahwaofficial"
+      ]
+    }
+  </script>
+  <!-- VideoObject placeholder – to be filled with real data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": "Fahwa Official Music Video",
+      "description": "Official music video by Fahwa.",
+      "thumbnailUrl": "fahwafavicon.jpg",
+      "uploadDate": "2026-01-01",
+      "embedUrl": "https://www.youtube.com/embed/YOUTUBE_FEATURED_ID"
+    }
+  </script>
+
+  <style>
+    /* RESET & BASE */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    :root {
+      --bg: #0a0a0a;
+      --surface: #121212;
+      --surface2: #1e1e1e;
+      --text: #f0f0f0;
+      --textMuted: #b0b0b0;
+      --accent: #d4a373;
+      --accentHover: #e0b88a;
+      --border: #2a2a2a;
+      --radius: 12px;
+      --transition: 0.2s ease;
+    }
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      padding: 0 1rem;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+    a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    a:hover {
+      color: var(--accent);
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+    /* HEADER / NAV */
+    header {
+      padding: 1.2rem 0 0.8rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 10;
+      backdrop-filter: blur(4px);
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .logo img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    nav a {
+      padding: 0.3rem 0;
+      border-bottom: 2px solid transparent;
+      transition: border-color var(--transition);
+    }
+    nav a.active {
+      border-bottom-color: var(--accent);
+      color: var(--accent);
+    }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .hamburger span {
+      width: 26px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: 0.2s;
+    }
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding-top: 1rem;
+      }
+      nav.open {
+        display: flex;
+      }
+      .hamburger {
+        display: flex;
+      }
+    }
+
+    /* HERO */
+    .hero {
+      margin: 2rem 0 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      background: var(--surface);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .hero-image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      background: #1a1a1a;
+    }
+    .hero-content {
+      padding: 1.5rem 2rem 2rem;
+    }
+    .hero-content h1 {
+      font-size: 2.6rem;
+      font-weight: 600;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+    .hero-content h1 span {
+      color: var(--accent);
+    }
+    .hero-content p {
+      max-width: 600px;
+      color: var(--textMuted);
+      margin: 0.8rem 0 1.8rem;
+      font-size: 1.1rem;
+    }
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface2);
+      padding: 0.7rem 1.6rem;
+      border-radius: 40px;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      transition: all var(--transition);
+      cursor: pointer;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0a0a0a;
+    }
+    .btn-primary:hover {
+      background: var(--accentHover);
+      border-color: var(--accentHover);
+      color: #0a0a0a;
+    }
+    .btn-outline {
+      background: transparent;
+    }
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .scroll-hint {
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+      color: var(--textMuted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .scroll-hint::after {
+      content: '↓';
+      font-size: 1.2rem;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* SECTIONS */
+    section {
+      margin: 4rem 0;
+    }
+    .section-title {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section-sub {
+      color: var(--textMuted);
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .video-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform var(--transition);
+    }
+    .video-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+    .video-thumb {
+      position: relative;
+      aspect-ratio: 16/9;
+      background: #1a1a1a;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .video-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .play-icon {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.4);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .video-thumb:hover .play-icon {
+      opacity: 1;
+    }
+    .play-icon svg {
+      width: 48px;
+      height: 48px;
+      fill: white;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+    }
+    .video-meta {
+      padding: 1rem 1.2rem 1.2rem;
+    }
+    .video-meta h3 {
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+    .video-meta .cat {
+      display: inline-block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--accent);
+      background: rgba(212, 163, 115, 0.12);
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      margin: 0.4rem 0 0.3rem;
+    }
+    .video-meta p {
+      color: var(--textMuted);
+      font-size: 0.9rem;
+      margin: 0.3rem 0 0.8rem;
+    }
+    .video-meta .watch-link {
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .video-meta .watch-link:hover {
+      color: var(--accentHover);
+    }
+
+    /* EMBED WRAPPER */
+    .embed-wrapper {
+      position: relative;
+      aspect-ratio: 16/9;
+      background: #000;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    .embed-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .featured-embed {
+      aspect-ratio: 16/9;
+      background: #000;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .featured-embed iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* PLATFORM GRID */
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .platform-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 0.8rem;
+      text-align: center;
+      transition: all var(--transition);
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    .platform-card:hover {
+      border-color: var(--accent);
+      background: var(--surface2);
+    }
+    .platform-card .official {
+      display: block;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: var(--accent);
+      margin-top: 0.2rem;
+    }
+
+    /* BREADCRUMB */
+    .breadcrumb {
+      font-size: 0.85rem;
+      color: var(--textMuted);
+      padding: 0.5rem 0 1.5rem;
+    }
+    .breadcrumb a {
+      color: var(--textMuted);
+    }
+    .breadcrumb a:hover {
+      color: var(--accent);
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0 2rem;
+      margin-top: 3rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    footer .footer-col {
+      max-width: 260px;
+    }
+    footer .footer-col h4 {
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      font-size: 1rem;
+    }
+    footer .footer-col a {
+      display: block;
+      color: var(--textMuted);
+      font-size: 0.9rem;
+      padding: 0.15rem 0;
+    }
+    footer .footer-col a:hover {
+      color: var(--accent);
+    }
+    footer .copy {
+      width: 100%;
+      text-align: center;
+      color: var(--textMuted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1.8rem;
+      margin-top: 0.8rem;
+    }
+
+    /* RESPONSIVE TWEAKS */
+    @media (max-width: 600px) {
+      .hero-content {
+        padding: 1rem 1.2rem 1.5rem;
+      }
+      .hero-content h1 {
+        font-size: 2rem;
+      }
+      .section-title {
+        font-size: 1.6rem;
+      }
+      .video-grid {
+        grid-template-columns: 1fr;
+      }
+      .platform-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      footer {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+    }
+    @media (min-width: 769px) {
+      nav {
+        display: flex !important;
+      }
+    }
+
+    /* UTILITY */
+    .text-muted {
+      color: var(--textMuted);
+    }
+    .mt-1 { margin-top: 1rem; }
+    .mb-1 { margin-bottom: 1rem; }
+    .gap-1 { gap: 1rem; }
+    .flex { display: flex; align-items: center; }
+    .flex-wrap { flex-wrap: wrap; }
+
+    /* Instagram embed container */
+    .insta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .insta-item {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      padding: 0.8rem;
+    }
+    .insta-item .insta-placeholder {
+      aspect-ratio: 1/1;
+      background: #1a1a1a;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--textMuted);
+      font-size: 0.9rem;
+      border: 1px dashed var(--border);
+      margin-bottom: 0.6rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="fahwafavicon.jpg" alt="Fahwa favicon" width="32" height="32" loading="lazy" decoding="async">
+      Fahwa
+    </div>
+    <button class="hamburger" aria-label="Toggle navigation" onclick="document.querySelector('nav').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="music.html">Music</a>
+      <a href="releases.html">Releases</a>
+      <a href="videos.html" class="active">Videos</a>
+      <a href="media.html">Media</a>
+      <a href="news.html">News</a>
+      <a href="biography.html">Biography</a>
+      <a href="social.html">Social</a>
+      <a href="download.html">Downloads</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> &nbsp;/&nbsp; <span>Videos</span>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <img src="hero.jpeg" alt="Fahwa official artist hero image" class="hero-image" width="1200" height="675" loading="eager" decoding="async">
+    <div class="hero-content">
+      <h1><span>Official</span> Videos</h1>
+      <p>Watch the official music videos, visualizers, performances, and video content by Fahwa.</p>
+      <div class="hero-cta">
+        <a href="https://www.youtube.com/@fahwaofficial" class="btn btn-primary" target="_blank" rel="noopener">▶ Watch on YouTube</a>
+        <a href="https://www.instagram.com/fahwaofficial/" class="btn btn-outline" target="_blank" rel="noopener">📸 Instagram</a>
+      </div>
+      <div class="scroll-hint">Explore videos</div>
+    </div>
+  </section>
+
+  <!-- FEATURED VIDEO -->
+  <section>
+    <h2 class="section-title">⭐ Featured Video</h2>
+    <p class="section-sub">Official music video — watch the latest release</p>
+    <div class="featured-embed">
+      <!-- Replace YOUTUBE_FEATURED_ID with actual ID -->
+      <iframe src="https://www.youtube.com/embed/YOUTUBE_FEATURED_ID" 
+              title="Fahwa featured official music video" 
+              allowfullscreen 
+              loading="lazy"
+              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+      </iframe>
+    </div>
+  </section>
+
+  <!-- OFFICIAL YOUTUBE VIDEOS -->
+  <section>
+    <h2 class="section-title">📹 Official YouTube Videos</h2>
+    <p class="section-sub">Music videos, visualizers, live performances & more</p>
+    <div class="video-grid" id="youtubeGrid">
+      <!-- Cards will be injected by JS -->
+    </div>
+  </section>
+
+  <!-- INSTAGRAM VIDEOS & REELS -->
+  <section>
+    <h2 class="section-title">📱 Instagram Videos & Reels</h2>
+    <p class="section-sub">Exclusive reels and video posts from Fahwa</p>
+    <div class="insta-grid" id="instagramGrid">
+      <!-- Injected by JS -->
+    </div>
+  </section>
+
+  <!-- VIDEO ARCHIVE (placeholder) -->
+  <section>
+    <h2 class="section-title">🗂️ Video Archive</h2>
+    <p class="section-sub">Complete collection of Fahwa video content</p>
+    <div class="video-grid" id="archiveGrid">
+      <!-- Injected by JS -->
+    </div>
+  </section>
+
+  <!-- PLATFORM SECTION -->
+  <section>
+    <h2 class="section-title">🌐 Fahwa on Video Platforms</h2>
+    <p class="section-sub">Follow Fahwa across all official channels</p>
+    <div class="platform-grid" id="platformGrid">
+      <!-- Injected by JS -->
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-col">
+      <h4>Fahwa</h4>
+      <p class="text-muted" style="font-size:0.9rem;">Official artist website · Music · Videos · Culture</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick</h4>
+      <a href="index.html">Home</a>
+      <a href="music.html">Music</a>
+      <a href="releases.html">Releases</a>
+      <a href="videos.html">Videos</a>
+      <a href="media.html">Media</a>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <a href="https://www.youtube.com/@fahwaofficial" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.instagram.com/fahwaofficial/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://x.com/fahwaofficial" target="_blank" rel="noopener">X</a>
+      <a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener">SoundCloud</a>
+      <a href="https://t.me/fahwaofficial" target="_blank" rel="noopener">Telegram</a>
+    </div>
+    <div class="copy">
+      © 2026 Fahwa. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      // -------- DATA (placeholders – replace with real IDs/URLs) --------
+      const YOUTUBE_FEATURED_ID = 'YOUTUBE_FEATURED_ID'; // change to real ID
+
+      // YouTube videos list – add as many as needed
+      const youtubeVideos = [
+        {
+          id: 'YOUTUBE_VIDEO_ID_1',
+          title: 'Official Music Video',
+          category: 'Music Video',
+          description: 'Official music video by Fahwa.',
+          thumb: 'fahwafavicon.jpg'
+        },
+        {
+          id: 'YOUTUBE_VIDEO_ID_2',
+          title: 'Visualizer',
+          category: 'Visualizer',
+          description: 'Official visualizer for the new single.',
+          thumb: 'fahwafavicon.jpg'
+        },
+        {
+          id: 'YOUTUBE_VIDEO_ID_3',
+          title: 'Live Performance',
+          category: 'Performance',
+          description: 'Live session recorded in studio.',
+          thumb: 'fahwafavicon.jpg'
+        }
+      ];
+
+      // Instagram Reels / Posts – placeholder URLs
+      const instagramItems = [
+        { url: 'INSTAGRAM_REEL_URL_1', title: 'Reel 1', type: 'Reel' },
+        { url: 'INSTAGRAM_REEL_URL_2', title: 'Reel 2', type: 'Reel' },
+        { url: 'INSTAGRAM_REEL_URL_3', title: 'Post', type: 'Post' }
+      ];
+
+      // Archive (extra videos)
+      const archiveVideos = [
+        { title: 'Behind the Scenes', category: 'BTS', thumb: 'fahwafavicon.jpg', desc: 'Behind the scenes footage.' },
+        { title: 'Interview', category: 'Interview', thumb: 'fahwafavicon.jpg', desc: 'Exclusive interview.' }
+      ];
+
+      // Platforms
+      const platforms = [
+        { name: 'YouTube', url: 'https://www.youtube.com/@fahwaofficial' },
+        { name: 'Instagram', url: 'https://www.instagram.com/fahwaofficial/' },
+        { name: 'TikTok', url: 'https://www.tiktok.com/@fahwaofficial' },
+        { name: 'X', url: 'https://x.com/fahwaofficial' },
+        { name: 'SoundCloud', url: 'https://soundcloud.com/fahwaofficial' },
+        { name: 'Spotify', url: 'SPOTIFY_PLACEHOLDER_URL' },
+        { name: 'Apple Music', url: 'APPLE_MUSIC_PLACEHOLDER_URL' },
+        { name: 'Amazon Music', url: 'AMAZON_MUSIC_PLACEHOLDER_URL' },
+        { name: 'Bandcamp', url: 'BANDCAMP_PLACEHOLDER_URL' },
+        { name: 'Genius', url: 'GENIUS_PLACEHOLDER_URL' },
+        { name: 'MusicBrainz', url: 'https://musicbrainz.org/artist/85623249-de16-4582-ab32-a73b7aff093a' },
+        { name: 'Telegram', url: 'https://t.me/fahwaofficial' }
+      ];
+
+      // -------- RENDER HELPERS --------
+      function createVideoCard(video) {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        const thumb = video.thumb || 'fahwafavicon.jpg';
+        card.innerHTML = `
+          <div class="video-thumb" onclick="this.querySelector('.play-icon')?.click()">
+            <img src="${thumb}" alt="${video.title} thumbnail" loading="lazy" decoding="async">
+            <div class="play-icon" onclick="event.stopPropagation(); window.open('https://www.youtube.com/watch?v=${video.id}', '_blank')">
+              <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+            </div>
+          </div>
+          <div class="video-meta">
+            <h3>${video.title}</h3>
+            <span class="cat">${video.category || 'Video'}</span>
+            <p>${video.description || ''}</p>
+            <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank" rel="noopener" class="watch-link">Watch on YouTube →</a>
+          </div>
+        `;
+        return card;
+      }
+
+      function createInstagramItem(item) {
+        const div = document.createElement('div');
+        div.className = 'insta-item';
+        div.innerHTML = `
+          <div class="insta-placeholder">
+            <span>📸 ${item.type || 'Post'}<br><small>${item.url}</small></span>
+          </div>
+          <div style="padding:0.2rem 0 0.4rem;">
+            <strong>${item.title}</strong>
+            <div style="font-size:0.8rem;color:var(--textMuted);">${item.type || 'Instagram'}</div>
+            <a href="${item.url}" target="_blank" rel="noopener" class="watch-link" style="font-size:0.8rem;">View on Instagram →</a>
+          </div>
+        `;
+        return div;
+      }
+
+      function createPlatformCard(p) {
+        const a = document.createElement('a');
+        a.className = 'platform-card';
+        a.href = p.url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.innerHTML = `${p.name} <span class="official">official</span>`;
+        return a;
+      }
+
+      // -------- POPULATE --------
+      const youtubeGrid = document.getElementById('youtubeGrid');
+      youtubeVideos.forEach(v => youtubeGrid.appendChild(createVideoCard(v)));
+
+      const instaGrid = document.getElementById('instagramGrid');
+      instagramItems.forEach(item => instaGrid.appendChild(createInstagramItem(item)));
+
+      const archiveGrid = document.getElementById('archiveGrid');
+      archiveVideos.forEach(v => {
+        const card = createVideoCard({ ...v, id: 'ARCHIVE_PLACEHOLDER_ID' });
+        archiveGrid.appendChild(card);
+      });
+
+      const platformGrid = document.getElementById('platformGrid');
+      platforms.forEach(p => platformGrid.appendChild(createPlatformCard(p)));
+
+      // Update featured embed ID if needed (replace placeholder)
+      const featuredIframe = document.querySelector('.featured-embed iframe');
+      if (featuredIframe && YOUTUBE_FEATURED_ID !== 'YOUTUBE_FEATURED_ID') {
+        featuredIframe.src = `https://www.youtube.com/embed/${YOUTUBE_FEATURED_ID}`;
+      }
+
+      // close nav on link click (mobile)
+      document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', () => {
+          document.querySelector('nav').classList.remove('open');
+        });
+      });
+
+    })();
+  </script>
+</body>
+</html>
