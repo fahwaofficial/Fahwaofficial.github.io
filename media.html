@@ -1,1 +1,869 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Fahwa Media Kit &amp; Press Center | Official Website</title>
+    <meta name="description" content="Official media kit &amp; press center for Fahwa (فهوا). Access official biography, music, videos, photos, social platforms &amp; press resources.">
+    <link rel="canonical" href="https://Fahwaofficial.github.io/media.html">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta property="og:title" content="Fahwa Media Kit &amp; Press Center | Official Website">
+    <meta property="og:description" content="Official media resources for Fahwa (فهوا) – independent rap/hip-hop artist. Photos, videos, music, press info &amp; official links.">
+    <meta property="og:url" content="https://Fahwaofficial.github.io/media.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="icon" href="fahwafavicon.jpg" sizes="32x32">
+    <link rel="apple-touch-icon" href="fahwafavicon.jpg">
 
+    <style>
+        /* === RESET & BASE === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0a0a;
+            color: #eaeaea;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: #eaeaea;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        a:hover,
+        a:focus {
+            color: #d4b48c;
+        }
+        button {
+            cursor: pointer;
+            font-family: inherit;
+        }
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+        ul {
+            list-style: none;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+        }
+        .section {
+            padding: 3.5rem 0;
+        }
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 2.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            right: 0;
+            width: 4rem;
+            height: 3px;
+            background: #d4b48c;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.7rem 1.8rem;
+            background: transparent;
+            border: 1px solid #d4b48c;
+            color: #eaeaea;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border-radius: 40px;
+            transition: all 0.25s ease;
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
+        .btn:hover,
+        .btn:focus {
+            background: #d4b48c;
+            color: #0a0a0a;
+            border-color: #d4b48c;
+        }
+        .btn-primary {
+            background: #d4b48c;
+            color: #0a0a0a;
+            border-color: #d4b48c;
+        }
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background: #e6c9a6;
+            border-color: #e6c9a6;
+            color: #0a0a0a;
+        }
+
+        /* === HEADER === */
+        .site-header {
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            background: #0a0a0a;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(6px);
+            background: rgba(10, 10, 10, 0.85);
+        }
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .logo span {
+            color: #d4b48c;
+        }
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #eaeaea;
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+        .nav-list {
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-list a {
+            font-size: 0.95rem;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            padding: 0.3rem 0;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        .nav-list a:hover,
+        .nav-list a:focus {
+            border-bottom-color: #d4b48c;
+        }
+        .nav-list a[aria-current="page"] {
+            border-bottom-color: #d4b48c;
+            color: #d4b48c;
+        }
+
+        /* === HERO === */
+        .hero {
+            padding: 4rem 0 5rem;
+            position: relative;
+            overflow: hidden;
+            background: #0a0a0a;
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        .hero-image {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.7);
+        }
+        .hero-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            object-position: center;
+        }
+        .hero-content h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+        .hero-content h1 small {
+            display: block;
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: #d4b48c;
+            letter-spacing: 1px;
+            margin-top: 0.25rem;
+        }
+        .hero-content p {
+            font-size: 1.1rem;
+            color: #b8b8b8;
+            max-width: 520px;
+            margin: 1.5rem 0 2.2rem;
+        }
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1rem;
+        }
+        .hero-actions .btn {
+            min-width: 130px;
+        }
+
+        /* === BREADCRUMB === */
+        .breadcrumb {
+            padding: 0.8rem 0 1.2rem;
+            font-size: 0.9rem;
+            color: #9a9a9a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .breadcrumb a {
+            color: #c0c0c0;
+        }
+        .breadcrumb a:hover {
+            color: #d4b48c;
+        }
+        .breadcrumb span {
+            margin: 0 0.4rem;
+        }
+
+        /* === ABOUT === */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+        .about-text p {
+            font-size: 1.05rem;
+            color: #d0d0d0;
+            max-width: 600px;
+        }
+        .about-text .btn {
+            margin-top: 1.5rem;
+        }
+        .about-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 2rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .about-meta-item {
+            text-align: center;
+        }
+        .about-meta-item .label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #9a9a9a;
+        }
+        .about-meta-item .value {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-top: 0.2rem;
+        }
+
+        /* === PLATFORMS === */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        .platform-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .platform-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.07);
+        }
+        .platform-card .icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .platform-card h3 {
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+        .platform-card p {
+            font-size: 0.8rem;
+            color: #b0b0b0;
+            margin-bottom: 0.8rem;
+        }
+        .platform-card .btn {
+            font-size: 0.8rem;
+            padding: 0.4rem 1rem;
+        }
+
+        /* === YOUTUBE CAROUSEL === */
+        .carousel-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        .carousel-track {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding: 0.5rem 0.2rem 1.5rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #d4b48c transparent;
+        }
+        .carousel-track::-webkit-scrollbar {
+            height: 4px;
+        }
+        .carousel-track::-webkit-scrollbar-thumb {
+            background: #d4b48c;
+            border-radius: 20px;
+        }
+        .video-card {
+            flex: 0 0 300px;
+            scroll-snap-align: start;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.2s;
+        }
+        .video-card:hover {
+            transform: scale(1.01);
+        }
+        .video-card iframe {
+            width: 100%;
+            height: 180px;
+            border: 0;
+            display: block;
+        }
+        .video-card .card-body {
+            padding: 1rem 1rem 1.2rem;
+        }
+        .video-card .card-body h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        .video-card .card-body p {
+            font-size: 0.85rem;
+            color: #b0b0b0;
+        }
+        .video-card .card-body .btn {
+            margin-top: 0.7rem;
+            font-size: 0.8rem;
+            padding: 0.3rem 1.2rem;
+        }
+        .carousel-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0 1.5rem;
+        }
+        .carousel-arrows button {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #eaeaea;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            transition: background 0.2s;
+        }
+        .carousel-arrows button:hover {
+            background: rgba(212, 180, 140, 0.2);
+        }
+        .subscribe-cta .btn {
+            background: #ff0000;
+            border-color: #ff0000;
+            color: #fff;
+            font-weight: 600;
+        }
+        .subscribe-cta .btn:hover {
+            background: #cc0000;
+            border-color: #cc0000;
+        }
+
+        /* === MEDIA GALLERY === */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .gallery-item {
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        .gallery-item .caption {
+            padding: 0.8rem 1rem;
+            font-size: 0.9rem;
+            color: #c0c0c0;
+        }
+
+        /* === PRESS & DOWNLOAD === */
+        .press-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+        .press-card,
+        .download-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .press-card h3,
+        .download-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+        }
+        .press-card p,
+        .download-card p {
+            color: #c8c8c8;
+            margin-bottom: 1.2rem;
+        }
+        .press-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem 1.2rem;
+        }
+        .press-links a {
+            color: #d4b48c;
+            border-bottom: 1px dotted rgba(212, 180, 140, 0.3);
+        }
+
+        /* === FEATURED RELEASES === */
+        .release-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .release-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 1.2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* === FOOTER === */
+        .site-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 2.5rem 0 1.8rem;
+            margin-top: 2rem;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 2rem;
+        }
+        .footer-brand h3 {
+            font-size: 1.6rem;
+        }
+        .footer-brand h3 span {
+            color: #d4b48c;
+        }
+        .footer-brand p {
+            color: #a8a8a8;
+            margin: 0.5rem 0;
+        }
+        .footer-links ul {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .footer-links a {
+            color: #b8b8b8;
+            font-size: 0.95rem;
+        }
+        .footer-links a:hover {
+            color: #d4b48c;
+        }
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.8rem;
+        }
+        .footer-social a {
+            font-size: 1.3rem;
+            color: #b0b0b0;
+        }
+        .footer-copy {
+            text-align: center;
+            padding-top: 2rem;
+            font-size: 0.9rem;
+            color: #7a7a7a;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            margin-top: 1.5rem;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 992px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-content p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .hero-actions {
+                justify-content: center;
+            }
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+            .about-text p {
+                max-width: 100%;
+            }
+            .press-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+            .nav-list {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                padding: 1.5rem 0 0.5rem;
+                gap: 0.8rem;
+                border-top: 1px solid rgba(255, 255, 255, 0.06);
+                margin-top: 0.8rem;
+            }
+            .nav-list.open {
+                display: flex;
+            }
+            .hero-content h1 {
+                font-size: 2.4rem;
+            }
+            .hero-content h1 small {
+                font-size: 1.1rem;
+            }
+            .hero-image img {
+                height: 260px;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .about-meta {
+                grid-template-columns: 1fr 1fr;
+            }
+            .platform-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            .video-card {
+                flex: 0 0 260px;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 1.8rem;
+            }
+            .carousel-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            .hero-actions .btn {
+                min-width: 100%;
+                width: 100%;
+            }
+            .platform-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .video-card {
+                flex: 0 0 220px;
+            }
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <header class="site-header" role="banner">
+        <div class="container header-inner">
+            <div class="logo"><a href="/">Fahwa<span>.</span></a></div>
+            <button class="nav-toggle" aria-label="منو" aria-expanded="false" id="navToggle">&#9776;</button>
+            <nav aria-label="منو اصلی" id="mainNav">
+                <ul class="nav-list" role="list">
+                    <li><a href="/">خانه</a></li>
+                    <li><a href="/biography.html">بیوگرافی</a></li>
+                    <li><a href="/music.html">موسیقی</a></li>
+                    <li><a href="/social.html">شبکه‌های اجتماعی</a></li>
+                    <li><a href="/news.html">اخبار</a></li>
+                    <li><a href="/download.html">دانلود</a></li>
+                    <li><a href="/contact.html">تماس</a></li>
+                    <li><a href="/media.html" aria-current="page">رسانه</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ========== BREADCRUMB ========== -->
+    <div class="breadcrumb container" aria-label="مسیر">
+        <a href="/">خانه</a> <span>/</span> <span>رسانه</span>
+    </div>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero" aria-labelledby="hero-title">
+        <div class="container hero-grid">
+            <div class="hero-image">
+                <img src="hero.jpeg" alt="Fahwa – هنرمند رپ و هیپ‌هاپ مستقل" width="800" height="400" loading="eager" decoding="async">
+            </div>
+            <div class="hero-content">
+                <h1 id="hero-title">
+                    Fahwa
+                    <small>Official Media &amp; Press Center</small>
+                </h1>
+                <p>
+                    مرجع رسمی رسانه‌ای Fahwa (فهوا) – دسترسی به اطلاعات هنرمند، تصاویر، ویدئوها، موسیقی و لینک‌های رسمی برای طرفداران، رسانه‌ها و تولیدکنندگان محتوا.
+                </p>
+                <div class="hero-actions">
+                    <a href="/music.html" class="btn btn-primary">شنیدن موسیقی</a>
+                    <a href="#videos" class="btn">تماشای ویدئو</a>
+                    <a href="/download.html" class="btn">دانلود</a>
+                    <a href="/contact.html" class="btn">تماس</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main id="main">
+
+        <!-- ========== ABOUT ========== -->
+        <section class="section container" aria-labelledby="about-title">
+            <h2 id="about-title" class="section-title">درباره Fahwa</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p>
+                        <strong>Fahwa (فهوا)</strong> هنرمند مستقل رپ و هیپ‌هاپ است که از سال ۲۰۲۰ فعالیت خود را آغاز کرده است. 
+                        با سبکی خاص و اشعار تأمل‌برانگیز، Fahwa توانسته جایگاهی ویژه در میان مخاطبان فارسی‌زبان پیدا کند. 
+                        این صفحه به‌عنوان مرجع رسمی رسانه‌ای، اطلاعات معتبر و منابع قابل استناد را در اختیار شما قرار می‌دهد.
+                    </p>
+                    <a href="/biography.html" class="btn">مطالعه بیوگرافی کامل</a>
+                </div>
+                <div class="about-meta">
+                    <div class="about-meta-item">
+                        <div class="label">نام هنری</div>
+                        <div class="value">Fahwa</div>
+                    </div>
+                    <div class="about-meta-item">
+                        <div class="label">نام فارسی</div>
+                        <div class="value">فهوا</div>
+                    </div>
+                    <div class="about-meta-item">
+                        <div class="label">سبک</div>
+                        <div class="value">Rap / Hip-Hop</div>
+                    </div>
+                    <div class="about-meta-item">
+                        <div class="label">فعالیت</div>
+                        <div class="value">از ۲۰۲۰</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== PLATFORMS ========== -->
+        <section class="section container" aria-labelledby="platforms-title">
+            <h2 id="platforms-title" class="section-title">Official Fahwa Platforms</h2>
+            <div class="platform-grid">
+                <div class="platform-card">
+                    <div class="icon">&#9835;</div>
+                    <h3>Spotify</h3>
+                    <p>گوش دادن به آهنگ‌ها</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Spotify رسمی Fahwa">مشاهده پروفایل</a>
+                </div>
+                <div class="platform-card">
+                    <div class="icon">&#63743;</div>
+                    <h3>Apple Music</h3>
+                    <p>پخش و دانلود</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Apple Music رسمی Fahwa">مشاهده پروفایل</a>
+                </div>
+                <div class="platform-card">
+                    <div class="icon">&#9654;</div>
+                    <h3>YouTube</h3>
+                    <p>ویدئو و موزیک</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="YouTube رسمی Fahwa">مشاهده کانال</a>
+                </div>
+                <div class="platform-card">
+                    <div class="icon">&#9834;</div>
+                    <h3>SoundCloud</h3>
+                    <p>آهنگ‌های جدید</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="SoundCloud رسمی Fahwa">مشاهده پروفایل</a>
+                </div>
+                <div class="platform-card">
+                    <div class="icon">&#9836;</div>
+                    <h3>Bandcamp</h3>
+                    <p>خرید و دانلود</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Bandcamp رسمی Fahwa">مشاهده پروفایل</a>
+                </div>
+                <div class="platform-card">
+                    <div class="icon">&#63743;</div>
+                    <h3>Amazon Music</h3>
+                    <p>پخش آنلاین</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Amazon Music رسمی Fahwa">مشاهده پروفایل</a>
+                </div>
+                <div class="platform-card">
+                    <div class="icon">&#9733;</div>
+                    <h3>Genius</h3>
+                    <p>متن آهنگ‌ها</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Genius رسمی Fahwa">مشاهده پروفایل</a>
+                </div>
+                <div class="platform-card">
+                    <div class="icon">&#9874;</div>
+                    <h3>MusicBrainz</h3>
+                    <p>دیتابیس موسیقی</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="MusicBrainz رسمی Fahwa">مشاهده پروفایل</a>
+                </div>
+                <div class="platform-card">
+                    <div class="icon">&#128247;</div>
+                    <h3>Instagram</h3>
+                    <p>تصاویر و استوری</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Instagram رسمی Fahwa">مشاهده پروفایل</a>
+                </div>
+                <div class="platform-card">
+                    <div class="icon">&#9835;</div>
+                    <h3>TikTok</h3>
+                    <p>ویدئوهای کوتاه</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="TikTok رسمی Fahwa">مشاهده پروفایل</a>
+                </div>
+                <div class="platform-card">
+                    <div class="icon">&#9733;</div>
+                    <h3>X</h3>
+                    <p>اخبار و به‌روزرسانی</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="X رسمی Fahwa">مشاهده پروفایل</a>
+                </div>
+                <div class="platform-card">
+                    <div class="icon">&#128172;</div>
+                    <h3>Telegram</h3>
+                    <p>کانال رسمی</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Telegram رسمی Fahwa">عضویت</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== YOUTUBE ========== -->
+        <section class="section container" aria-labelledby="videos-title" id="videos">
+            <div class="carousel-actions">
+                <h2 id="videos-title" class="section-title" style="margin-bottom:0;">Watch Fahwa on YouTube</h2>
+                <div class="subscribe-cta">
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer">&#9654; Subscribe on YouTube</a>
+                </div>
+            </div>
+            <div class="carousel-wrapper">
+                <div class="carousel-track" id="videoTrack" role="list">
+                    <!-- ویدئوها توسط JS پر می‌شوند -->
+                </div>
+            </div>
+            <div style="display:flex; justify-content:center; gap:1rem; margin-top:1rem;">
+                <button id="prevVideo" aria-label="ویدئو قبلی">&#8594;</button>
+                <button id="nextVideo" aria-label="ویدئو بعدی">&#8592;</button>
+            </div>
+        </section>
+
+        <!-- ========== MEDIA GALLERY ========== -->
+        <section class="section container" aria-labelledby="gallery-title">
+            <h2 id="gallery-title" class="section-title">Official Fahwa Media</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="hero.jpeg" alt="Fahwa – تصویر رسمی هنرمند" width="500" height="220" loading="lazy" decoding="async">
+                    <div class="caption">Fahwa – هنرمند رپ و هیپ‌هاپ</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="hero.jpeg" alt="Fahwa – صحنه اجرا" width="500" height="220" loading="lazy" decoding="async">
+                    <div class="caption">Fahwa – اجرای زنده</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="fahwafavicon.jpg" alt="آرم رسمی Fahwa" width="500" height="220" loading="lazy" decoding="async">
+                    <div class="caption">لوگوی رسمی Fahwa</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== PRESS & DOWNLOAD ========== -->
+        <section class="section container" aria-labelledby="press-title">
+            <h2 id="press-title" class="section-title">For Media &amp; Press</h2>
+            <div class="press-grid">
+                <div class="press-card">
+                    <h3>دسترسی رسانه‌ای</h3>
+                    <p>
+                        این صفحه به‌عنوان مرجع رسمی اطلاعات Fahwa برای رسانه‌ها، وب‌سایت‌ها، خبرنگاران و تولیدکنندگان محتوا طراحی شده است. 
+                        تمام منابع معتبر در اینجا گردآوری شده‌اند.
+                    </p>
+                    <div class="press-links">
+                        <a href="/biography.html">بیوگرافی رسمی</a>
+                        <a href="/music.html">موسیقی</a>
+                        <a href="#videos">ویدئوها</a>
+                        <a href="/social.html">شبکه‌های اجتماعی</a>
+                        <a href="/contact.html">تماس با مدیریت</a>
+                        <a href="/download.html">دانلود Assets</a>
+                    </div>
+                </div>
+                <div class="download-card">
+                    <h3>Official Downloads</h3>
+                    <p>
+                        برای دسترسی به فایل‌های رسمی، تصاویر با کیفیت، جلد آثار و منابع قابل دانلود، به صفحه دانلود مراجعه کنید.
+                    </p>
+                    <a href="/download.html" class="btn">رفتن به صفحه دانلود</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== MUSIC / FEATURED ========== -->
+        <section class="section container" aria-labelledby="music-title">
+            <h2 id="music-title" class="section-title">Listen to Fahwa</h2>
+            <div class="release-grid">
+                <div class="release-item">
+                    <h3>Spotify</h3>
+                    <p style="color:#aaa; font-size:0.85rem;">جدیدترین آهنگ‌ها</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" style="font-size:0.8rem;">گوش دادن</a>
+                </div>
+                <div class="release-item">
+                    <h3>Apple Music</h3>
+                    <p style="color:#aaa; font-size:0.85rem;">آلبوم‌ها و تک‌آهنگ‌ها</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" style="font-size:0.8rem;">گوش دادن</a>
+                </div>
+                <div class="release-item">
+                    <h3>YouTube Music</h3>
+                    <p style="color:#aaa; font-size:0.85rem;">پخش ویدئو</p>
+                    <a href="#" class="btn" target="_blank" rel="noopener noreferrer" style="font-size:0.8rem;">مشاهده</a>
+                </div>
+                <
