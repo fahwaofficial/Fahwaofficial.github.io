@@ -1,0 +1,579 @@
+This is a complete, ready-to-use HTML document for the official "Releases" page of the artist Fahwa. It's a professional, dark-themed, and responsive page designed to showcase music releases, embed players, and provide a hub for all official content.
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Releases | Fahwa — Official Music & Visual Projects</title>
+  <meta name="description" content="Official releases, singles, albums, EPs, and visual projects by Fahwa. Listen on Spotify, Apple Music, Amazon, Bandcamp, SoundCloud & more.">
+  <link rel="canonical" href="https://fahwaofficial.github.io/releases.html">
+  <meta name="robots" content="index, follow">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Releases | Fahwa">
+  <meta property="og:description" content="Official music releases, videos, and visual projects by Fahwa. Stream on all platforms.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fahwaofficial.github.io/releases.html">
+  <meta property="og:image" content="https://fahwaofficial.github.io/hero.jpeg">
+  <meta property="og:site_name" content="Fahwa Official">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Releases | Fahwa">
+  <meta name="twitter:description" content="Official music releases, videos, and visual projects by Fahwa.">
+  <meta name="twitter:image" content="https://fahwaofficial.github.io/hero.jpeg">
+  <!-- Theme & Icons -->
+  <meta name="theme-color" content="#0b0b0b">
+  <link rel="icon" href="fahwafavicon.jpg" type="image/jpeg">
+  <link rel="apple-touch-icon" href="fahwafavicon.jpg">
+  <!-- Performance & Accessibility -->
+  <style>
+    /* reset & base */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0b0b0b;
+      color: #eaeaea;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      padding: 0 20px;
+    }
+    a { color: #d4a5ff; text-decoration: none; transition: color 0.2s; }
+    a:hover { color: #f0d6ff; }
+    img, iframe { max-width: 100%; display: block; height: auto; }
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 40px;
+      padding: 20px 0 40px;
+    }
+    /* main content */
+    .main-content { min-width: 0; }
+    /* header */
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0 10px;
+      border-bottom: 1px solid #2a2a2a;
+      flex-wrap: wrap;
+    }
+    .logo a {
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: #fff;
+      background: linear-gradient(135deg, #c084fc, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .nav-links a {
+      color: #ccc;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: 0.2s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+    .hamburger span { width: 28px; height: 2px; background: #eee; border-radius: 2px; }
+    /* hero */
+    .hero {
+      background: linear-gradient(145deg, #141414, #1e1e1e);
+      border-radius: 32px;
+      padding: 40px 40px 50px;
+      margin: 30px 0 40px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 30px;
+      border: 1px solid #2c2c2c;
+    }
+    .hero-image {
+      flex: 1 1 200px;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #1e1e1e;
+    }
+    .hero-image img { width: 100%; height: auto; aspect-ratio: 1/1; object-fit: cover; }
+    .hero-text {
+      flex: 2 1 300px;
+    }
+    .hero-text h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #f0e6ff, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    .hero-text p {
+      font-size: 1.1rem;
+      color: #b0b0b0;
+      max-width: 600px;
+      margin-bottom: 24px;
+    }
+    .cta-group { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn {
+      display: inline-block;
+      background: #2a2a2a;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      color: #fff;
+      transition: 0.2s;
+      border: 1px solid #444;
+      cursor: pointer;
+    }
+    .btn-primary { background: #7c3aed; border-color: #7c3aed; }
+    .btn-primary:hover { background: #6d28d9; border-color: #6d28d9; }
+    /* sections */
+    section { margin-bottom: 60px; }
+    .section-title {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      letter-spacing: -0.3px;
+      border-left: 4px solid #7c3aed;
+      padding-left: 16px;
+    }
+    .featured-card {
+      background: #161616;
+      border-radius: 28px;
+      padding: 30px;
+      border: 1px solid #2a2a2a;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+    .featured-cover { flex: 0 0 200px; border-radius: 20px; overflow: hidden; }
+    .featured-cover img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+    .featured-info { flex: 1; }
+    .featured-info h3 { font-size: 1.8rem; margin-bottom: 6px; }
+    .meta { color: #9a9a9a; font-size: 0.9rem; margin-bottom: 10px; }
+    .platform-badges { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0; }
+    .platform-badges a {
+      background: #252525;
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #3a3a3a;
+    }
+    .platform-badges a:hover { background: #333; }
+    .embed-wrapper {
+      background: #111;
+      border-radius: 20px;
+      padding: 16px;
+      margin: 20px 0 10px;
+      border: 1px solid #2a2a2a;
+    }
+    .embed-wrapper iframe { border-radius: 12px; width: 100%; }
+    /* release grid */
+    .release-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 25px;
+    }
+    .release-card {
+      background: #151515;
+      border-radius: 24px;
+      padding: 18px 18px 22px;
+      border: 1px solid #282828;
+      transition: 0.2s;
+    }
+    .release-card:hover { border-color: #5a3a8a; background: #1c1c1c; }
+    .release-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 16px; margin-bottom: 12px; }
+    .release-card h4 { font-size: 1.1rem; margin-bottom: 2px; }
+    .release-card .sub { color: #9a9a9a; font-size: 0.8rem; }
+    .release-card .actions { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .release-card .actions a { background: #252525; padding: 4px 12px; border-radius: 30px; font-size: 0.75rem; }
+    /* filter */
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid #3a3a3a;
+      color: #bbb;
+      padding: 8px 18px;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 500;
+    }
+    .filter-btn.active { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+    .filter-btn:hover { background: #2a2a2a; }
+    /* videos */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 25px;
+    }
+    .video-card {
+      background: #151515;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid #282828;
+    }
+    .video-card .thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #1e1e1e; }
+    .video-card .info { padding: 14px 16px 18px; }
+    .video-card .info h4 { font-size: 1rem; }
+    .video-card .info .vid-meta { color: #888; font-size: 0.8rem; }
+    .video-card .info .watch-link { display: inline-block; margin-top: 10px; background: #2a2a2a; padding: 6px 16px; border-radius: 30px; font-size: 0.8rem; }
+    /* sidebar */
+    .sidebar {
+      background: #121212;
+      border-radius: 28px;
+      padding: 28px 20px;
+      border: 1px solid #2a2a2a;
+      position: sticky;
+      top: 20px;
+      align-self: start;
+    }
+    .sidebar h3 { font-size: 1.4rem; margin-bottom: 20px; border-bottom: 1px solid #2a2a2a; padding-bottom: 12px; }
+    .side-block { margin-bottom: 30px; }
+    .side-block h4 { font-size: 1rem; color: #b0b0b0; margin-bottom: 10px; letter-spacing: 0.3px; }
+    .side-block ul { list-style: none; }
+    .side-block ul li { margin-bottom: 8px; }
+    .side-block ul li a { color: #ccc; font-size: 0.95rem; }
+    .side-block ul li a:hover { color: #fff; }
+    .update-item { background: #1a1a1a; padding: 10px 14px; border-radius: 14px; margin-bottom: 8px; border-left: 3px solid #7c3aed; }
+    /* platforms */
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px,1fr));
+      gap: 18px;
+      margin: 20px 0;
+    }
+    .platform-item {
+      background: #151515;
+      border-radius: 20px;
+      padding: 16px 10px;
+      text-align: center;
+      border: 1px solid #2a2a2a;
+      transition: 0.2s;
+    }
+    .platform-item:hover { background: #222; border-color: #7c3aed; }
+    .platform-item .icon { font-size: 2.2rem; line-height: 1; margin-bottom: 6px; }
+    .platform-item span { display: block; font-size: 0.9rem; }
+    .subscribe-box {
+      background: #181818;
+      border-radius: 28px;
+      padding: 30px 25px;
+      border: 1px solid #2a2a2a;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 30px;
+      margin: 30px 0;
+    }
+    .subscribe-box form { display: flex; flex-wrap: wrap; gap: 12px; flex: 1; }
+    .subscribe-box input { background: #222; border: 1px solid #3a3a3a; padding: 12px 18px; border-radius: 50px; flex: 2 1 200px; color: #fff; }
+    .subscribe-box input:focus { outline: 2px solid #7c3aed; }
+    .subscribe-box .btn { flex: 0 0 auto; }
+    /* footer */
+    .footer {
+      border-top: 1px solid #2a2a2a;
+      padding: 40px 0 30px;
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+    }
+    .footer-col { min-width: 140px; }
+    .footer-col h4 { margin-bottom: 12px; color: #ccc; }
+    .footer-col a { display: block; color: #999; margin-bottom: 6px; font-size: 0.9rem; }
+    .footer-col a:hover { color: #fff; }
+    .copyright { text-align: center; color: #666; font-size: 0.8rem; padding-top: 20px; border-top: 1px solid #1f1f1f; margin-top: 20px; }
+    /* breadcrumb */
+    .breadcrumb { font-size: 0.85rem; color: #888; margin: 10px 0 0; }
+    .breadcrumb span { color: #aaa; }
+    /* responsive */
+    @media (max-width: 1024px) {
+      .container { grid-template-columns: 1fr; }
+      .sidebar { position: static; margin-top: 20px; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; flex-direction: column; width: 100%; gap: 12px; padding: 20px 0; }
+      .nav-links.show { display: flex; }
+      .hamburger { display: flex; }
+      .hero { padding: 30px 20px; }
+      .hero-text h1 { font-size: 2.4rem; }
+      .featured-card { flex-direction: column; }
+      .featured-cover { flex: 0 0 auto; width: 100%; max-width: 280px; }
+      .release-grid { grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); }
+    }
+    @media (max-width: 480px) {
+      body { padding: 0 12px; }
+      .hero-text h1 { font-size: 2rem; }
+      .btn { padding: 10px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="logo"><a href="index.html">Fahwa</a></div>
+    <button class="hamburger" aria-label="menu" id="hamburgerBtn"><span></span><span></span><span></span></button>
+    <nav class="nav-links" id="mainNav">
+      <a href="index.html">Home</a>
+      <a href="releases.html" style="color:#fff;">Releases</a>
+      <a href="videos.html">Videos</a>
+      <a href="media.html">Media</a>
+      <a href="biography.html">Biography</a>
+      <a href="contact.html">Contact</a>
+      <a href="socialnetworks.html">Social</a>
+      <a href="download.html">Download</a>
+    </nav>
+  </header>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb" style="margin-top: 12px;"><span>Home</span> / <span style="color:#c084fc;">Releases</span></div>
+
+  <div class="container">
+    <main class="main-content">
+
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-image">
+          <img src="hero.jpeg" alt="Fahwa official hero image" width="400" height="400" loading="eager">
+        </div>
+        <div class="hero-text">
+          <h1>Fahwa Releases</h1>
+          <p>Official singles, EPs, albums, and visual projects. Every release is a chapter of the sonic journey.</p>
+          <div class="cta-group">
+            <a href="#latest" class="btn btn-primary">Explore Releases</a>
+            <a href="#listen" class="btn">Listen Now</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- LATEST RELEASE (FEATURED) -->
+      <section id="latest">
+        <h2 class="section-title">Latest Release</h2>
+        <div class="featured-card">
+          <div class="featured-cover">
+            <img src="release-cover-01.jpg" alt="Latest release cover art" width="400" height="400" loading="lazy" onerror="this.style.display='none'">
+          </div>
+          <div class="featured-info">
+            <h3>Echoes of Tomorrow</h3>
+            <div class="meta">Single · Fahwa · Released: April 2026</div>
+            <p>An atmospheric blend of electronic and organic textures. The first single from the upcoming album.</p>
+            <!-- embed spotify -->
+            <div class="embed-wrapper">
+              <!-- SPOTIFY EMBED: replace src with your track URI/URL -->
+              <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4cT6dRqR6Xp9PmTQrW8z1x?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+            <div class="platform-badges">
+              <a href="#" target="_blank" rel="noopener noreferrer">▶ Play</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">Spotify</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">YouTube</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">Apple Music</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">Amazon</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">Bandcamp</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">SoundCloud</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ALL RELEASES with filters -->
+      <section>
+        <h2 class="section-title">All Releases</h2>
+        <div class="filter-bar" id="filterBar">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="single">Singles</button>
+          <button class="filter-btn" data-filter="album">Albums</button>
+          <button class="filter-btn" data-filter="ep">EPs</button>
+          <button class="filter-btn" data-filter="collab">Collaborations</button>
+          <button class="filter-btn" data-filter="visual">Visual</button>
+        </div>
+        <div class="release-grid" id="releaseGrid">
+          <!-- cards: each card has data-category -->
+          <div class="release-card" data-category="single">
+            <img src="release-cover-01.jpg" alt="Single cover" loading="lazy" width="300" height="300">
+            <h4>Echoes of Tomorrow</h4>
+            <div class="sub">Single · 2026</div>
+            <div class="actions"><a href="#">Listen</a><a href="#">Watch</a></div>
+          </div>
+          <div class="release-card" data-category="album">
+            <img src="release-cover-02.jpg" alt="Album cover" loading="lazy" width="300" height="300">
+            <h4>Fragments</h4>
+            <div class="sub">Album · 2025</div>
+            <div class="actions"><a href="#">Listen</a><a href="#">Watch</a></div>
+          </div>
+          <div class="release-card" data-category="ep">
+            <img src="release-cover-03.jpg" alt="EP cover" loading="lazy" width="300" height="300">
+            <h4>Midnight Sessions</h4>
+            <div class="sub">EP · 2025</div>
+            <div class="actions"><a href="#">Listen</a></div>
+          </div>
+          <div class="release-card" data-category="collab">
+            <img src="release-cover-04.jpg" alt="Collaboration cover" loading="lazy" width="300" height="300">
+            <h4>Parallels (with KIVA)</h4>
+            <div class="sub">Collab · 2024</div>
+            <div class="actions"><a href="#">Listen</a><a href="#">Watch</a></div>
+          </div>
+          <div class="release-card" data-category="visual">
+            <img src="release-cover-05.jpg" alt="Visual release" loading="lazy" width="300" height="300">
+            <h4>Neon Dreams (Visual)</h4>
+            <div class="sub">Visual · 2024</div>
+            <div class="actions"><a href="#">Watch</a></div>
+          </div>
+          <div class="release-card" data-category="single">
+            <img src="release-cover-06.jpg" alt="Single cover" loading="lazy" width="300" height="300">
+            <h4>Silent Waves</h4>
+            <div class="sub">Single · 2024</div>
+            <div class="actions"><a href="#">Listen</a></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIDEOS / VISUAL RELEASES -->
+      <section>
+        <h2 class="section-title">Music Videos &amp; Visuals</h2>
+        <div class="video-grid">
+          <div class="video-card">
+            <img class="thumb" src="hero.jpeg" alt="Video thumbnail" loading="lazy" width="480" height="270">
+            <div class="info">
+              <h4>Echoes of Tomorrow (Official)</h4>
+              <div class="vid-meta">2026 · 4:12</div>
+              <!-- youtube embed placeholder -->
+              <div style="margin:10px 0; background:#1e1e1e; border-radius:12px; overflow:hidden;">
+                <iframe width="100%" height="160" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+              </div>
+              <a href="#" target="_blank" rel="noopener noreferrer" class="watch-link">Watch on YouTube</a>
+            </div>
+          </div>
+          <div class="video-card">
+            <img class="thumb" src="hero.jpeg" alt="Video thumbnail" loading="lazy" width="480" height="270">
+            <div class="info">
+              <h4>Fragments (Visualizer)</h4>
+              <div class="vid-meta">2025 · 3:48</div>
+              <div style="margin:10px 0; background:#1e1e1e; border-radius:12px; overflow:hidden;">
+                <iframe width="100%" height="160" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+              </div>
+              <a href="#" target="_blank" rel="noopener noreferrer" class="watch-link">Watch on YouTube</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUBSCRIBE / STAY UPDATED -->
+      <section class="subscribe-box" id="listen">
+        <div style="flex:1;">
+          <h3 style="font-size:1.6rem;">Stay Updated</h3>
+          <p style="color:#aaa;">Subscribe for new releases, videos, and news.</p>
+        </div>
+        <form action="#" method="post">
+          <input type="email" placeholder="Your email" aria-label="Email address" required>
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <a href="https://www.youtube.com/@fahwaofficial?sub_confirmation=1" target="_blank" rel="noopener noreferrer" class="btn">Subscribe on YouTube</a>
+        </div>
+      </section>
+
+      <!-- OFFICIAL PLATFORMS -->
+      <section>
+        <h2 class="section-title">Listen &amp; Follow Fahwa</h2>
+        <div class="platform-grid">
+          <div class="platform-item"><div class="icon">🎵</div><span>Spotify</span><a href="#" target="_blank" rel="noopener noreferrer" style="display:block;font-size:0.8rem;margin-top:4px;">Follow</a></div>
+          <div class="platform-item"><div class="icon">▶️</div><span>YouTube</span><a href="https://www.youtube.com/@fahwaofficial" target="_blank" rel="noopener noreferrer" style="display:block;font-size:0.8rem;margin-top:4px;">Subscribe</a></div>
+          <div class="platform-item"><div class="icon">🍏</div><span>Apple Music</span><a href="#" target="_blank" rel="noopener noreferrer" style="display:block;font-size:0.8rem;margin-top:4px;">Listen</a></div>
+          <div class="platform-item"><div class="icon">📦</div><span>Amazon Music</span><a href="#" target="_blank" rel="noopener noreferrer" style="display:block;font-size:0.8rem;margin-top:4px;">Listen</a></div>
+          <div class="platform-item"><div class="icon">🏷️</div><span>Bandcamp</span><a href="#" target="_blank" rel="noopener noreferrer" style="display:block;font-size:0.8rem;margin-top:4px;">Support</a></div>
+          <div class="platform-item"><div class="icon">☁️</div><span>SoundCloud</span><a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener noreferrer" style="display:block;font-size:0.8rem;margin-top:4px;">Follow</a></div>
+          <div class="platform-item"><div class="icon">📸</div><span>Instagram</span><a href="https://www.instagram.com/fahwaofficial" target="_blank" rel="noopener noreferrer" style="display:block;font-size:0.8rem;margin-top:4px;">Follow</a></div>
+          <div class="platform-item"><div class="icon">🐦</div><span>X</span><a href="https://x.com/fahwaofficial" target="_blank" rel="noopener noreferrer" style="display:block;font-size:0.8rem;margin-top:4px;">Follow</a></div>
+          <div class="platform-item"><div class="icon">📱</div><span>TikTok</span><a href="https://www.tiktok.com/@fahwaofficial" target="_blank" rel="noopener noreferrer" style="display:block;font-size:0.8rem;margin-top:4px;">Follow</a></div>
+          <div class="platform-item"><div class="icon">✈️</div><span>Telegram</span><a href="https://t.me/fahwaofficial" target="_blank" rel="noopener noreferrer" style="display:block;font-size:0.8rem;margin-top:4px;">Join</a></div>
+          <div class="platform-item"><div class="icon">🧠</div><span>Genius</span><a href="#" target="_blank" rel="noopener noreferrer" style="display:block;font-size:0.8rem;margin-top:4px;">Read</a></div>
+          <div class="platform-item"><div class="icon">🎼</div><span>MusicBrainz</span><a href="#" target="_blank" rel="noopener noreferrer" style="display:block;font-size:0.8rem;margin-top:4px;">Explore</a></div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <h3>Fahwa Updates</h3>
+      <div class="side-block">
+        <h4>📌 Latest</h4>
+        <ul>
+          <li><a href="#latest">New Single: Echoes of Tomorrow</a></li>
+          <li><a href="#">Video: Fragments (Visualizer)</a></li>
+          <li><a href="#">Release: Midnight Sessions EP</a></li>
+          <li><a href="#">Announcement: Album 2026</a></li>
+        </ul>
+      </div>
+      <div class="side-block">
+        <h4>⚡ Quick Links</h4>
+        <ul>
+          <li><a href="#latest">New Music</a></li>
+          <li><a href="#">Latest Video</a></li>
+          <li><a href="download.html">Download</a></li>
+          <li><a href="media.html">Media</a></li>
+          <li><a href="biography.html">Biography</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="side-block">
+        <h4>⭐ Featured</h4>
+        <div class="update-item" style="background:#1f1f1f; border-left-color:#a78bfa;">
+          <strong>Echoes of Tomorrow</strong><br>
+          <span style="font-size:0.85rem;color:#aaa;">New single out now</span>
+        </div>
+      </div>
+      <div class="side-block">
+        <h4>📰 Updates</h4>
+        <div class="update-item">🎵 New Release: Echoes of Tomorrow</div>
+        <div class="update-item">📹 New Video: Fragments Visualizer</div>
+        <div class="update-item">📢 Announcement: Tour 2026</div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer container" style="grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 20px; max-width:1300px; margin:0 auto; padding: 40px 0 20px;">
+    <div class="footer-col"><h4>Fahwa</h4><a href="index.html">Home</a><a href="releases.html">Releases</a><a href="videos.html">Videos</a></div>
+    <div class="footer-col"><h4>Media</h4><a href="media.html">Photos</a><a href="biography.html">Bio</a><a href="contact.html">Contact</a></div>
+    <div class="footer-col"><h4>Connect</h4><a href="socialnetworks.html">Social Networks</a><a href="download.html">Downloads</a></div>
+    <div class="footer-col"><h4>Platforms</h4><a href="#" target="_blank" rel="noopener noreferrer">Spotify</a><a href="https://www.youtube.com/@fahwaofficial" target="_blank" rel="noopener noreferrer">YouTube</a><a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener noreferrer">SoundCloud</a></div>
+    <div class="copyright" style="grid-column:1/-1; text-align:center; padding-top:20px; border-top:1px solid #222; margin-top:10px;">&copy; 2026 Fahwa · Official Website</div>
+  </footer>
+
+  <!-- SCRIPT: hamburger + filter -->
+  <script>
+    (function() {
+      // hamburger
+      const btn = document.getElementById('hamburgerBtn');
+      const nav = document.getElementById('mainNav');
+      if (btn && nav) {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          nav.classList.toggle('show');
+        });
+      }
+      // filter
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const cards = document.querySelectorAll('.release-card');
+      if (filterBtns.length) {
+        filterBtns.forEach(btn => {
+          btn.addEventListener('click', function() {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const filter = this.dataset.filter;
+            cards.forEach(card => {
+              if (filter === 'all' || card.dataset.category === filter)
