@@ -1,14 +1,35 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
-    <link rel="canonical" href="https://fahwaofficial.github.io/cantact.html">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تماس با ما - Fahwa</title>
-    <!-- فونت‌های خاص و مدرن -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@200;400;600;700&display=swap" rel="stylesheet">
+    <title>تماس با فهوا | وبسایت رسمی</title>
+    <meta name="description" content="صفحه رسمی تماس با فهوا. برای ارتباط مستقیم از طریق کانال رسمی تلگرام اقدام کنید.">
+    <link rel="canonical" href="https://fahwaofficial.com/contact.html" />
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0d0d0d">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="تماس با فهوا | وبسایت رسمی" />
+    <meta property="og:description" content="ارتباط مستقیم با فهوا از طریق تلگرام رسمی." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://fahwaofficial.com/contact.html" />
+    <meta property="og:image" content="hero.jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="تماس با فهوا | وبسایت رسمی" />
+    <meta name="twitter:description" content="ارتباط مستقیم با فهوا از طریق تلگرام رسمی." />
+    <meta name="twitter:image" content="hero.jpeg" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.jpg" type="image/jpeg" />
+    <link rel="apple-touch-icon" href="favicon.jpg" />
+
     <style>
-        /* ریست کامل و تنظیمات پایه */
+        /* ===== Reset & Base ===== */
         * {
             margin: 0;
             padding: 0;
@@ -16,433 +37,617 @@
         }
 
         body {
-            background-color: #0a0a0a;
-            color: #f5f5f5;
-            font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* پس‌زمینه‌ی گرافیکی خاص با خطوط ظریف */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* حلقه‌های بزرگ و محو در پس‌زمینه */
-        .bg-circle {
-            position: fixed;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .bg-circle-1 {
-            width: 600px;
-            height: 600px;
-            top: -200px;
-            right: -200px;
-        }
-
-        .bg-circle-2 {
-            width: 500px;
-            height: 500px;
-            bottom: -150px;
-            left: -150px;
-        }
-
-        /* کانتینر اصلی صفحه با حس لوکس و مینیمال */
-        .contact-container {
-            position: relative;
-            z-index: 1;
-            max-width: 680px;
-            width: 100%;
-            background: rgba(20, 20, 20, 0.5);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 2.5rem;
-            padding: 3.5rem 3rem;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .contact-container:hover {
-            border-color: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-        }
-
-        /* هدر با شماره‌گذاری خاص */
-        .header {
-            margin-bottom: 2.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            padding-bottom: 1.5rem;
-        }
-
-        .header .label {
-            font-size: 0.75rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.3);
-            font-weight: 400;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .header .label span {
-            display: inline-block;
-            width: 24px;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .header h1 {
-            font-size: 3.2rem;
-            font-weight: 300;
-            letter-spacing: -0.03em;
-            line-height: 1.1;
-            color: #ffffff;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        .header h1 strong {
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffffff 0%, #aaaaaa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header .sub {
-            margin-top: 0.75rem;
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 300;
-            letter-spacing: 0.02em;
-        }
-
-        /* بخش اطلاعات تماس با استایل مینیمال */
-        .contact-info {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0b0b0b;
+            color: #eaeaea;
+            line-height: 1.6;
             display: flex;
             flex-direction: column;
-            gap: 2rem;
-            margin: 2.5rem 0;
+            min-height: 100vh;
         }
 
-        .contact-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            transition: border-color 0.3s ease;
-        }
-
-        .contact-item:hover {
-            border-bottom-color: rgba(255, 255, 255, 0.12);
-        }
-
-        .contact-item .label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: rgba(255, 255, 255, 0.25);
-            font-weight: 400;
-        }
-
-        .contact-item .value {
-            font-size: 1.05rem;
-            font-weight: 400;
-            color: rgba(255, 255, 255, 0.7);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        /* لینک اصلی تلگرام با طراحی خاص و مینیمال */
-        .telegram-link-wrapper {
-            margin: 2rem 0 1.5rem;
-            position: relative;
-        }
-
-        .telegram-link {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 100px;
-            padding: 0.85rem 1.5rem 0.85rem 1.8rem;
+        a {
+            color: #d4a373;
             text-decoration: none;
-            color: #ffffff;
-            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            backdrop-filter: blur(4px);
-            position: relative;
-            overflow: hidden;
+            transition: color 0.2s ease;
+        }
+        a:hover {
+            color: #f0c8a0;
         }
 
-        .telegram-link::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
         }
 
-        .telegram-link:hover {
-            border-color: rgba(255, 255, 255, 0.25);
-            background: rgba(255, 255, 255, 0.06);
-            transform: scale(1.01);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        /* ===== Header ===== */
+        .site-header {
+            padding: 1.2rem 0;
+            border-bottom: 1px solid #2a2a2a;
+            background: #0b0b0b;
         }
 
-        .telegram-link:hover::before {
-            opacity: 1;
-        }
-
-        .telegram-link .link-content {
+        .header-inner {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 1rem;
-            position: relative;
-            z-index: 1;
+            flex-wrap: wrap;
         }
 
-        /* آیکون تلگرام با استایل خاص */
-        .telegram-icon {
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #f0e6d3;
+        }
+        .logo span {
+            color: #d4a373;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 0.5rem 1.5rem;
+            flex-wrap: wrap;
+        }
+        .main-nav a {
+            font-size: 0.95rem;
+            padding: 0.3rem 0;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+            color: #ccc;
+        }
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: #fff;
+            border-bottom-color: #d4a373;
+        }
+        .main-nav a.active {
+            color: #fff;
+        }
+
+        /* ===== Breadcrumb ===== */
+        .breadcrumb {
+            font-size: 0.85rem;
+            padding: 1.2rem 0 0.8rem;
+            color: #aaa;
+        }
+        .breadcrumb a {
+            color: #d4a373;
+        }
+        .breadcrumb span {
+            color: #888;
+        }
+
+        /* ===== Hero ===== */
+        .hero {
+            position: relative;
+            min-height: 55vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            background: #0b0b0b;
         }
 
-        .telegram-link:hover .telegram-icon {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.15);
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
         }
-
-        .telegram-icon svg {
-            width: 22px;
-            height: 22px;
-            fill: none;
-            stroke: #ffffff;
-            stroke-width: 1.8;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+        .hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.4;
+            filter: brightness(0.6) saturate(0.8);
         }
-
-        .telegram-link .text {
-            font-size: 1.05rem;
-            font-weight: 400;
-            letter-spacing: -0.01em;
-            color: rgba(255, 255, 255, 0.85);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        .telegram-link .username {
-            font-weight: 600;
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.06);
-            padding: 0.2rem 1rem;
-            border-radius: 40px;
-            font-size: 0.9rem;
-            letter-spacing: 0.02em;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            transition: all 0.3s ease;
-        }
-
-        .telegram-link:hover .username {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.12);
-        }
-
-        .telegram-link .arrow {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-            position: relative;
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 40%, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.75) 90%);
             z-index: 1;
         }
-
-        .telegram-link:hover .arrow {
-            transform: translateX(4px);
-            color: rgba(255, 255, 255, 0.5);
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 1rem;
         }
-
-        /* فوتر مینیمال با شماره */
-        .footer-note {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        .hero-content h1 {
+            font-size: clamp(2.6rem, 8vw, 4.8rem);
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 4px 30px rgba(0,0,0,0.7);
+            margin-bottom: 0.5rem;
+        }
+        .hero-content p {
+            font-size: 1.3rem;
+            color: #ddd;
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+        }
+        .hero-buttons {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.15);
-            letter-spacing: 0.05em;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
         }
-
-        .footer-note .dot {
+        .btn {
             display: inline-block;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            margin: 0 0.5rem;
+            padding: 0.9rem 2.2rem;
+            font-weight: 600;
+            border-radius: 40px;
+            background: #d4a373;
+            color: #0b0b0b;
+            transition: all 0.25s ease;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #e8b88a;
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(212, 163, 115, 0.25);
+            color: #0b0b0b;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #d4a373;
+            color: #d4a373;
+        }
+        .btn-outline:hover {
+            background: #d4a373;
+            color: #0b0b0b;
         }
 
-        /* ریسپانسیو برای موبایل */
-        @media (max-width: 640px) {
-            .contact-container {
-                padding: 2rem 1.5rem;
-                border-radius: 2rem;
-            }
+        /* ===== Main Grid ===== */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2.5rem;
+            margin: 2.5rem 0 3rem;
+        }
 
-            .header h1 {
-                font-size: 2.4rem;
-            }
+        /* ===== Contact Card ===== */
+        .contact-card {
+            background: #141414;
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.7);
+        }
+        .contact-card h2 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+        .contact-card .sub {
+            color: #bbb;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #d4a373;
+            padding-left: 1.2rem;
+        }
+        .telegram-box {
+            background: #1c1c1c;
+            border-radius: 16px;
+            padding: 2rem 1.8rem;
+            text-align: center;
+            border: 1px solid #333;
+            transition: border 0.2s;
+        }
+        .telegram-box:hover {
+            border-color: #d4a373;
+        }
+        .telegram-box .icon {
+            font-size: 3.2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .telegram-box h3 {
+            font-size: 1.6rem;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+        .telegram-box .username {
+            color: #d4a373;
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+        .btn-telegram {
+            background: #0088cc;
+            color: #fff;
+            padding: 0.9rem 2.8rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: inline-block;
+            transition: all 0.25s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-telegram:hover {
+            background: #0099dd;
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.35);
+            color: #fff;
+        }
+        .telegram-box .small-link {
+            display: block;
+            margin-top: 1.2rem;
+            font-size: 0.95rem;
+            color: #aaa;
+        }
+        .telegram-box .small-link a {
+            color: #d4a373;
+        }
 
-            .contact-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.3rem;
-                padding: 0.9rem 0;
-            }
+        /* ===== Sidebars ===== */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
 
-            .telegram-link {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 1rem;
-                border-radius: 1.8rem;
-                padding: 1.2rem 1.5rem;
-            }
+        .sidebar-block {
+            background: #141414;
+            border-radius: 20px;
+            padding: 1.8rem 1.5rem;
+            border: 1px solid #2a2a2a;
+        }
+        .sidebar-block h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #2a2a2a;
+            padding-bottom: 0.6rem;
+        }
 
-            .telegram-link .link-content {
-                justify-content: center;
-            }
+        .platform-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .platform-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.5rem 0.4rem;
+            border-radius: 8px;
+            transition: background 0.15s;
+            color: #ccc;
+        }
+        .platform-item:hover {
+            background: #1f1f1f;
+            color: #fff;
+        }
+        .platform-item .icon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .platform-item .icon img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            display: block;
+            filter: brightness(0.9);
+            transition: filter 0.2s;
+        }
+        .platform-item:hover .icon img {
+            filter: brightness(1);
+        }
+        .platform-item .name {
+            font-size: 0.95rem;
+        }
 
-            .telegram-link .arrow {
-                display: none;
-            }
+        .daily-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .daily-list a {
+            display: block;
+            padding: 0.45rem 0.5rem;
+            border-radius: 8px;
+            color: #ccc;
+            font-size: 0.95rem;
+            transition: all 0.15s;
+        }
+        .daily-list a:hover {
+            background: #1f1f1f;
+            color: #fff;
+            padding-left: 1rem;
+        }
 
-            .footer-note {
-                flex-direction: column;
-                gap: 0.5rem;
+        /* ===== Visual Brand Section ===== */
+        .brand-section {
+            margin: 3rem 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            background: #101010;
+            border-radius: 24px;
+            padding: 1rem;
+            border: 1px solid #222;
+        }
+        .brand-section .image-wrap {
+            border-radius: 16px;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+        .brand-section .image-wrap img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        .brand-section .image-wrap img:hover {
+            transform: scale(1.02);
+        }
+        .brand-section .text {
+            padding: 1rem 1.5rem;
+        }
+        .brand-section .text h3 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+        .brand-section .text p {
+            color: #bbb;
+            font-size: 1rem;
+            max-width: 90%;
+        }
+
+        /* ===== Footer ===== */
+        .site-footer {
+            margin-top: 3rem;
+            background: #0a0a0a;
+            border-top: 1px solid #222;
+            padding: 2.5rem 0 1.5rem;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .footer-grid h5 {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+        .footer-grid ul {
+            list-style: none;
+        }
+        .footer-grid ul li {
+            margin-bottom: 0.3rem;
+        }
+        .footer-grid ul li a {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        .footer-grid ul li a:hover {
+            color: #d4a373;
+        }
+        .footer-bottom {
+            border-top: 1px solid #1f1f1f;
+            padding-top: 1.5rem;
+            text-align: center;
+            color: #777;
+            font-size: 0.85rem;
+        }
+        .footer-bottom span {
+            color: #d4a373;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 992px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            .brand-section {
+                grid-template-columns: 1fr;
                 text-align: center;
             }
-        }
-
-        /* انیمیشن محو شدن هنگام لود */
-        @keyframes fadeSlide {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+            .brand-section .text p {
+                max-width: 100%;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
             }
         }
 
-        .contact-container {
-            animation: fadeSlide 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        @media (max-width: 640px) {
+            .header-inner {
+                flex-direction: column;
+                gap: 0.8rem;
+                align-items: stretch;
+                text-align: center;
+            }
+            .main-nav {
+                justify-content: center;
+                gap: 0.3rem 0.9rem;
+            }
+            .hero {
+                min-height: 45vh;
+            }
+            .hero-content h1 {
+                font-size: 2.4rem;
+            }
+            .contact-card {
+                padding: 1.5rem 1rem;
+            }
+            .telegram-box {
+                padding: 1.5rem 1rem;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .brand-section .text h3 {
+                font-size: 1.5rem;
+            }
         }
 
-        /* استایل خاص برای انتخاب متن */
-        ::selection {
-            background: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
+        /* ===== focus-visible ===== */
+        a:focus-visible,
+        .btn:focus-visible,
+        .btn-telegram:focus-visible {
+            outline: 3px solid #d4a373;
+            outline-offset: 3px;
         }
     </style>
 </head>
 <body>
-    <!-- عناصر گرافیکی پس‌زمینه -->
-    <div class="bg-circle bg-circle-1"></div>
-    <div class="bg-circle bg-circle-2"></div>
 
-    <div class="contact-container">
-        <!-- هدر -->
-        <div class="header">
-            <div class="label">
-                <span></span> ارتباط
-            </div>
-            <h1>
-                تماس <strong>مستقیم</strong>
-            </h1>
-            <div class="sub">
-                از طریق پیام‌رسان تلگرام
-            </div>
+    <!-- ===== HEADER ===== -->
+    <header class="site-header">
+        <div class="container header-inner">
+            <div class="logo">Fahwa <span>✦</span></div>
+            <nav class="main-nav" aria-label="منوی اصلی">
+                <a href="index.html">خانه</a>
+                <a href="about.html">درباره</a>
+                <a href="music.html">موسیقی</a>
+                <a href="media.html">رسانه</a>
+                <a href="videos.html">ویدئوها</a>
+                <a href="news.html">اخبار</a>
+                <a href="download.html">دانلود</a>
+                <a href="contact.html" class="active">تماس</a>
+            </nav>
         </div>
-<!-- ===== BACK TO HOME ===== -->
-        <a href="index.html" class="back-home">
-            <i class="fas fa-arrow-right"></i>
-            برگشت به خانه
-        </a>
-        <!-- اطلاعات تماس (نمادین) -->
-        <div class="contact-info">
-            <div class="contact-item">
-                <span class="label">پاسخگویی</span>
-                <span class="value">۲۴ ساعته</span>
-            </div>
-            <div class="contact-item">
-                <span class="label">اولویت</span>
-                <span class="value">پیام‌های تلگرام</span>
-            </div>
-        </div>
+    </header>
 
-        <!-- لینک مستقیم تلگرام با طراحی خاص -->
-        <div class="telegram-link-wrapper">
-            <a href="https://t.me/fahwaam" target="_blank" rel="noopener noreferrer" class="telegram-link">
-                <div class="link-content">
-                    <div class="telegram-icon">
-                        <!-- آیکون تلگرام با استایل مینیمال (SVG) -->
-                        <svg viewBox="0 0 24 24">
-                            <path d="M22 2L11 13" />
-                            <path d="M22 2L15 22L11 13L2 9L22 2Z" />
-                        </svg>
-                    </div>
-                    <span class="text">ارسال پیام در</span>
-                    <span class="username">@fahwaam</span>
-                </div>
-                <span class="arrow">→</span>
-            </a>
-        </div>
-
-        <!-- فوتر با جزئیات ظریف -->
-        <div class="footer-note">
-            <span>طراحی شده با تمرکز بر جزئیات</span>
-            <span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </span>
-            <span>Fahwa</span>
+    <!-- ===== BREADCRUMB ===== -->
+    <div class="container">
+        <div class="breadcrumb" aria-label="مسیر صفحه">
+            <a href="index.html">خانه</a> &nbsp;/&nbsp; <span>تماس</span>
         </div>
     </div>
-</body>
-  </html><link rel="icon" type="image/jpeg" href="images/favicon.jpg">
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-bg">
+            <img src="hero.jpeg" alt="تصویر هنری فهوا – تماس رسمی" loading="eager" />
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 id="hero-title">تماس با فهوا</h1>
+            <p>صفحه رسمی تماس با فهوا – ارتباط مستقیم از طریق تلگرام</p>
+            <div class="hero-buttons">
+                <a href="https://t.me/fahwaofficial" target="_blank" rel="noopener noreferrer" class="btn">تماس در تلگرام</a>
+                <a href="index.html" class="btn btn-outline">مشاهده وبسایت</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="container">
+        <div class="main-grid">
+
+            <!-- ===== LEFT COLUMN ===== -->
+            <section class="contact-card" aria-labelledby="contact-heading">
+                <h2 id="contact-heading">ارتباط با فهوا</h2>
+                <p class="sub">برای ارتباط مستقیم با فهوا، پیام خود را از طریق کانال رسمی تلگرام ارسال کنید.</p>
+
+                <div class="telegram-box">
+                    <span class="icon" aria-hidden="true">✉️</span>
+                    <h3>تلگرام رسمی</h3>
+                    <span class="username">@fahwaofficial</span>
+                    <a href="https://t.me/fahwaofficial" target="_blank" rel="noopener noreferrer" class="btn-telegram">
+                        ارسال پیام به فهوا
+                    </a>
+                    <span class="small-link">
+                        <a href="https://t.me/fahwaofficial" target="_blank" rel="noopener noreferrer">باز کردن تلگرام رسمی</a>
+                    </span>
+                </div>
+            </section>
+
+            <!-- ===== SIDEBAR ===== -->
+            <aside class="sidebar" aria-label="سایدبار پلتفرم‌ها و لینک‌های روزانه">
+
+                <!-- Official Platforms -->
+                <section class="sidebar-block" aria-labelledby="platforms-heading">
+                    <h4 id="platforms-heading">پلتفرم‌های رسمی فهوا</h4>
+                    <div class="platform-list">
+                        <a href="#" class="platform-item" aria-label="Genius">
+                            <span class="icon"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4a373'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E" alt="Genius" /></span>
+                            <span class="name">Genius</span>
+                        </a>
+                        <a href="#" class="platform-item" aria-label="MusicBrainz">
+                            <span class="icon"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4a373'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E" alt="MusicBrainz" /></span>
+                            <span class="name">MusicBrainz</span>
+                        </a>
+                        <a href="#" class="platform-item" aria-label="TikTok">
+                            <span class="icon"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4a373'%3E%3Cpath d='M16.6 5.82s.51.5 1.5.5c0 0 .5-1.5.5-2.5 0 0-1.5-.5-2.5-.5 0 0-1 1.5-1 2.5l1 1.5zm-2.5 2.5l-1-1.5v8.5c0 1.5-1.5 2.5-3 2.5s-3-1-3-2.5 1.5-2.5 3-2.5c.5 0 1 .2 1.5.5V8.32h2.5v.5c0 0 1.5-.5 2.5-.5v-2.5c-1 0-2.5.5-2.5.5z'/%3E%3C/svg%3E" alt="TikTok" /></span>
+                            <span class="name">TikTok</span>
+                        </a>
+                        <a href="#" class="platform-item" aria-label="Apple Music">
+                            <span class="icon"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4a373'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5zm2.5-7.5l-4 1.5v5l4-1.5V9z'/%3E%3C/svg%3E" alt="Apple Music" /></span>
+                            <span class="name">Apple Music</span>
+                        </a>
+                        <a href="#" class="platform-item" aria-label="Amazon Music">
+                            <span class="icon"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4a373'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5zm2.5-7.5l-4 1.5v5l4-1.5V9z'/%3E%3C/svg%3E" alt="Amazon Music" /></span>
+                            <span class="name">Amazon Music</span>
+                        </a>
+                        <a href="#" class="platform-item" aria-label="Bandcamp">
+                            <span class="icon"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4a373'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E" alt="Bandcamp" /></span>
+                            <span class="name">Bandcamp</span>
+                        </a>
+                        <a href="#" class="platform-item" aria-label="X">
+                            <span class="icon"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4a373'%3E%3Cpath d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/%3E%3C/svg%3E" alt="X" /></span>
+                            <span class="name">X</span>
+                        </a>
+                        <a href="#" class="platform-item" aria-label="Instagram">
+                            <span class="icon"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4a373'%3E%3Cpath d='M7.75 2.25h8.5C19.5 2.25 21.75 4.5 21.75 7.75v8.5c0 3.25-2.25 5.5-5.5 5.5h-8.5C4.5 21.75 2.25 19.5 2.25 16.25v-8.5C2.25 4.5 4.5 2.25 7.75 2.25zm0 1.5c-2.2 0-4 1.8-4 4v8.5c0 2.2 1.8 4 4 4h8.5c2.2 0 4-1.8 4-4v-8.5c0-2.2-1.8-4-4-4h-8.5zM12 7c2.76 0 5 2.24 5 5s-2.24 5-5 5-5-2.24-5-5 2.24-5 5-5zm0 1.5c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5 3.5-1.57 3.5-3.5-1.57-3.5-3.5-3.5zm4.5-1.75c.69 0 1.25.56 1.25 1.25s-.56 1.25-1.25 1.25-1.25-.56-1.25-1.25.56-1.25 1.25-1.25z'/%3E%3C/svg%3E" alt="Instagram" /></span>
+                            <span class="name">Instagram</span>
+                        </a>
+                        <a href="#" class="platform-item" aria-label="Spotify">
+                            <span class="icon"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4a373'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.5 14.5c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm-4.5-4c0 2.2-1.8 4-4 4s-4-1.8-4-4 1.8-4 4-4 4 1.8 4 4z'/%3E%3C/svg%3E" alt="Spotify" /></span>
+                            <span class="name">Spotify</span>
+                        </a>
+                        <a href="#" class="platform-item" aria-label="SoundCloud">
+                            <span class="icon"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4a373'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E" alt="SoundCloud" /></span>
+                            <span class="name">SoundCloud</span>
+                        </a>
+                        <a href="#" class="platform-item" aria-label="YouTube">
+                            <span class="icon"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4a373'%3E%3Cpath d='M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15.5v-7l6 3.5-6 3.5z'/%3E%3C/svg%3E" alt="YouTube" /></span>
+                            <span class="name">YouTube</span>
+                        </a>
+                        <a href="https://t.me/fahwaofficial" target="_blank" rel="noopener noreferrer" class="platform-item" aria-label="Telegram">
+                            <span class="icon"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4a373'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.5 14.5c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm-4.5-4c0 2.2-1.8 4-4 4s-4-1.8-4-4 1.8-4 4-4 4 1.8 4 4z'/%3E%3C/svg%3E" alt="Telegram" /></span>
+                            <span class="name">Telegram</span>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Daily Links -->
+                <section class="sidebar-block" aria-labelledby="daily-heading">
+                    <h4 id="daily-heading">لینک‌های روزانه</h4>
+                    <div class="daily-list">
+                        <a href="#">جدیدترین انتشار</a>
+                        <a href="#">ویدئوی جدید</a>
+                        <a href="#">آخرین اخبار</a>
+                        <a href="#">
+    <script>
+        // خودکار سال در فوتر
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+                            
