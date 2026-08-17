@@ -45,8 +45,8 @@
           "https://www.tiktok.com/@fahwaofficial",
           "https://x.com/fahwaofficial",
           "https://t.me/fahwaofficial",
-          "https://soundcloud.com/fahwaofficial"
-        "https://musicbrainz.org/85623249-de16-4582-ab32-a73b7aff093a
+          "https://soundcloud.com/fahwaofficial",
+          "https://musicbrainz.org/85623249-de16-4582-ab32-a73b7aff093a"
         ]
       }
     }
@@ -283,6 +283,17 @@
             font-size: 2.2rem;
             margin-bottom: 0.4rem;
             line-height: 1;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .card-icon svg {
+            width: 32px;
+            height: 32px;
+            display: block;
         }
 
         .card h3 {
@@ -568,41 +579,81 @@
         <section aria-labelledby="social-heading">
             <h2 id="social-heading">Fahwa Official Social Media</h2>
             <div class="card-grid">
+
                 <!-- Instagram -->
                 <article class="card">
-                    <div class="card-icon"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23E4405F'%3E%3Crect x='2' y='2' width='20' height='20' rx='5' fill='%23fff'/%3E%3Ccircle cx='12' cy='12' r='5' fill='%23E4405F'/%3E%3Ccircle cx='18.5' cy='5.5' r='1.5' fill='%23E4405F'/%3E%3C/svg%3E" alt="Instagram logo" style="width:32px;height:32px;"><span>📸</span></div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Instagram logo">
+                            <defs>
+                                <linearGradient id="instagramGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#FFDC80"/>
+                                    <stop offset="25%" stop-color="#FCaf45"/>
+                                    <stop offset="55%" stop-color="#E1306C"/>
+                                    <stop offset="80%" stop-color="#C13584"/>
+                                    <stop offset="100%" stop-color="#833AB4"/>
+                                </linearGradient>
+                            </defs>
+                            <rect x="2" y="2" width="20" height="20" rx="5" fill="url(#instagramGradient)"/>
+                            <rect x="6.5" y="6.5" width="11" height="11" rx="3.5" fill="none" stroke="#fff" stroke-width="1.8"/>
+                            <circle cx="12" cy="12" r="2.6" fill="none" stroke="#fff" stroke-width="1.8"/>
+                            <circle cx="17.2" cy="6.8" r="1.1" fill="#fff"/>
+                        </svg>
+                    </div>
                     <h3>Instagram</h3>
                     <div class="username">@fahwaofficial</div>
                     <p>Official Instagram profile – visuals, updates, and behind the scenes.</p>
                     <a href="https://www.instagram.com/fahwaofficial/" class="btn" target="_blank" rel="noopener noreferrer">Visit Official Profile</a>
                 </article>
+
                 <!-- TikTok -->
                 <article class="card">
-                    <div class="card-icon">🎵</div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="TikTok logo">
+                            <path fill="#25F4EE" d="M14.2 3.2v10.1a3.1 3.1 0 1 1-2.4-3v-2.5a5.6 5.6 0 1 0 4.8 5.5V8.1c1.1.8 2.5 1.3 4 1.3V6.9c-2.4-.1-4.2-1.5-4.8-3.7z"/>
+                            <path fill="#FE2C55" d="M13.1 4.1v10.1a3.1 3.1 0 1 1-2.4-3v-2.5a5.6 5.6 0 1 0 4.8 5.5V9c1.1.8 2.5 1.3 4 1.3V7.8c-2.4-.1-4.2-1.5-4.8-3.7z"/>
+                            <path fill="#fff" d="M13.65 3.6v10.1a3.1 3.1 0 1 1-2.4-3v-1.1a4.4 4.4 0 1 0 3.1 4.2V8.5c1.1.8 2.5 1.3 4 1.3V8c-2.4-.1-4.2-1.5-4.7-4.4z"/>
+                        </svg>
+                    </div>
                     <h3>TikTok</h3>
                     <div class="username">@fahwaofficial</div>
                     <p>Short videos, music snippets, and creative content.</p>
                     <a href="https://www.tiktok.com/@fahwaofficial" class="btn" target="_blank" rel="noopener noreferrer">Visit Official Profile</a>
                 </article>
+
                 <!-- X -->
                 <article class="card">
-                    <div class="card-icon">🐦</div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="X logo">
+                            <path fill="#fff" d="M18.9 2H22l-6.77 7.74L23.2 22h-6.24l-4.89-6.39L6.49 22H3.38l7.24-8.28L2.8 2h6.4l4.42 5.85L18.9 2zm-1.1 17.8h1.73L8.3 4.07H6.44L17.8 19.8z"/>
+                        </svg>
+                    </div>
                     <h3>X</h3>
                     <div class="username">@fahwaofficial</div>
                     <p>Official X (Twitter) feed – news, thoughts, and announcements.</p>
                     <a href="https://x.com/fahwaofficial" class="btn" target="_blank" rel="noopener noreferrer">Visit Official Profile</a>
                 </article>
+
                 <!-- Telegram -->
                 <article class="card">
-                    <div class="card-icon">✈️</div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Telegram logo">
+                            <circle cx="12" cy="12" r="10" fill="#229ED9"/>
+                            <path fill="#fff" d="M17.9 6.7 15.3 18c-.2.8-.7 1-1.4.6l-3.9-2.9-1.9 1.8c-.2.2-.4.4-.8.4l.3-4 7.3-6.6c.3-.3-.1-.5-.5-.2l-9 5.7-3.9-1.2c-.8-.3-.8-.8.2-1.2l15.3-5.9c.7-.3 1.3.2 1 1.2z"/>
+                        </svg>
+                    </div>
                     <h3>Telegram</h3>
                     <div class="username">@fahwaofficial</div>
                     <p>Join the official Telegram channel for exclusive updates.</p>
                     <a href="https://t.me/fahwaofficial" class="btn" target="_blank" rel="noopener noreferrer">Visit Official Profile</a>
                 </article>
+
                 <!-- Discord (placeholder – no fake link) -->
                 <article class="card">
-                    <div class="card-icon">💬</div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Discord logo">
+                            <path fill="#5865F2" d="M19.5 5.3A16.4 16.4 0 0 0 15.4 4l-.5 1a14.4 14.4 0 0 0-5.8 0l-.5-1a16.4 16.4 0 0 0-4.1 1.3C1.9 9.2 1.2 13 1.5 16.8a16.5 16.5 0 0 0 5.1 2.6l1.2-1.7a10 10 0 0 1-1.9-.9l.5-.4c3.7 1.7 7.8 1.7 11.5 0l.5.4c-.6.4-1.2.7-1.9.9l1.2 1.7a16.5 16.5 0 0 0 5.1-2.6c.4-4.4-.7-8.2-3.3-11.5zM8.4 14.6c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2zm7.2 0c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2z"/>
+                        </svg>
+                    </div>
                     <h3>Discord</h3>
                     <div class="username">🔜</div>
                     <p>Official Discord community – coming soon.</p>
@@ -615,51 +666,83 @@
         <section aria-labelledby="music-heading">
             <h2 id="music-heading">Fahwa Official Music Platforms</h2>
             <div class="card-grid two-col">
+
                 <!-- Spotify -->
                 <article class="card">
-                    <div class="card-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.59 14.5a.75.75 0 0 1-1.03.25c-2.82-1.72-6.37-2.11-10.56-1.16a.75.75 0 1 1-.31-1.47c4.58-.98 8.5-.52 11.65 1.4.35.21.46.67.25 1.03zm1.38-3.07a.94.94 0 0 1-1.29.31c-3.23-1.98-8.16-2.55-11.98-1.39a.94.94 0 1 1-.58-1.79c4.37-1.4 9.81-.72 13.54 1.57.44.27.58.85.31 1.3zm.12-3.2C14.22 7.85 8.07 7.64 4.5 8.72a1.13 1.13 0 1 1-.65-2.17c4.09-1.24 10.9-1 15.04 1.46a1.13 1.13 0 0 1-.8 2.22z"/>
-                    </svg> </div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Spotify logo">
+                            <circle cx="12" cy="12" r="10" fill="#1DB954"/>
+                            <path fill="#fff" d="M16.7 15.2c-.3 0-.5-.1-.7-.2-2.8-1.7-6.3-2.1-10.5-1.2-.4.1-.8-.2-.9-.6-.1-.4.2-.8.6-.9 4.6-1 8.5-.5 11.6 1.4.4.2.5.7.3 1-.1.3-.3.5-.4.5zm1.4-3.1c-.2 0-.4-.1-.6-.2-3.2-2-8.1-2.5-12-1.4-.5.1-1-.1-1.1-.6-.1-.5.1-1 .6-1.1 4.4-1.4 9.8-.7 13.5 1.6.4.3.6.8.3 1.3-.1.2-.4.4-.7.4zm.1-3.3c-.2 0-.3-.1-.5-.1C14.1 7.3 8 7.1 4.4 8.2c-.5.1-1-.1-1.2-.6-.1-.5.1-1 .6-1.2 4.1-1.2 10.9-1 15 1.5.4.3.6.8.3 1.3-.2.4-.5.6-.9.6z"/>
+                        </svg>
+                    </div>
                     <h3>Spotify</h3>
                     <div class="username">Fahwa</div>
                     <p>Stream Fahwa on Spotify – all tracks and albums.</p>
                     <a href="https://open.spotify.com/artist/5Xz1xLp3vFj3vM2KtM9N5H?si=Qm2U5lZpR8mz3qLxJzY0kg" class="btn" target="_blank" rel="noopener noreferrer">Visit Official Profile</a>
                 </article>
+
                 <!-- Apple Music -->
                 <article class="card">
-                    <div class="card-icon">🍏</div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Apple Music logo">
+                            <path fill="#FA243C" d="M17.1 3.3c-.9.1-2 .6-2.6 1.3-.6.7-1.1 1.8-.9 2.8 1 0 2.1-.5 2.7-1.2.6-.7 1-1.8.8-2.9z"/>
+                            <path fill="#FA243C" d="M19.7 13.1c0-2.4 2-3.5 2.1-3.6-1.1-1.6-2.8-1.8-3.4-1.9-1.5-.2-2.9.9-3.6.9-.8 0-1.9-.9-3.1-.9-1.6 0-3.1.9-3.9 2.3-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.7 2.5 2.9 2.5 1.2-.1 1.6-.8 3-.8 1.4 0 1.8.8 3 .8 1.2 0 2-1.2 2.8-2.4.9-1.4 1.3-2.8 1.3-2.9-.1 0-2.3-.9-2.3-3.8z"/>
+                        </svg>
+                    </div>
                     <h3>Apple Music</h3>
                     <div class="username">Fahwa</div>
                     <p>Listen on Apple Music – official artist page.</p>
                     <a href="https://music.apple.com/artist/fahwa/1601847123" class="btn" target="_blank" rel="noopener noreferrer">Visit Official Profile</a>
                 </article>
+
                 <!-- Amazon Music -->
                 <article class="card">
-                    <div class="card-icon">📦</div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Amazon Music logo">
+                            <path fill="#fff" d="M5.1 8.2c0-2.1 1.6-3.5 4.2-3.5 1.7 0 2.9.4 3.7 1.2.7.7.9 1.5.9 2.8v3.8c0 .9.3 1.3.8 1.8.2.2.3.4.3.6 0 .3-.2.5-.5.7l-1.3.9c-.3.2-.6.2-.8 0-.5-.4-.9-.8-1.3-1.4-1.1 1.1-2.2 1.7-3.9 1.7-2.1 0-3.5-1.3-3.5-3.3 0-1.7 1.1-2.9 2.9-3.5 1.1-.4 2.6-.5 4.2-.5v-.4c0-.8-.1-1.2-.4-1.6-.3-.4-.8-.6-1.5-.6-1 0-1.6.5-1.8 1.3-.1.4-.3.5-.6.5l-1.6-.2c-.4-.1-.5-.3-.5-.8zm5.7 2.7c-1.1 0-1.9.1-2.4.4-.8.3-1.2.8-1.2 1.5 0 .8.5 1.3 1.3 1.3.9 0 1.7-.5 2.3-1.3v-1.9z"/>
+                            <path fill="#FF9900" d="M4.4 18.3c3.4 2.1 7.7 2.6 11.6 1.5 1-.3 2-.7 2.9-1.2.3-.2.6 0 .4.3-2.5 2.3-6.1 3.5-9.5 3.1-2.7-.3-5.3-1.4-7.3-3.1-.3-.3-.1-.8.3-.6.5 0 1.1 0 1.6 0z"/>
+                        </svg>
+                    </div>
                     <h3>Amazon Music</h3>
                     <div class="username">Fahwa</div>
                     <p>Official Amazon Music artist profile.</p>
                     <a href="https://music.amazon.com/artists/B09N9N5Y8K/fahwa" class="btn" target="_blank" rel="noopener noreferrer">Visit Official Profile</a>
                 </article>
+
                 <!-- SoundCloud -->
                 <article class="card">
-                    <div class="card-icon">☁️</div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="SoundCloud logo">
+                            <path fill="#FF5500" d="M1.8 14.2c-.1 0-.2.1-.2.2l-.2 1.4.2 1.4c0 .1.1.2.2.2s.2-.1.2-.2l.2-1.4-.2-1.4c0-.1-.1-.2-.2-.2zm1.3-1.2c-.1 0-.2.1-.2.2l-.2 2.6.2 2.6c0 .1.1.2.2.2s.2-.1.2-.2l.2-2.6-.2-2.6c0-.1-.1-.2-.2-.2zm1.4-.5c-.1 0-.2.1-.2.2l-.2 3.1.2 3.1c0 .1.1.2.2.2s.2-.1.2-.2l.2-3.1-.2-3.1c0-.1-.1-.2-.2-.2zm1.5-.1c-.1 0-.2.1-.2.2l-.2 3.2.2 3.2c0 .1.1.2.2.2s.2-.1.2-.2l.2-3.2-.2-3.2c0-.1-.1-.2-.2-.2zm1.5.2c-.1 0-.2.1-.2.2l-.2 3 .2 3c0 .1.1.2.2.2s.2-.1.2-.2l.2-3-.2-3c0-.1-.1-.2-.2-.2zm1.6-.5c-.1 0-.2.1-.2.2l-.2 3.5.2 3.5c0 .1.1.2.2.2s.2-.1.2-.2l.2-3.5-.2-3.5c0-.1-.1-.2-.2-.2zm1.7-.4c-.1 0-.2.1-.2.2l-.2 3.9.2 3.9c0 .1.1.2.2.2s.2-.1.2-.2l.2-3.9-.2-3.9c0-.1-.1-.2-.2-.2zm1.8.2c-.1 0-.2.1-.2.2l-.2 3.7.2 3.7c0 .1.1.2.2.2s.2-.1.2-.2l.2-3.7-.2-3.7c0-.1-.1-.2-.2-.2zm1.9.4c-.1 0-.2.1-.2.2l-.2 3.3.2 3.3c0 .1.1.2.2.2s.2-.1.2-.2l.2-3.3-.2-3.3c0-.1-.1-.2-.2-.2zm2.1-1.8c-1.7 0-3.2.6-4.3 1.7V19h7.6c2.2 0 4-1.8 4-4s-1.8-4-4-4c-.3 0-.6 0-.9.1-.8-2.2-2.9-3.8-5.4-3.8-2.3 0-4.3 1.3-5.2 3.2z"/>
+                        </svg>
+                    </div>
                     <h3>SoundCloud</h3>
                     <div class="username">fahwaofficial</div>
                     <p>Exclusive tracks, demos, and freestyles on SoundCloud.</p>
                     <a href="https://soundcloud.com/fahwaofficial" class="btn" target="_blank" rel="noopener noreferrer">Visit Official Profile</a>
                 </article>
+
                 <!-- Bandcamp -->
                 <article class="card">
-                    <div class="card-icon">🏷️</div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Bandcamp logo">
+                            <path fill="#629AA9" d="M4.1 5h10.7l5.1 14H9.2L4.1 5z"/>
+                        </svg>
+                    </div>
                     <h3>Bandcamp</h3>
                     <div class="username">Fahwa</div>
                     <p>Official Bandcamp – music and merch.</p>
                     <a href="https://fahwa.bandcamp.com/" class="btn" target="_blank" rel="noopener noreferrer">Visit Official Profile</a>
                 </article>
+
                 <!-- YouTube Music -->
                 <article class="card">
-                    <div class="card-icon">▶️</div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="YouTube Music logo">
+                            <circle cx="12" cy="12" r="10" fill="#FF0000"/>
+                            <path fill="#fff" d="M10.2 8.1 16 12l-5.8 3.9V8.1z"/>
+                        </svg>
+                    </div>
                     <h3>YouTube Music</h3>
                     <div class="username">Fahwa</div>
                     <p>Official YouTube Music channel.</p>
@@ -672,15 +755,27 @@
         <section aria-labelledby="artist-heading">
             <h2 id="artist-heading">Fahwa Official Artist Profiles</h2>
             <div class="card-grid two-col">
+
                 <article class="card">
-                    <div class="card-icon">🧠</div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Genius logo">
+                            <path fill="#FFFF64" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/>
+                            <path fill="#000" d="M7.2 9.2h5.5v1.4H8.8v1.1h3.4v1.3H8.8v1.2h4v1.4H7.2V9.2zm7.1 0h1.5v6.4h-1.5V9.2z"/>
+                        </svg>
+                    </div>
                     <h3>Genius</h3>
                     <div class="username">Fahwa</div>
                     <p>Lyrics, annotations, and song meanings on Genius.</p>
                     <a href="https://genius.com/artists/Fahwa" class="btn" target="_blank" rel="noopener noreferrer">Visit Official Profile</a>
                 </article>
+
                 <article class="card">
-                    <div class="card-icon">🎼</div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="MusicBrainz logo">
+                            <circle cx="12" cy="12" r="10" fill="#BA478F"/>
+                            <path fill="#fff" d="M7 7.5h2.2v2.1h2.1V7.5h2.2v2.1h2.1v2.2h-2.1v2.1h-2.2v-2.1H9.2v2.1H7v-2.1H5v-2.2h2V7.5zm0 7.7h2.2v2.1H7v-2.1zm7 0h2.2v2.1H14v-2.1z"/>
+                        </svg>
+                    </div>
                     <h3>MusicBrainz</h3>
                     <div class="username">Fahwa</div>
                     <p>Official MusicBrainz artist profile – metadata and releases.</p>
@@ -695,11 +790,22 @@
             <h2 id="yt-heading">Watch Fahwa on YouTube</h2>
             <div class="youtube-feature">
                 <div class="yt-text">
-                    <h3>🎬 YouTube Channel</h3>
+                    <h3>
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:32px;height:32px;display:block;" aria-label="YouTube logo">
+                            <rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/>
+                            <path fill="#fff" d="M10 8.7 16 12l-6 3.3V8.7z"/>
+                        </svg>
+                        YouTube Channel
+                    </h3>
                     <p>موزیک‌ویدیوها، ویدیوهای رسمی، آثار جدید و محتوای تصویری Fahwa را در کانال رسمی YouTube دنبال کنید.</p>
                     <a href="https://www.youtube.com/@fahwaofficial" class="btn-yt" target="_blank" rel="noopener noreferrer">Visit YouTube Channel</a>
                 </div>
-                <div style="flex:1; min-width:140px; text-align:center; font-size:3.5rem;">▶️</div>
+                <div style="flex:1; min-width:140px; text-align:center;">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:70px;height:70px;display:inline-block;" aria-label="YouTube logo">
+                        <rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/>
+                        <path fill="#fff" d="M10 8.7 16 12l-6 3.3V8.7z"/>
+                    </svg>
+                </div>
             </div>
         </section>
 
