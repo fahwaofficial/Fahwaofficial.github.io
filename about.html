@@ -1,368 +1,623 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <link rel="canonical" href="https://fahwaofficial.github.io/about.html">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fahwa · بیوگرافی رسمی</title>
-  <!-- فونت‌های منحصربه‌فرد و جدید -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- فونت انگلیسی: Orbitron (حسی مدرن و تکنو) -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&display=swap" rel="stylesheet">
-  <!-- فونت فارسی: Vazir+ و یک فونت خاص برای عنوان (لومینا/دنیا) ولی از Vazir به‌عنوان پایه استفاده می‌کنیم + یک فونت نمایشی برای فارسی -->
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700;900&display=swap" rel="stylesheet">
-  <!-- فونت ثانویه برای فارسی با استایل خاص (Plus Jakarta Sans هم فارسی ندارد، ولی از Vazir استفاده می‌کنیم) -->
-  <style>
-    /* ریست و پایه */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fahwa (فهوا) | Official Artist Biography & About</title>
+    <meta name="description" content="صفحه رسمی هنرمند مستقل Fahwa (فهوا)؛ معرفی هویت هنری، آثار موسیقی و پلتفرم‌های رسمی. Fahwa official artist biography and music project.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://Fahwaofficial.github.io/about.html">
 
-    body {
-      background: #0b0b0b;
-      color: #eee;
-      font-family: 'Vazirmatn', 'Orbitron', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 2rem 1rem;
-      direction: rtl;
-    }
+    <!-- Open Graph -->
+    <meta property="og:title" content="Fahwa (فهوا) | Official Artist Biography & About">
+    <meta property="og:description" content="صفحه رسمی هنرمند مستقل Fahwa (فهوا)؛ معرفی هویت هنری، آثار موسیقی و پلتفرم‌های رسمی.">
+    <meta property="og:type" content="profile">
+    <meta property="og:url" content="https://Fahwaofficial.github.io/about.html">
+    <meta property="og:image" content="https://Fahwaofficial.github.io/hero.jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Fahwa Official">
+    <meta property="og:locale" content="fa_IR">
+    <meta property="og:locale:alternate" content="en_US">
 
-    .artist-card {
-      max-width: 1200px;
-      width: 100%;
-      background: linear-gradient(145deg, #121212 0%, #1a1a1a 100%);
-      border-radius: 3.5rem;
-      padding: 2.5rem 2rem;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 215, 0, 0.1);
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 215, 0, 0.15);
-    }
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fahwa (فهوا) | Official Artist Biography & About">
+    <meta name="twitter:description" content="صفحه رسمی هنرمند مستقل Fahwa (فهوا)؛ معرفی هویت هنری، آثار موسیقی و پلتفرم‌های رسمی.">
+    <meta name="twitter:image" content="https://Fahwaofficial.github.io/hero.jpeg">
+    <meta name="twitter:site" content="@fahwaofficial">
+    <meta name="twitter:creator" content="@fahwaofficial">
 
-    /* هدر با تصویر و نام */
-    .hero {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2.5rem;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 3.5rem;
-      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-      padding-bottom: 2.5rem;
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "MusicGroup",
+        "name": "Fahwa",
+        "alternateName": "فهوا",
+        "url": "https://Fahwaofficial.github.io/",
+        "image": "https://Fahwaofficial.github.io/hero.jpeg",
+        "description": "Fahwa (فهوا) یک هنرمند و پروژه موسیقی مستقل است. فعالیت هنری او شامل آثار منتشر شده در پلتفرم‌های مختلف جهانی می‌شود.",
+        "sameAs": [
+            "https://www.tiktok.com/@fahwaofficial",
+            "https://x.com/fahwaofficial",
+            "https://www.instagram.com/fahwaofficial/",
+            "https://soundcloud.com/fahwaofficial",
+            "https://youtube.com/@fahwaofficial",
+            "https://t.me/fahwaofficial"
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://Fahwaofficial.github.io/about.html"
+        }
     }
+    </script>
 
-    .photo-frame {
-      flex: 0 0 220px;
-      height: 220px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 4px solid #f5c842;
-      box-shadow: 0 0 30px rgba(245, 200, 66, 0.3);
-      transition: 0.4s;
-      background: #222;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    <!-- BreadcrumbList JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://Fahwaofficial.github.io/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "About",
+                "item": "https://Fahwaofficial.github.io/about.html"
+            }
+        ]
     }
+    </script>
 
-    .photo-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.4s;
+    <!-- FAQPage schema (only for questions present on the page) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Who is Fahwa?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Fahwa (فهوا) یک هنرمند و پروژه موسیقی مستقل است که آثار خود را در پلتفرم‌های مختلف جهانی منتشر می‌کند."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is Fahwa's official website?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "وب‌سایت رسمی Fahwa در آدرس https://Fahwaofficial.github.io/ قرار دارد."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Where can I listen to Fahwa's music?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "آثار Fahwa در پلتفرم‌هایی مانند Spotify، Apple Music، Amazon Music، Bandcamp و SoundCloud قابل دسترسی هستند."
+                }
+            }
+        ]
     }
+    </script>
 
-    .photo-frame:hover img {
-      transform: scale(1.05);
-    }
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #0d0d0d;
+            color: #e8e6e3;
+            line-height: 1.7;
+            padding: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        a {
+            color: #b8b0a8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        a:hover, a:focus {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        /* Skip to content */
+        .skip-to-content {
+            position: absolute;
+            left: -10000px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+        .skip-to-content:focus {
+            position: static;
+            width: auto;
+            height: auto;
+            padding: 0.5rem 1rem;
+            background: #1e1e1e;
+            color: #fff;
+            border-radius: 4px;
+        }
+        /* Header / Nav */
+        header {
+            border-bottom: 1px solid #2a2a2a;
+            padding-bottom: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem 2rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem 1.8rem;
+            list-style: none;
+        }
+        .nav-links a {
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
+            padding: 0.3rem 0;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-links a:hover, .nav-links a:focus {
+            border-bottom-color: #a88c7a;
+            text-decoration: none;
+        }
+        .brand {
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: #f0ece7;
+            letter-spacing: 0.5px;
+        }
+        .brand span {
+            color: #b8a99c;
+            font-weight: 300;
+        }
 
-    .title-group {
-      flex: 1;
-      min-width: 260px;
-      text-align: center;
-    }
+        /* Breadcrumb */
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 2rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #222;
+        }
+        .breadcrumb a {
+            color: #b8b0a8;
+        }
+        .breadcrumb a:hover {
+            color: #fff;
+        }
+        .breadcrumb span {
+            margin: 0 0.4rem;
+        }
 
-    .title-group h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 900;
-      font-size: 4.2rem;
-      letter-spacing: 6px;
-      background: linear-gradient(135deg, #f5c842, #ffb347);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(245, 200, 66, 0.2);
-      line-height: 1.1;
-      margin-bottom: 0.3rem;
-    }
+        /* Main */
+        main {
+            flex: 1;
+        }
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            color: #f5f0eb;
+        }
+        h1 small {
+            font-size: 1.8rem;
+            font-weight: 200;
+            color: #b8a99c;
+            margin-right: 0.75rem;
+        }
+        .subhead {
+            font-size: 1.2rem;
+            color: #b0a69b;
+            border-right: 3px solid #6a5f55;
+            padding-right: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+        section {
+            margin-bottom: 3.5rem;
+        }
+        h2 {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            color: #e0dad4;
+            letter-spacing: -0.3px;
+            border-bottom: 1px solid #2a2a2a;
+            padding-bottom: 0.5rem;
+        }
+        h3 {
+            font-size: 1.4rem;
+            font-weight: 400;
+            margin: 1.8rem 0 0.8rem 0;
+            color: #d6cec6;
+        }
+        p {
+            margin-bottom: 1.2rem;
+            max-width: 75ch;
+            color: #d6d0ca;
+        }
+        .highlight {
+            background: #1c1c1c;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            color: #e6ddd5;
+        }
 
-    .title-group .persian-name {
-      font-family: 'Vazirmatn', sans-serif;
-      font-weight: 900;
-      font-size: 2.8rem;
-      background: linear-gradient(135deg, #f0e6d0, #d4b68a);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 2px;
-      display: block;
-      margin-top: -0.3rem;
-      text-shadow: 0 0 10px rgba(212, 182, 138, 0.3);
-    }
+        /* Identity card */
+        .identity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem 2rem;
+            background: #151515;
+            padding: 1.8rem 2rem;
+            border-radius: 12px;
+            border: 1px solid #2a2a2a;
+            margin: 1.5rem 0;
+        }
+        .identity-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .identity-item .label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8f847a;
+        }
+        .identity-item .value {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #f0e9e2;
+        }
 
-    .title-group .subhead {
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 400;
-      font-size: 0.9rem;
-      color: #aaa;
-      letter-spacing: 3px;
-      margin-top: 0.6rem;
-      border-top: 1px dashed #444;
-      padding-top: 0.8rem;
-      display: inline-block;
-    }
+        /* Official Platforms */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1rem;
+        }
+        .platform-card {
+            background: #161616;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            transition: background 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .platform-card:hover {
+            background: #222;
+            border-color: #4a3f38;
+            transform: translateY(-2px);
+        }
+        .platform-card img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 4px;
+            background: #2a2a2a;
+            padding: 4px;
+        }
+        .platform-card .info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+        .platform-card .platform-name {
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #e0d8d0;
+        }
+        .platform-card .username {
+            font-size: 0.8rem;
+            color: #9a8f84;
+        }
 
-    /* بخش بیوگرافی دوزبانه */
-    .bio-section {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2.5rem;
-      margin: 2.8rem 0 3rem;
-    }
+        /* FAQ */
+        .faq-item {
+            border-bottom: 1px solid #252525;
+            padding: 1.2rem 0;
+        }
+        .faq-item:last-child {
+            border-bottom: 0;
+        }
+        .faq-question {
+            font-weight: 500;
+            font-size: 1.1rem;
+            color: #e8e0d8;
+        }
+        .faq-answer {
+            color: #c5bcb2;
+            margin-top: 0.3rem;
+        }
 
-    @media (max-width: 720px) {
-      .bio-section {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-      .title-group h1 {
-        font-size: 3rem;
-      }
-      .title-group .persian-name {
-        font-size: 2rem;
-      }
-      .hero {
-        gap: 1.5rem;
-      }
-    }
+        /* Footer */
+        footer {
+            border-top: 1px solid #2a2a2a;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: #a0958a;
+        }
+        footer a {
+            color: #b8b0a8;
+        }
+        footer a:hover {
+            color: #fff;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem 2rem;
+            list-style: none;
+        }
+        .footer-copy {
+            text-align: left;
+        }
 
-    .bio-card {
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(4px);
-      padding: 1.8rem 2rem;
-      border-radius: 2.5rem;
-      border: 1px solid rgba(255, 215, 0, 0.08);
-      transition: 0.3s;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-    }
-
-    .bio-card:hover {
-      border-color: #f5c84255;
-      box-shadow: 0 8px 30px rgba(245, 200, 66, 0.1);
-      transform: translateY(-3px);
-    }
-
-    .bio-card h3 {
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 700;
-      font-size: 1.1rem;
-      letter-spacing: 2px;
-      color: #f5c842;
-      margin-bottom: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border-bottom: 1px solid #333;
-      padding-bottom: 0.6rem;
-    }
-
-    .bio-card h3 span {
-      background: #f5c84222;
-      padding: 0 8px;
-      border-radius: 30px;
-      font-size: 0.8rem;
-    }
-
-    .bio-card p {
-      font-size: 1rem;
-      line-height: 1.9;
-      color: #d0d0d0;
-      font-weight: 300;
-    }
-
-    .bio-card p strong {
-      color: #f5c842;
-      font-weight: 700;
-    }
-
-    .bio-card.persian p {
-      font-family: 'Vazirmatn', sans-serif;
-      font-weight: 400;
-      font-size: 1.05rem;
-      line-height: 2;
-    }
-
-    .bio-card.english p {
-      font-family: 'Orbitron', 'Segoe UI', sans-serif;
-      font-weight: 300;
-      letter-spacing: 0.5px;
-      font-size: 0.95rem;
-      direction: ltr;
-      text-align: left;
-    }
-
-    /* لینک‌های شبکه‌های اجتماعی */
-    .social-links {
-      margin: 3rem 0 1rem;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.8rem 1.2rem;
-      border-top: 1px solid #2a2a2a;
-      padding-top: 2.5rem;
-    }
-
-    .social-links a {
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 400;
-      font-size: 0.7rem;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      color: #ccc;
-      background: #1f1f1f;
-      padding: 0.6rem 1.3rem;
-      border-radius: 60px;
-      border: 1px solid #333;
-      transition: 0.2s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.4);
-    }
-
-    .social-links a:hover {
-      background: #f5c842;
-      color: #0b0b0b;
-      border-color: #f5c842;
-      transform: scale(1.04);
-      box-shadow: 0 0 25px #f5c84255;
-    }
-
-    .social-links a i {
-      font-style: normal;
-      font-weight: 900;
-      font-size: 1rem;
-    }
-
-    /* دکمه‌های شبکه با آیکون ساده (اموجی) */
-    .social-links a::before {
-      content: "●";
-      color: #f5c842;
-      font-size: 0.5rem;
-      margin-left: 4px;
-      transition: 0.2s;
-    }
-
-    .social-links a:hover::before {
-      color: #0b0b0b;
-    }
-
-    /* فوتر */
-    .footer-note {
-      text-align: center;
-      font-size: 0.7rem;
-      color: #555;
-      font-family: 'Orbitron', sans-serif;
-      letter-spacing: 2px;
-      margin-top: 1.5rem;
-      border-top: 1px solid #1f1f1f;
-      padding-top: 1.8rem;
-    }
-
-    .footer-note span {
-      color: #f5c842;
-    }
-
-    /* تنظیم عکس در صورت عدم وجود فایل photo3.jpg */
-    .photo-frame img {
-      background: #2a2a2a;
-    }
-  </style>
+        /* Responsive */
+        @media (max-width: 700px) {
+            body {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            h1 small {
+                font-size: 1.4rem;
+                display: block;
+                margin-right: 0;
+            }
+            nav {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.8rem;
+            }
+            .nav-links {
+                justify-content: center;
+                gap: 0.8rem 1.2rem;
+            }
+            .brand {
+                text-align: center;
+            }
+            .identity-grid {
+                grid-template-columns: 1fr;
+                padding: 1.2rem;
+            }
+            .platform-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            footer {
+                flex-direction: column;
+                text-align: center;
+            }
+            .footer-copy {
+                text-align: center;
+            }
+        }
+        @media (max-width: 480px) {
+            .platform-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                gap: 0.6rem 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+        /* focus states for accessibility */
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid #b8a99c;
+            outline-offset: 4px;
+            border-radius: 2px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
 </head>
 <body>
-  <div class="artist-card">
+    <a class="skip-to-content" href="#main-content">پرش به محتوای اصلی</a>
 
-    <!-- بخش هیرو: عکس + نام -->
-    <div class="hero">
-      <div class="photo-frame">
-        <!-- عکس photo3.jpg (در کنار فایل html قرار دهید) -->
-        <img src="photo3.jpg" alt="Fahwa · فَهوا" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22 viewBox=%220 0 300 300%22%3E%3Crect width=%22300%22 height=%22300%22 fill=%22%231a1a1a%22/%3E%3Ctext x=%2250%22 y=%22160%22 font-family=%22Orbitron%22 font-size=%2230%22 fill=%22%23f5c842%22%3EFAHWA%3C/text%3E%3C/svg%3E'">
-      </div>
-      <div class="title-group">
-        <h1>FAHWA</h1>
-        <span class="persian-name">فَهوا</span>
-        <div class="subhead">RAPPER · PRODUCER · IRAN</div>
-      </div>
-    </div>
+    <header>
+        <nav aria-label="منوی اصلی">
+            <div class="brand">Fahwa <span>official</span></div>
+            <ul class="nav-links">
+                <li><a href="https://Fahwaofficial.github.io/">Home</a></li>
+                <li><a href="https://Fahwaofficial.github.io/about.html" aria-current="page">About</a></li>
+                <li><a href="https://Fahwaofficial.github.io/biography.html">Biography</a></li>
+                <li><a href="https://Fahwaofficial.github.io/releases.html">Releases</a></li>
+                <li><a href="https://Fahwaofficial.github.io/media.html">Media</a></li>
+                <li><a href="https://Fahwaofficial.github.io/videos.html">Videos</a></li>
+                <li><a href="https://Fahwaofficial.github.io/social.html">Social Networks</a></li>
+                <li><a href="https://Fahwaofficial.github.io/contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <!-- بیوگرافی دو زبانه -->
-    <div class="bio-section">
-      <!-- فارسی -->
-      <div class="bio-card persian">
-        <h3>بیوگرافی <span>🇮🇷</span></h3>
-        <p>
-          <strong>فَهوا</strong> (متولد 1993/07/04(1372/04/13) رپر، ترانه‌سرا و آهنگساز ایرانی ساکن تهران است. 
-          فعالیت حرفه‌ای خود را از سال <strong>۲۰۲۰</strong> به‌طور رسمی آغاز کرد و با سبکی منحصربه‌فرد 
-          و ترکیبی از هارمونی‌های مدرن و اشعار عمیق، به‌سرعت در میان مخاطبان جایگاه ویژه‌ای یافت. 
-          او با تکیه بر تجربه‌های زیستی و فضای اجتماعی ایران، آثاری خلق کرده که بازتابی از 
-          نسل امروز است. فَهوا علاوه بر رپ، در زمینه‌ی تولید موسیقی و تنظیم نیز فعالیت گسترده‌ای 
-          دارد و همکاری با هنرمندان دیگر را در کارنامه‌ی خود می‌بیند.
-        </p>
-      </div>
-      <!-- انگلیسی -->
-      <div class="bio-card english">
-        <h3>Biography <span>🇬🇧</span></h3>
-        <p>
-          <strong>Fahwa</strong> (b. 1993, age 33) is an Iranian rapper, songwriter, and producer 
-          based in Tehran. He officially started his career in <strong>2020</strong> and quickly 
-          gained attention for his distinctive flow, introspective lyrics, and modern production 
-          style. Blending traditional Persian melodies with trap and alternative hip-hop, 
-          Fahwa’s music reflects the complexities of life in Iran today. He is also an active 
-          collaborator and has worked with several underground and mainstream artists across 
-          the Middle East.
-        </p>
-      </div>
-    </div>
+    <nav class="breadcrumb" aria-label="مسیر صفحه">
+        <a href="https://Fahwaofficial.github.io/">Home</a> <span>›</span>
+        <span>About</span>
+    </nav>
 
-    <!-- تمام لینک‌های شبکه‌های اجتماعی (با متن به‌صورت دکمه) -->
-    <div class="social-links">
-      <a href="https://www.instagram.com/fahwaofficial?igsh=MWY2M3h1cnZnZW00dw==" target="_blank">Instagram</a>
-      <a href="https://x.com/fahwaofficial?t=FwD5_1e1MYA541awWEOGpg&s=09" target="_blank">X</a>
-      <a href="https://t.me/fahwaofficial/544" target="_blank">Telegram</a>
-      <a href="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK?si=OSjGCMdiRha0Sfus15aU7Q" target="_blank">Spotify</a>
-      <a href="https://soundcloud.com/fahwaofficial?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" target="_blank">SoundCloud</a>
-      <a href="https://youtube.com/@fahwaofficial?si=ZOC9pHhkG4HSHU3L" target="_blank">YouTube</a>
-      <a href="https://genius.com/artists/Fahwa" target="_blank">Genius</a>
-      <a href="https://musicbrainz.org/artist/85623249-de16-4582-ab32-a73b7aff093a" target="_blank">MusicBrainz</a>
-      <a href="https://fahwa.substack.com/" target="_blank">Substack</a>
-      <a href="https://youtube.com/@fahwaofficial?si=gMthC9TAcRZmFiEs" target="_blank">YT 2</a>
-      <a href="https://musicbrainz.org/artist/12be2b36-1596-4ec7-9abf-0f9eb53377e1" target="_blank">MB 2</a>
-      <a href="https://www.tiktok.com/@fahwaofficial?_r=1&_d=dfj79h7h7bg66d&sec_uid=MS4wLjABAAAAedKz2xnRTCBQoTtnBUL09h5nIxWLG1kxNB7jqqDdmItiq7xWtGHxsT4T_X2jYYY9&share_author_id=7603187326018323464&sharer_language=en&source=h5_m&u_code=f1lh7hmi0ma778&utm_source=copy&utm_campaign=client_share&share_link_id=ba0f3127-6379-4d62-90e7-767cb43a78b0&share_app_id=1340&ugbiz_name=Account&lang=en&user_id=7603187326018323464&sec_user_id=MS4wLjABAAAAedKz2xnRTCBQoTtnBUL09h5nIxWLG1kxNB7jqqDdmItiq7xWtGHxsT4T_X2jYYY9&enable_checksum=1" target="_blank">TikTok</a>
-      <a href="https://music.apple.com/mx/artist/fahwa/1813073821" target="_blank">Apple Music</a>
-      <a href="https://music.amazon.it/artists/B0F7RW3YL2" target="_blank">Amazon Music</a>
-      <a href="https://sites.google.com/view/fahwaofficial" target="_blank">Google Site</a>
-    </div>
+    <main id="main-content">
+        <article>
+            <header>
+                <h1>Fahwa <small>فهوا</small></h1>
+                <div class="subhead">
+                    هنرمند و پروژه موسیقی مستقل — Independent Artist &amp; Music Project
+                </div>
+            </header>
 
-    <div class="footer-note">
-      <span>⚡</span> FAHWA · OFFICIAL PAGE <span>⚡</span>
-    </div>
+            <section aria-labelledby="about-intro">
+                <h2 id="about-intro">درباره / About</h2>
+                <p>
+                    <span lang="en">Fahwa</span> (با نام فارسی «فهوا») یک هنرمند و پروژه موسیقی مستقل است که با رویکردی شخصی و هویتی متمایز، آثار خود را در پلتفرم‌های جهانی منتشر می‌کند. 
+                    فعالیت هنری <span lang="en">Fahwa</span> بر پایه‌ی بیان اصالت، تجربه‌های صوتی و ارتباط مستقیم با مخاطب بنا شده است.
+                </p>
+                <p>
+                    مسیر هنری <span lang="en">Fahwa</span> با انتشار قطعات و پروژه‌های مستقل در پلتفرم‌هایی مانند <span lang="en">Spotify</span>، <span lang="en">Apple Music</span>، <span lang="en">Bandcamp</span> و <span lang="en">SoundCloud</span> همراه بوده و همواره بر استقلال و خلاقیت تأکید داشته است. 
+                    این صفحه، هویت رسمی و مرجع اطلاعاتی پروژه <span lang="en">Fahwa</span> برای مخاطبان، رسانه‌ها و موتورهای جستجو است.
+                </p>
+            </section>
 
-  </div>
+            <section aria-labelledby="identity-title">
+                <h2 id="identity-title">هویت هنری / Identity</h2>
+                <div class="identity-grid">
+                    <div class="identity-item">
+                        <span class="label">Official Name</span>
+                        <span class="value" lang="en">Fahwa</span>
+                    </div>
+                    <div class="identity-item">
+                        <span class="label">نام فارسی</span>
+                        <span class="value">فهوا</span>
+                    </div>
+                    <div class="identity-item">
+                        <span class="label">Also known as</span>
+                        <span class="value" lang="en">Fahwa Official</span>
+                    </div>
+                    <div class="identity-item">
+                        <span class="label">Full name (verified)</span>
+                        <span class="value" lang="en">Iman Fahwa / ایمان فهوا</span>
+                    </div>
+                </div>
+                <p>
+                    نام کامل <span lang="en">Iman Fahwa</span> (ایمان فهوا) به عنوان هویت اصلی این پروژه هنری ثبت شده است. 
+                    تمامی آثار، شبکه‌های اجتماعی و پلتفرم‌های رسمی تحت این نام و برند <span lang="en">Fahwa</span> فعالیت می‌کنند.
+                </p>
+            </section>
+
+            <section aria-labelledby="platforms-title">
+                <h2 id="platforms-title">شبکه‌ها و پلتفرم‌های رسمی / Official Platforms</h2>
+                <div class="platform-grid">
+                    <a href="https://www.tiktok.com/@fahwaofficial" class="platform-card" target="_blank" rel="me noopener noreferrer">
+                        <img src="https://Fahwaofficial.github.io/fahwafavicon.jpg" alt="آیکون TikTok" width="32" height="32" loading="lazy" decoding="async">
+                        <div class="info">
+                            <span class="platform-name">TikTok</span>
+                            <span class="username">@fahwaofficial</span>
+                        </div>
+                    </a>
+                    <a href="https://x.com/fahwaofficial" class="platform-card" target="_blank" rel="me noopener noreferrer">
+                        <img src="https://Fahwaofficial.github.io/favicon.jpg" alt="آیکون X" width="32" height="32" loading="lazy" decoding="async">
+                        <div class="info">
+                            <span class="platform-name">X</span>
+                            <span class="username">@fahwaofficial</span>
+                        </div>
+                    </a>
+                    <a href="https://www.instagram.com/fahwaofficial/" class="platform-card" target="_blank" rel="me noopener noreferrer">
+                        <img src="https://Fahwaofficial.github.io/photo4.jpg" alt="آیکون Instagram" width="32" height="32" loading="lazy" decoding="async">
+                        <div class="info">
+                            <span class="platform-name">Instagram</span>
+                            <span class="username">@fahwaofficial</span>
+                        </div>
+                    </a>
+                    <a href="https://soundcloud.com/fahwaofficial" class="platform-card" target="_blank" rel="me noopener noreferrer">
+                        <img src="https://Fahwaofficial.github.io/fahwafavicon.jpg" alt="آیکون SoundCloud" width="32" height="32" loading="lazy" decoding="async">
+                        <div class="info">
+                            <span class="platform-name">SoundCloud</span>
+                            <span class="username">fahwaofficial</span>
+                        </div>
+                    </a>
+                    <a href="https://youtube.com/@fahwaofficial" class="platform-card" target="_blank" rel="me noopener noreferrer">
+                        <img src="https://Fahwaofficial.github.io/hero.jpeg" alt="آیکون YouTube" width="32" height="32" loading="lazy" decoding="async">
+                        <div class="info">
+                            <span class="platform-name">YouTube</span>
+                            <span class="username">@fahwaofficial</span>
+                        </div>
+                    </a>
+                    <a href="https://t.me/fahwaofficial" class="platform-card" target="_blank" rel="me noopener noreferrer">
+                        <img src="https://Fahwaofficial.github.io/favicon.jpg" alt="آیکون Telegram" width="32" height="32" loading="lazy" decoding="async">
+                        <div class="info">
+                            <span class="platform-name">Telegram</span>
+                            <span class="username">@fahwaofficial</span>
+                        </div>
+                    </a>
+                </div>
+                <p style="margin-top: 1.2rem;">
+                    همچنین آثار <span lang="en">Fahwa</span> در <span lang="en">Spotify</span>، <span lang="en">Apple Music</span>، <span lang="en">Amazon Music</span>، <span lang="en">Bandcamp</span> و <span lang="en">Genius</span> و <span lang="en">MusicBrainz</span> در دسترس هستند.
+                </p>
+            </section>
+
+            <section aria-labelledby="faq-title">
+                <h2 id="faq-title">پرسش‌های متداول / FAQ</h2>
+                <div class="faq-item">
+                    <div class="faq-question">Who is Fahwa?</div>
+                    <div class="faq-answer">Fahwa (فهوا) یک هنرمند و پروژه موسیقی مستقل است که آثار خود را در پلتفرم‌های مختلف جهانی منتشر می‌کند.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">What is Fahwa's official website?</div>
+                    <div class="faq-answer">وب‌سایت رسمی Fahwa در آدرس <a href="https://Fahwaofficial.github.io/">https://Fahwaofficial.github.io/</a> قرار دارد.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Where can I listen to Fahwa's music?</div>
+                    <div class="faq-answer">آثار Fahwa در پلتفرم‌هایی مانند Spotify، Apple Music، Amazon Music، Bandcamp و SoundCloud قابل دسترسی هستند.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">What is Fahwa known as in Persian?</div>
+                    <div class="faq-answer">نام فارسی Fahwa، «فهوا» است و همچنین با نام کامل Iman Fahwa (ایمان فهوا) نیز شناخته می‌شود.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Where can I find Fahwa's official social media accounts?</div>
+                    <div class="faq-answer">همه شبکه‌های اجتماعی رسمی در بخش «شبکه‌ها و پلتفرم‌های رسمی» این صفحه فهرست شده‌اند.</div>
+                </div>
+            </section>
+        </article>
+    </main>
+
+    <footer>
+        <div>
+            <strong>Fahwa</strong> — Official Artist Website
+            <br>
+            <span lang="fa">فهوا | وب‌سایت رسمی هنرمند</span>
+        </div>
+        <ul class="footer-links">
+            <li><a href="https://Fahwaofficial.github.io/about.html">About</a></li>
+            <li><a href="https://Fahwaofficial.github.io/biography.html">Biography</a></li>
+            <li><a href="https://Fahwaofficial.github.io/releases.html">Releases</a></li>
+            <li><a href="https://Fahwaofficial.github.io/media.html">Media</a></li>
+            <li><a href="https://Fahwaofficial.github.io/videos.html">Videos</a></li>
+            <li><a href="https://Fahwaofficial.github.io/social.html">Social</a></li>
+            <li><a href="https://Fahwaofficial.github.io/contact.html">Contact</a></li>
+        </ul>
+        <div class="footer-copy">
+            &copy; 2026 Fahwa. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- minimal performance: no external libraries -->
 </body>
-    </html>
+</html>
