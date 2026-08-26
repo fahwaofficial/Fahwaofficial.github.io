@@ -1,776 +1,841 @@
-This is a complete, production-ready HTML file for the "FAHWA GAME" Telegram Mini App. It's a community-focused clicker game designed with a professional, Web3-inspired aesthetic. The file includes all core mechanics like point earning, energy management, daily rewards, missions, referral system, and leaderboards, all built with a modular architecture ready for future backend integration.
+## 1. مشکل نسخه قبلی
+
+مشکل اصلی این بود که **بازی شرط وجود Telegram WebApp SDK را داشت** و اگر در مرورگر عادی باز می‌شد، هیچ محتوایی نمایش نمی‌داد. همچنین ساختار کد به‌گونه‌ای بود که **تمام منطق بازی به Telegram وابسته** بود و در صورت عدم وجود آن، صفحه سیاه باقی می‌ماند.
+
+---
+
+## 2. فایل کامل `game.html` (نسخه نهایی)
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>FAHWA GAME — Community Clicker</title>
-  <!-- Open Graph / Social -->
-  <meta property="og:title" content="FAHWA GAME — Community Clicker" />
-  <meta property="og:description" content="Play, earn POINTS, complete missions, grow the FAHWA community. Real product, real contribution." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://t.me/fahwabot" />
-  <meta property="og:image" content="https://fahwa.game/og-image.jpg" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="FAHWA GAME — Community Clicker" />
-  <meta name="twitter:description" content="Play, earn POINTS, complete missions, grow the FAHWA community." />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    }
-    :root {
-      --bg-primary: #0b0d11;
-      --bg-secondary: #13161e;
-      --bg-card: #1a1f2a;
-      --bg-card-hover: #222a38;
-      --border-subtle: #2a3344;
-      --text-primary: #f0f2f8;
-      --text-secondary: #8892a8;
-      --text-muted: #4f5a6e;
-      --accent-glow: #d4a373;
-      --accent-gold: #e4b77d;
-      --accent-blue: #5b7cfa;
-      --shadow-card: 0 8px 24px rgba(0,0,0,0.6);
-      --radius-card: 20px;
-      --radius-btn: 60px;
-      --transition: 0.25s cubic-bezier(0.2, 0, 0, 1);
-    }
-    body {
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 12px 0 80px 0;
-      font-weight: 400;
-      line-height: 1.4;
-      -webkit-tap-highlight-color: transparent;
-    }
-    #app {
-      max-width: 430px;
-      width: 100%;
-      padding: 0 16px 16px 16px;
-      margin: 0 auto;
-    }
-    /* Telegram theme integration */
-    .tg-theme {
-      background: var(--tg-theme-bg-color, var(--bg-primary));
-      color: var(--tg-theme-text-color, var(--text-primary));
-    }
-    /* cards */
-    .card {
-      background: var(--bg-card);
-      border-radius: var(--radius-card);
-      padding: 16px 18px;
-      box-shadow: var(--shadow-card);
-      border: 1px solid var(--border-subtle);
-      transition: var(--transition);
-      backdrop-filter: blur(2px);
-    }
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      font-weight: 500;
-      letter-spacing: 0.3px;
-      color: var(--text-secondary);
-      font-size: 14px;
-      text-transform: uppercase;
-    }
-    .flex {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .flex-col {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .gap-2 { gap: 12px; }
-    .gap-3 { gap: 20px; }
-    .grow { flex: 1; }
-    .text-center { text-align: center; }
-    .text-muted { color: var(--text-muted); }
-    .text-secondary { color: var(--text-secondary); }
-    .text-gold { color: var(--accent-gold); }
-    .text-sm { font-size: 13px; }
-    .text-xs { font-size: 11px; letter-spacing: 0.3px; }
-    .font-mono { font-family: 'SF Mono', 'Menlo', monospace; }
-    .mt-1 { margin-top: 8px; }
-    .mt-2 { margin-top: 16px; }
-    .mb-1 { margin-bottom: 8px; }
-    .w-full { width: 100%; }
-    /* buttons */
-    .btn {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-primary);
-      padding: 10px 18px;
-      border-radius: var(--radius-btn);
-      font-weight: 500;
-      font-size: 15px;
-      cursor: pointer;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      background: #1e2636;
-    }
-    .btn:active { transform: scale(0.96); opacity: 0.8; }
-    .btn-primary {
-      background: var(--accent-gold);
-      color: #0b0d11;
-      border-color: var(--accent-gold);
-      font-weight: 600;
-    }
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--border-subtle);
-    }
-    .btn-sm { padding: 6px 14px; font-size: 13px; }
-    .btn-block { width: 100%; justify-content: center; }
-    /* navigation */
-    .nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--bg-secondary);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border-subtle);
-      display: flex;
-      justify-content: space-around;
-      padding: 8px 8px 12px 8px;
-      max-width: 430px;
-      margin: 0 auto;
-      z-index: 99;
-      border-radius: 24px 24px 0 0;
-      box-shadow: 0 -8px 24px rgba(0,0,0,0.6);
-    }
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 10px;
-      color: var(--text-muted);
-      transition: var(--transition);
-      cursor: pointer;
-      padding: 4px 12px;
-      border-radius: 40px;
-      background: transparent;
-      border: none;
-      gap: 2px;
-      min-width: 56px;
-    }
-    .nav-item.active {
-      color: var(--accent-gold);
-      background: rgba(212, 163, 115, 0.08);
-    }
-    .nav-item svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.8; }
-    .nav-item.active svg { stroke: var(--accent-gold); }
-    /* home */
-    .hero {
-      text-align: center;
-      padding: 10px 0 6px 0;
-    }
-    .hero h1 {
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #f0e6d0, #d4a373);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .click-area {
-      width: 180px;
-      height: 180px;
-      margin: 12px auto;
-      background: radial-gradient(circle at 30% 30%, #2a3344, #13161e);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid var(--accent-gold);
-      box-shadow: 0 0 40px rgba(212, 163, 115, 0.15), inset 0 0 40px rgba(212, 163, 115, 0.05);
-      cursor: pointer;
-      user-select: none;
-      transition: var(--transition);
-      position: relative;
-      font-weight: 700;
-      font-size: 20px;
-      color: var(--accent-gold);
-      text-shadow: 0 0 20px rgba(212, 163, 115, 0.3);
-    }
-    .click-area:active { transform: scale(0.94); }
-    .click-area .ripple {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(212, 163, 115, 0.2);
-      animation: rippleAnim 0.6s ease-out forwards;
-      pointer-events: none;
-    }
-    @keyframes rippleAnim {
-      0% { width: 0; height: 0; opacity: 0.8; }
-      100% { width: 300px; height: 300px; opacity: 0; }
-    }
-    .float-point {
-      position: fixed;
-      font-weight: 700;
-      color: var(--accent-gold);
-      font-size: 22px;
-      pointer-events: none;
-      animation: floatUp 0.9s ease-out forwards;
-      z-index: 100;
-      text-shadow: 0 0 20px rgba(212, 163, 115, 0.5);
-    }
-    @keyframes floatUp {
-      0% { opacity: 1; transform: translateY(0) scale(1); }
-      100% { opacity: 0; transform: translateY(-100px) scale(1.2); }
-    }
-    .stat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-      margin: 16px 0 6px;
-    }
-    .stat-box {
-      background: var(--bg-secondary);
-      border-radius: 16px;
-      padding: 10px 6px;
-      text-align: center;
-      border: 1px solid var(--border-subtle);
-    }
-    .stat-box .label { font-size: 10px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; }
-    .stat-box .value { font-size: 18px; font-weight: 600; margin-top: 2px; }
-    .energy-bar {
-      background: var(--bg-secondary);
-      border-radius: 40px;
-      height: 10px;
-      overflow: hidden;
-      border: 1px solid var(--border-subtle);
-      margin: 6px 0 4px;
-    }
-    .energy-fill {
-      height: 100%;
-      width: 100%;
-      background: linear-gradient(90deg, #5b7cfa, #a78bfa);
-      border-radius: 40px;
-      transition: width 0.3s ease;
-    }
-    /* mission cards */
-    .mission-item {
-      background: var(--bg-secondary);
-      border-radius: 16px;
-      padding: 12px 14px;
-      border-left: 3px solid var(--accent-gold);
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid var(--border-subtle);
-      border-left-width: 4px;
-    }
-    .mission-item .info { flex: 1; }
-    .mission-item .title { font-weight: 500; font-size: 15px; }
-    .mission-item .desc { font-size: 12px; color: var(--text-secondary); }
-    .badge {
-      background: var(--accent-gold);
-      color: #0b0d11;
-      padding: 2px 10px;
-      border-radius: 40px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-    .badge-secondary { background: var(--bg-card); color: var(--text-secondary); }
-    /* leaderboard */
-    .lb-entry {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 4px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-    .lb-entry .rank { font-weight: 600; width: 28px; color: var(--text-secondary); }
-    .lb-entry .name { flex: 1; font-weight: 500; }
-    .lb-entry .points { font-weight: 600; color: var(--accent-gold); }
-    /* tabs */
-    .tabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-    .tab {
-      padding: 6px 14px;
-      border-radius: 40px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    .tab.active {
-      background: var(--accent-gold);
-      color: #0b0d11;
-      border-color: var(--accent-gold);
-    }
-    /* profile */
-    .profile-avatar {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: var(--bg-secondary);
-      border: 2px solid var(--accent-gold);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      font-weight: 600;
-      color: var(--accent-gold);
-    }
-    /* responsive */
-    @media (max-width: 380px) {
-      .click-area { width: 150px; height: 150px; font-size: 16px; }
-      .stat-grid { grid-template-columns: 1fr 1fr; }
-    }
-    /* skeleton */
-    .skeleton {
-      background: var(--bg-secondary);
-      border-radius: 12px;
-      height: 48px;
-      width: 100%;
-      animation: pulse 1.4s ease-in-out infinite;
-      margin-bottom: 8px;
-    }
-    @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 0.3; } 100% { opacity: 0.6; } }
-    .hidden { display: none !important; }
-    .section-title { font-size: 18px; font-weight: 600; margin: 18px 0 12px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>FAHWA CLICK — Community Game</title>
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="FAHWA CLICK — Community Game" />
+    <meta property="og:description" content="Play, earn points, support Fahwa and grow the community." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://fahwa.io/game.html" />
+    <meta property="og:image" content="https://fahwa.io/og-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="FAHWA CLICK — Community Game" />
+    <meta name="twitter:description" content="Play, earn points, support Fahwa and grow the community." />
+    
+    <!-- Telegram WebApp SDK (loads only if available) -->
+    <script src="https://telegram.org/js/telegram-web-app.js" async defer></script>
+    
+    <style>
+        /* ============================================================
+           CSS VARIABLES & RESET
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --bg-primary: #0a0c12;
+            --bg-secondary: #141821;
+            --bg-card: #1a1f2c;
+            --bg-card-hover: #222a3a;
+            --border-color: #2a3346;
+            --text-primary: #f0f2f8;
+            --text-secondary: #8892a8;
+            --text-muted: #4f5a6e;
+            --accent-gold: #d4a373;
+            --accent-gold-glow: rgba(212, 163, 115, 0.25);
+            --accent-blue: #5b7cfa;
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.6);
+            --radius-card: 20px;
+            --radius-btn: 60px;
+            --transition: 0.2s cubic-bezier(0.2, 0, 0, 1);
+            --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        
+        html, body {
+            height: 100%;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font);
+            font-weight: 400;
+            line-height: 1.5;
+            overflow: hidden;
+        }
+        
+        /* ============================================================
+           APP CONTAINER
+           ============================================================ */
+        #app {
+            max-width: 430px;
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            margin: 0 auto;
+            padding: 0 16px 72px 16px;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* ============================================================
+           LOADING SCREEN
+           ============================================================ */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #loading-screen h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f0e6d0, var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+        #loading-screen .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        #loading-screen .sub {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 16px;
+        }
+        
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0 8px 0;
+            flex-shrink: 0;
+        }
+        .header .brand {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #f0e6d0, var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .status {
+            font-size: 11px;
+            color: var(--text-secondary);
+            background: var(--bg-card);
+            padding: 4px 12px;
+            border-radius: 40px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .header .status .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot.online { background: #4ade80; }
+        .dot.offline { background: var(--text-muted); }
+        
+        /* ============================================================
+           POINTS DISPLAY
+           ============================================================ */
+        .points-display {
+            text-align: center;
+            padding: 6px 0 4px 0;
+            flex-shrink: 0;
+        }
+        .points-display .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+        }
+        .points-display .value {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -1px;
+            transition: transform 0.1s ease;
+            font-variant-numeric: tabular-nums;
+        }
+        .points-display .value.pop {
+            animation: pop 0.15s ease;
+        }
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+        
+        /* ============================================================
+           CLICK AREA
+           ============================================================ */
+        .click-area-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            padding: 8px 0;
+            position: relative;
+        }
+        .click-area {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #2a3346, #141821);
+            border: 2px solid var(--accent-gold);
+            box-shadow: 0 0 60px var(--accent-gold-glow), inset 0 0 60px rgba(212, 163, 115, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.08s ease, box-shadow 0.2s ease;
+            position: relative;
+            touch-action: manipulation;
+        }
+        .click-area:active {
+            transform: scale(0.94);
+        }
+        .click-area .inner-text {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-shadow: 0 0 30px rgba(212, 163, 115, 0.3);
+            pointer-events: none;
+            text-align: center;
+            line-height: 1.2;
+        }
+        .click-area .inner-text small {
+            display: block;
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            text-shadow: none;
+        }
+        
+        /* ripple */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(212, 163, 115, 0.2);
+            animation: rippleAnim 0.7s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes rippleAnim {
+            0% { width: 0; height: 0; opacity: 0.8; transform: translate(-50%, -50%); }
+            100% { width: 300px; height: 300px; opacity: 0; transform: translate(-50%, -50%); }
+        }
+        
+        /* floating +1 */
+        .float-point {
+            position: fixed;
+            pointer-events: none;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-shadow: 0 0 30px rgba(212, 163, 115, 0.6);
+            z-index: 1000;
+            animation: floatUp 0.9s ease-out forwards;
+        }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-120px) scale(1.3); }
+        }
+        
+        /* ============================================================
+           ENERGY BAR
+           ============================================================ */
+        .energy-section {
+            flex-shrink: 0;
+            padding: 4px 0 8px 0;
+        }
+        .energy-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .energy-bar-bg {
+            background: var(--bg-secondary);
+            border-radius: 40px;
+            height: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .energy-bar-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), #a78bfa);
+            border-radius: 40px;
+            transition: width 0.3s ease;
+        }
+        .energy-depleted {
+            color: #f87171;
+            font-weight: 600;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 4px;
+        }
+        
+        /* ============================================================
+           BOTTOM NAVIGATION
+           ============================================================ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 6px 0 12px 0;
+            max-width: 430px;
+            margin: 0 auto;
+            z-index: 100;
+            border-radius: 24px 24px 0 0;
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.5);
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 10px;
+            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: 40px;
+            transition: var(--transition);
+            min-width: 52px;
+            touch-action: manipulation;
+        }
+        .nav-item.active {
+            color: var(--accent-gold);
+            background: rgba(212, 163, 115, 0.08);
+        }
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+        }
+        .nav-item.active svg {
+            stroke: var(--accent-gold);
+        }
+        
+        /* ============================================================
+           PAGES (hidden by default)
+           ============================================================ */
+        .page {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            padding: 8px 0 12px 0;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .page.active {
+            display: flex;
+        }
+        
+        /* ============================================================
+           CARDS & COMMON
+           ============================================================ */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 16px 18px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+        }
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .flex-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .text-gold { color: var(--accent-gold); }
+        .text-muted { color: var(--text-muted); }
+        .text-sm { font-size: 13px; }
+        .text-xs { font-size: 11px; }
+        .mt-1 { margin-top: 8px; }
+        .mb-1 { margin-bottom: 8px; }
+        .gap-1 { gap: 6px; }
+        .gap-2 { gap: 12px; }
+        .w-full { width: 100%; }
+        .text-center { text-align: center; }
+        
+        .btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 18px;
+            border-radius: var(--radius-btn);
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            touch-action: manipulation;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn:active { transform: scale(0.96); opacity: 0.7; }
+        .btn-primary {
+            background: var(--accent-gold);
+            color: #0a0c12;
+            border-color: var(--accent-gold);
+            font-weight: 600;
+        }
+        .btn-sm { padding: 4px 14px; font-size: 12px; }
+        .btn-block { width: 100%; justify-content: center; }
+        .btn-outline {
+            background: transparent;
+            border-color: var(--border-color);
+        }
+        
+        .badge {
+            background: var(--accent-gold);
+            color: #0a0c12;
+            padding: 2px 12px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+        
+        /* ============================================================
+           MISSIONS
+           ============================================================ */
+        .mission-item {
+            background: var(--bg-secondary);
+            border-radius: 14px;
+            padding: 12px 14px;
+            border-left: 3px solid var(--accent-gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-left-width: 4px;
+            margin-bottom: 8px;
+        }
+        .mission-item .info { flex: 1; }
+        .mission-item .title { font-weight: 500; font-size: 14px; }
+        .mission-item .desc { font-size: 12px; color: var(--text-secondary); }
+        .mission-item .status { font-size: 12px; }
+        
+        /* ============================================================
+           LEADERBOARD
+           ============================================================ */
+        .lb-entry {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 4px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .lb-entry .rank { font-weight: 600; width: 30px; color: var(--text-secondary); }
+        .lb-entry .name { flex: 1; font-weight: 500; }
+        .lb-entry .pts { font-weight: 600; color: var(--accent-gold); }
+        
+        /* ============================================================
+           DAILY REWARD
+           ============================================================ */
+        .daily-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .daily-cell {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 8px 2px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            font-size: 11px;
+        }
+        .daily-cell .day { color: var(--text-muted); font-size: 10px; }
+        .daily-cell .amount { font-weight: 600; color: var(--accent-gold); }
+        .daily-cell.claimed { border-color: #4ade80; opacity: 0.5; }
+        .daily-cell.today { border-color: var(--accent-gold); background: rgba(212, 163, 115, 0.08); }
+        
+        /* ============================================================
+           SCROLLBAR
+           ============================================================ */
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 380px) {
+            .click-area { width: 160px; height: 160px; }
+            .points-display .value { font-size: 36px; }
+            .daily-grid { grid-template-columns: repeat(7, 1fr); gap: 4px; }
+            .daily-cell { font-size: 10px; padding: 6px 2px; }
+        }
+        @media (min-width: 768px) {
+            #app { padding: 0 24px 80px 24px; }
+            .click-area { width: 240px; height: 240px; }
+            .click-area .inner-text { font-size: 28px; }
+        }
+        @media (max-width: 430px) {
+            .bottom-nav { padding: 4px 0 10px 0; }
+            .nav-item { min-width: 44px; font-size: 9px; padding: 2px 8px; }
+            .nav-item svg { width: 20px; height: 20px; }
+        }
+    </style>
 </head>
 <body>
-<div id="app">
-  <!-- DYNAMIC CONTENT RENDERED BY JS -->
-</div>
-<script>
-  // ============================================================
-  // CONFIG
-  // ============================================================
-  const CONFIG = {
-    pointsPerClick: 1,
-    maxEnergy: 1000,
-    energyPerClick: 1,
-    energyRegenRate: 1,     // per interval
-    energyRegenInterval: 3000, // ms
-    dailyRewards: [100, 200, 300, 500, 700, 1000, 2000],
-    levelThresholds: [0, 10000, 50000, 250000, 1000000],
-    levelNames: ['NEWCOMER', 'ACTIVE', 'SUPPORTER', 'BUILDER', 'LEGEND'],
-    referralReward: 2500,
-    apiBaseUrl: 'https://api.fahwa.game/v1', // placeholder
-    demoMode: false,
-  };
-
-  // ============================================================
-  // APP STATE (in memory, persisted to localStorage)
-  // ============================================================
-  let state = {
-    user: {
-      id: null,
-      telegram_id: null,
-      username: 'Player',
-      first_name: 'Guest',
-      points: 0,
-      energy: CONFIG.maxEnergy,
-      level: 1,
-      referral_code: 'FAHWA-0000',
-      referred_by: null,
-      daily_streak: 0,
-      last_daily_claim: null,
-      supporter_score: 0,
-      created_at: Date.now(),
-    },
-    missions: [],
-    leaderboard: [],
-    referrals: [],
-    dailyClaimed: false,
-    achievements: [],
-    campaigns: [],
-  };
-
-  // ============================================================
-  // STORAGE (localStorage mock)
-  // ============================================================
-  const GameStorage = {
-    save() {
-      try {
-        localStorage.setItem('fahwa_game_state', JSON.stringify(state));
-      } catch (_) {}
-    },
-    load() {
-      try {
-        const raw = localStorage.getItem('fahwa_game_state');
-        if (raw) {
-          const saved = JSON.parse(raw);
-          // merge carefully
-          state.user = { ...state.user, ...saved.user };
-          state.missions = saved.missions || [];
-          state.leaderboard = saved.leaderboard || [];
-          state.referrals = saved.referrals || [];
-          state.dailyClaimed = saved.dailyClaimed || false;
-          state.achievements = saved.achievements || [];
-          state.campaigns = saved.campaigns || [];
-          // ensure energy not over max
-          if (state.user.energy > CONFIG.maxEnergy) state.user.energy = CONFIG.maxEnergy;
-        }
-      } catch (_) {}
-    },
-    clear() { localStorage.removeItem('fahwa_game_state'); }
-  };
-
-  // ============================================================
-  // TELEGRAM DETECTION & DEMO MODE
-  // ============================================================
-  const Telegram = {
-    webApp: window.Telegram?.WebApp || null,
-    init() {
-      if (this.webApp) {
-        this.webApp.ready();
-        this.webApp.expand();
-        // Use telegram user data if available
-        const user = this.webApp.initDataUnsafe?.user;
-        if (user) {
-          state.user.telegram_id = user.id;
-          state.user.username = user.username || user.first_name || 'Player';
-          state.user.first_name = user.first_name || 'User';
-          state.user.id = user.id;
-        }
-        CONFIG.demoMode = false;
-      } else {
-        CONFIG.demoMode = true;
-        state.user.id = 'demo_' + Date.now();
-        state.user.username = 'DemoUser';
-        state.user.first_name = 'Demo';
-      }
-      // generate referral code
-      state.user.referral_code = 'FAHWA-' + (state.user.telegram_id || state.user.id || Math.floor(Math.random() * 99999)).toString().slice(0,6).toUpperCase();
-    },
-    haptic(style = 'light') {
-      if (this.webApp?.HapticFeedback) {
-        try { this.webApp.HapticFeedback.impactOccurred(style); } catch(_) {}
-      }
-    },
-  };
-
-  // ============================================================
-  // API ABSTRACTION (MOCK)
-  // ============================================================
-  const API = {
-    async getUser() { return { ...state.user }; },
-    async saveSession() { GameStorage.save(); return { ok: true }; },
-    async getPoints() { return { points: state.user.points }; },
-    async claimDailyReward() {
-      if (state.dailyClaimed) return { error: 'Already claimed' };
-      const streak = state.user.daily_streak || 0;
-      const idx = Math.min(streak, CONFIG.dailyRewards.length - 1);
-      const reward = CONFIG.dailyRewards[idx];
-      state.user.points += reward;
-      state.user.daily_streak = streak + 1;
-      state.dailyClaimed = true;
-      state.user.last_daily_claim = Date.now();
-      GameStorage.save();
-      return { reward, streak: state.user.daily_streak };
-    },
-    async completeMission(missionId) {
-      const mission = state.missions.find(m => m.id === missionId);
-      if (!mission || mission.completed) return { error: 'Mission unavailable' };
-      mission.completed = true;
-      state.user.points += mission.reward;
-      state.user.supporter_score += mission.supporterPoints || 0;
-      GameStorage.save();
-      return { ok: true, reward: mission.reward };
-    },
-    async getMissions() { return { missions: state.missions }; },
-    async getLeaderboard() { return { leaderboard: state.leaderboard }; },
-    async createReferral() {
-      const code = state.user.referral_code;
-      return { code, link: `https://t.me/fahwabot?start=${code}` };
-    },
-    async getReferralStats() { return { referrals: state.referrals, count: state.referrals.length }; },
-    async getSupporterRank() { return { rank: 1, score: state.user.supporter_score }; },
-    async getTreasury() { return { status: 'Coming soon' }; },
-    async getCampaigns() { return { campaigns: state.campaigns }; },
-  };
-
-  // ============================================================
-  // GAME ENGINE
-  // ============================================================
-  const Game = {
-    init() {
-      GameStorage.load();
-      Telegram.init();
-      this.generateDemoData();
-      this.startEnergyRegen();
-      this.checkDailyReset();
-      this.renderAll();
-    },
-    generateDemoData() {
-      if (!state.missions.length) {
-        state.missions = [
-          { id: 'm1', category: 'YOUTUBE', title: 'Watch FAHWA Video', desc: 'Watch a community video', reward: 1000, supporterPoints: 5, completed: false, verificationType: 'youtube_api' },
-          { id: 'm2', category: 'YOUTUBE', title: 'Subscribe to FAHWA', desc: 'Subscribe on YouTube', reward: 2000, supporterPoints: 10, completed: false, verificationType: 'youtube_api' },
-          { id: 'm3', category: 'TELEGRAM', title: 'Join Community', desc: 'Join our Telegram group', reward: 500, supporterPoints: 3, completed: false, verificationType: 'telegram' },
-          { id: 'm4', category: 'SOCIAL', title: 'Share FAHWA', desc: 'Share on social media', reward: 800, supporterPoints: 4, completed: false, verificationType: 'manual' },
-          { id: 'm5', category: 'SPECIAL', title: 'Weekly Supporter', desc: 'Complete weekly tasks', reward: 5000, supporterPoints: 25, completed: false, verificationType: 'server' },
-        ];
-      }
-      if (!state.leaderboard.length) {
-        state.leaderboard = [
-          { username: 'CryptoKnight', points: 48200 },
-          { username: 'YoutubeWarrior', points: 32100 },
-          { username: 'CommunityHero', points: 28900 },
-          { username: 'ReferralKing', points: 21200 },
-          { username: 'FAHWA_Fan', points: 18700 },
-          { username: 'Builder', points: 14500 },
-          { username: 'Supporter', points: 12300 },
-          { username: 'PlayerOne', points: 9800 },
-        ];
-      }
-      if (!state.referrals.length) {
-        state.referrals = [
-          { username: 'Friend1', joined: Date.now() - 100000 },
-          { username: 'Friend2', joined: Date.now() - 200000 },
-        ];
-      }
-      if (!state.campaigns.length) {
-        state.campaigns = [
-          { id: 'c1', name: 'YouTube 10K Subs', target: 10000, progress: 3420, rewardPool: 'Community Fund', status: 'ACTIVE' },
-          { id: 'c2', name: 'Community 5K Players', target: 5000, progress: 2100, rewardPool: 'TON Rewards', status: 'ACTIVE' },
-        ];
-      }
-      GameStorage.save();
-    },
-    startEnergyRegen() {
-      setInterval(() => {
-        if (state.user.energy < CONFIG.maxEnergy) {
-          state.user.energy = Math.min(state.user.energy + CONFIG.energyRegenRate, CONFIG.maxEnergy);
-          this.renderEnergy();
-          GameStorage.save();
-        }
-      }, CONFIG.energyRegenInterval);
-    },
-    checkDailyReset() {
-      const last = state.user.last_daily_claim;
-      if (last) {
-        const diff = Date.now() - last;
-        if (diff > 24 * 60 * 60 * 1000) {
-          state.dailyClaimed = false;
-          // reset streak if more than 48h
-          if (diff > 48 * 60 * 60 * 1000) state.user.daily_streak = 0;
-          GameStorage.save();
-        }
-      }
-    },
-    click() {
-      if (state.user.energy < CONFIG.energyPerClick) {
-        this.showToast('ENERGY DEPLETED');
-        return;
-      }
-      state.user.energy -= CONFIG.energyPerClick;
-      state.user.points += CONFIG.pointsPerClick;
-      // update level
-      this.updateLevel();
-      // haptic
-      Telegram.haptic('light');
-      // animation
-      this.spawnFloat('+1');
-      // ripple
-      this.rippleEffect();
-      GameStorage.save();
-      this.renderAll();
-    },
-    updateLevel() {
-      const pts = state.user.points;
-      let lvl = 1;
-      for (let i = CONFIG.levelThresholds.length - 1; i >= 0; i--) {
-        if (pts >= CONFIG.levelThresholds[i]) { lvl = i + 1; break; }
-      }
-      state.user.level = lvl;
-    },
-    spawnFloat(text) {
-      const el = document.createElement('div');
-      el.className = 'float-point';
-      el.textContent = text;
-      const x = 40 + Math.random() * 60;
-      const y = 30 + Math.random() * 40;
-      el.style.left = x + '%';
-      el.style.top = y + '%';
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), 1000);
-    },
-    rippleEffect() {
-      const area = document.querySelector('.click-area');
-      if (!area) return;
-      const ripple = document.createElement('div');
-      ripple.className = 'ripple';
-      const size = Math.min(area.offsetWidth, area.offsetHeight);
-      ripple.style.width = size + 'px';
-      ripple.style.height = size + 'px';
-      ripple.style.left = '50%';
-      ripple.style.top = '50%';
-      ripple.style.transform = 'translate(-50%, -50%)';
-      area.appendChild(ripple);
-      setTimeout(() => ripple.remove(), 700);
-    },
-    showToast(msg) {
-      const div = document.createElement('div');
-      div.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1f2a;color:#f0f2f8;padding:12px 24px;border-radius:60px;border:1px solid #d4a373;z-index:999;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,0.7);';
-      div.textContent = msg;
-      document.body.appendChild(div);
-      setTimeout(() => div.remove(), 1800);
-    },
-    // render functions
-    renderAll() {
-      this.renderHome();
-      this.renderMissions();
-      this.renderLeaderboard();
-      this.renderProfile();
-      this.renderReferral();
-      this.renderCampaigns();
-      this.renderEnergy();
-      this.updateNav();
-    },
-    renderHome() {
-      const app = document.getElementById('app');
-      const section = document.createElement('div');
-      section.id = 'section-home';
-      section.innerHTML = `
-        <div class="hero">
-          <h1>FAHWA GAME</h1>
-          <div style="font-size:13px;color:var(--text-secondary);margin-top:-2px;">Community · Build · Earn</div>
+    
+    <!-- ============================================================
+    LOADING SCREEN
+    ============================================================ -->
+    <div id="loading-screen">
+        <h1>FAHWA</h1>
+        <div class="spinner"></div>
+        <div class="sub">Loading game...</div>
+    </div>
+    
+    <!-- ============================================================
+    APP
+    ============================================================ -->
+    <div id="app" style="display:none;">
+        
+        <!-- HEADER -->
+        <div class="header">
+            <span class="brand">✦ FAHWA</span>
+            <span class="status" id="connectionStatus">
+                <span class="dot offline" id="statusDot"></span>
+                <span id="statusText">Connecting...</span>
+            </span>
         </div>
-        <div class="stat-grid">
-          <div class="stat-box"><div class="label">POINTS</div><div class="value" id="pointsDisplay">${state.user.points}</div></div>
-          <div class="stat-box"><div class="label">LEVEL</div><div class="value">${state.user.level} ${CONFIG.levelNames[state.user.level-1]||''}</div></div>
-          <div class="stat-box"><div class="label">ENERGY</div><div class="value" id="energyDisplay">${Math.round(state.user.energy)}</div></div>
+        
+        <!-- POINTS -->
+        <div class="points-display">
+            <div class="label">FAHWA POINTS</div>
+            <div class="value" id="pointsValue">0</div>
         </div>
-        <div class="energy-bar"><div class="energy-fill" id="energyFill" style="width:${(state.user.energy/CONFIG.maxEnergy)*100}%"></div></div>
-        <div class="flex text-sm text-secondary" style="justify-content:space-between;padding:0 4px;">
-          <span>${Math.round(state.user.energy)} / ${CONFIG.maxEnergy}</span>
-          <span>+${CONFIG.energyRegenRate} / ${CONFIG.energyRegenInterval/1000}s</span>
+        
+        <!-- CLICK AREA -->
+        <div class="click-area-wrapper">
+            <div class="click-area" id="clickArea">
+                <div class="inner-text">
+                    TAP
+                    <small>FAHWA</small>
+                </div>
+            </div>
         </div>
-        <div class="click-area" id="clickArea">
-          ⚡ CLICK
+        
+        <!-- ENERGY -->
+        <div class="energy-section">
+            <div class="energy-row">
+                <span>⚡ ENERGY</span>
+                <span id="energyText">1000 / 1000</span>
+            </div>
+            <div class="energy-bar-bg">
+                <div class="energy-bar-fill" id="energyFill" style="width:100%"></div>
+            </div>
+            <div id="energyDepleted" class="energy-depleted" style="display:none;">⚠️ ENERGY DEPLETED</div>
         </div>
-        <div style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:2px;">
-          POINTS are in-game/community points and are not a cryptocurrency.
+        
+        <!-- ============================================================
+        PAGES
+        ============================================================ -->
+        
+        <!-- HOME (visible by default) -->
+        <div class="page active" id="page-home">
+            <div class="card">
+                <div class="flex-between">
+                    <span class="card-title">📅 Daily Reward</span>
+                    <span class="badge" id="dailyBadge">Claim</span>
+                </div>
+                <div class="daily-grid" id="dailyGrid"></div>
+                <button class="btn btn-primary btn-block mt-1" id="dailyClaimBtn">Claim Daily Reward</button>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">🎯 Quick Tasks</div>
+                <div id="quickTasks"></div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">📊 Community</div>
+                <div class="flex-row flex-between text-sm">
+                    <span>Players: <span class="text-gold">1,247</span></span>
+                    <span>Active: <span class="text-gold">342</span></span>
+                    <span>YouTube: <span class="text-gold">2.1K</span></span>
+                </div>
+            </div>
         </div>
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
-          <span class="badge badge-secondary">${state.user.daily_streak || 0} day streak</span>
-          <span class="badge" style="background:var(--accent-blue);color:#fff;">${state.user.supporter_score} contribution</span>
+        
+        <!-- MISSIONS -->
+        <div class="page" id="page-missions">
+            <div class="card">
+                <div class="card-title">🎯 MISSIONS</div>
+                <div class="text-sm text-muted mb-1">Complete missions to earn points &amp; support Fahwa.</div>
+                <div id="missionsList"></div>
+                <div class="text-xs text-muted mt-1">* Verification coming soon in production.</div>
+            </div>
         </div>
-      `;
-      const existing = document.getElementById('section-home');
-      if (existing) existing.replaceWith(section);
-      else app.prepend(section);
-
-      document.getElementById('clickArea')?.addEventListener('click', () => this.click());
-      // update points live
-      document.getElementById('pointsDisplay').textContent = state.user.points;
-    },
-    renderEnergy() {
-      const fill = document.getElementById('energyFill');
-      const display = document.getElementById('energyDisplay');
-      if (fill) fill.style.width = (state.user.energy / CONFIG.maxEnergy) * 100 + '%';
-      if (display) display.textContent = Math.round(state.user.energy);
-    },
-    renderMissions() {
-      const container = document.getElementById('section-missions') || document.createElement('div');
-      container.id = 'section-missions';
-      container.className = 'hidden';
-      let html = `<div class="section-title">🎯 MISSIONS</div>
-        <div class="tabs">${['ALL','YOUTUBE','TELEGRAM','SOCIAL','SPECIAL'].map(t => `<span class="tab ${t==='ALL'?'active':''}" data-tab="${t}">${t}</span>`).join('')}</div>
-        <div id="missionList">`;
-      state.missions.forEach(m => {
-        const done = m.completed ? '✅' : '⏳';
-        html += `<div class="mission-item" style="${m.completed?'opacity:0.6;':''}">
-          <div class="info"><div class="title">${done} ${m.title}</div><div class="desc">${m.desc} · ${m.category}</div></div>
-          <div><span class="badge">+${m.reward}</span>
-          ${!m.completed ? `<button class="btn btn-sm btn-primary mission-claim" data-id="${m.id}" style="margin-left:6px;">Claim</button>` : '<span class="badge badge-secondary">Done</span>'}
-          </div>
-        </div>`;
-      });
-      html += `</div>`;
-      container.innerHTML = html;
-      // tab switching
-      container.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-          const filter = tab.dataset.tab;
-          const items = container.querySelectorAll('.mission-item');
-          items.forEach(item => {
-            const cat = item.querySelector('.desc')?.textContent?.split('·')[1]?.trim() || '';
-            if (filter === 'ALL' || cat === filter) item.style.display = 'flex';
-            else item.style.display = 'none';
-          });
-        });
-      });
-      // claim buttons
-      container.querySelectorAll('.mission-claim').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const id = btn.dataset.id;
-          const res = await API.completeMission(id);
-          if (res.ok) {
-            this.showToast('Mission complete! +' + res.reward);
-            this.renderAll();
-          } else {
-            this.showToast(res.error || 'Error');
-          }
-        });
-      });
-      document.getElementById('app').appendChild(container);
-    },
-    renderLeaderboard() {
-      const container = document.getElementById('section-leaderboard') || document.createElement('div');
-      container.id = 'section-leaderboard';
-      container.className = 'hidden';
-      let html = `<div class="section-title">🏆 LEADERBOARD</div>
-        <div class="tabs">${['GLOBAL','WEEKLY','MONTHLY','YOUTUBE','REFERRALS'].map(t => `<span class="tab ${t==='GLOBAL'?'active':''}">${t}</span>`).join('')}</div>
-        <div>`;
-      state.leaderboard.slice(0, 10).forEach((item, i) => {
-        html += `<div class="lb-entry"><span class="rank">#${i+1}</span><span class="name">${item.username}</span><span class="points">${item.points}</span></div>`;
-      });
-      html += `</div>`;
-      container.innerHTML = html;
-      document.getElementById('app').appendChild(container);
-    },
-    renderProfile() {
-      const container = document.getElementById('section-profile') || document.createElement('div');
-      container.id = 'section-profile';
-      container.className = 'hidden';
-      const u = state.user;
-      container.innerHTML = `
-        <div class="section-title">👤 PROFILE</div>
-        <div class="flex" style="gap:16px;align-items:center;">
-          <div class="profile-avatar">${u.first_name[0]}</div>
-          <div><div style="font-size:20px;font-weight:600;">${u.username}</div>
-          <div class="text-secondary text-sm">${u.first_name}</div>
-          <div class="text-xs text-muted">ID: ${u.telegram_id || u.id}</div></div>
+        
+        <!-- LEADERBOARD -->
+        <div class="page" id="page-leaderboard">
+            <div class="card">
+                <div class="card-title">🏆 LEADERBOARD</div>
+                <div class="text-xs text-muted mb-1">DEMO DATA — Top contributors</div>
+                <div id="leaderboardList"></div>
+            </div>
         </div>
-        <div class="stat-grid" style="margin-top:12px;">
-          <div class="stat-box"><div class="label">POINTS</div><div class="value">${u.points}</div></div>
-          <div class="stat-box"><div class="label">LEVEL</div><div class="value">${u.level}</div></div>
-          <div class="stat-box"><div class="label">STREAK</div><div class="value">${u.daily_streak}🔥</div></div>
+        
+        <!-- REWARDS -->
+        <div class="page" id="page-rewards">
+            <div class="card">
+                <div class="card-title">🎁 REWARDS</div>
+                <div class="text-sm text-gold">FAHWA POINTS</div>
+                <div class="text-sm text-muted">Points are in-game points and have no monetary value.</div>
+                <hr style="border-color:var(--border-color);margin:12px 0;">
+                <div class="card-title">🏆 COMMUNITY REWARDS</div>
+                <div class="text-sm text-muted">Top contributors may become eligible for future TON rewards.</div>
+                <div class="badge badge-secondary mt-1">Coming Soon</div>
+                <div class="text-xs text-muted mt-1">TON rewards are not currently active. Eligibility and distribution rules will be announced officially.</div>
+            </div>
+            <div class="card">
+                <div class="card-title">🔮 FUTURE TOKEN</div>
+                <div class="text-sm text-gold">FAHWA TOKEN</div>
+                <div class="text-sm text-muted">Status: PLANNED</div>
+                <div class="text-xs text-muted mt-1">The current game uses Points only. Points are not a cryptocurrency or transferable asset.</div>
+                <div class="text-xs text-muted">Any future token distribution will be announced officially by Fahwa.</div>
+            </div>
         </div>
-        <div class="card" style="margin-top:
+        
+        <!-- PROFILE -->
+        <div class="page" id="page-profile">
+            <div class="card">
+                <div class="flex-row" style="gap:16px;">
+                    <div style="width:64px;height:64px;border-radius:50%;background:var(--bg-secondary);border:2px solid var(--accent-gold);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:600;color:var(--accent-gold);flex-shrink:0;">
+                        👤
+                    </div>
+                    <div>
+                        <div style="font-size:20px;font-weight:600;" id="profileName">Player</div>
+                        <div class="text-sm text-muted" id="profileId">ID: web_xxxx</div>
+                        <div class="text-sm text-muted">Level: <span id="profileLevel">1</span></div>
+                    </div>
+                </div>
+                <div class="flex-row flex-between mt-1">
+                    <span>Points: <span class="text-gold" id="profilePoints">0</span></span>
+                    <span>Streak: <span class="text-gold" id="profileStreak">0</span>🔥</span>
+                    <span>Referrals: <span class="text-gold" id="profileReferrals">0</span></span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">📋 Stats</div>
+                <div class="flex-row flex-between text-sm"><span>Total Clicks</span><span id="statClicks">0</span></div>
+                <div class="flex-row flex-between text-sm"><span>Missions Done</span><span id="statMissions">0</span></div>
+                <div class="flex-row flex-between text-sm"><span>Supporter Score</span><span id="statSupporter">0</span></div>
+            </div>
+            <div class="card">
+                <div class="card-title">🔗 Referral</div>
+                <div class="flex-row gap-1">
+                    <input type="text" id="referralLink" readonly style="flex:1;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:40px;padding:8px 14px;color:var(--text-primary);font-size:12px;outline:none;">
+                    <button class="btn btn-sm btn-primary" id="copyReferralBtn">Copy</button>
+                </div>
+                <button class="btn btn-outline btn-block mt-1" id="shareReferralBtn">📤 Share</button>
+            </div>
+        </div>
+        
+        <!-- ============================================================
+        BOTTOM NAVIGATION
+        ============================================================ -->
+        <div class="bottom-nav">
+            <button class="nav-item active" data-page="home">
+                <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                Home
+            </button>
+            <button class="nav-item" data-page="missions">
+                <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                Missions
+            </button>
+            <button class="nav-item" data-page="leaderboard">
+                <svg viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                Leaderboard
+            </button>
+            <button class="nav-item" data-page="rewards">
+                <svg viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Rewards
+            </button>
+            <button class="nav-item" data-page="profile">
+                <svg viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                Profile
+            </button>
+        </div>
+    </div>
+    
+    <!-- ============================================================
+    JAVASCRIPT — MODULAR ARCHITECTURE
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+            
+            // ============================================================
+            // CONFIG
+            // ============================================================
+            const CONFIG = {
+                pointsPerClick: 1,
+                maxEnergy: 1000,
+                energyPerClick: 1,
+                energyRegenRate: 1,
+                energyRegenInterval: 3000,
+                dailyRewards: [100, 200, 300, 500, 750, 1000, 2500],
+                levelThresholds: [0, 1000, 5000, 20000, 100000, 500000],
+                levelNames: ['NEWCOMER', 'ACTIVE', 'SUPPORTER', 'BUILDER', 'LEGEND', 'FAHWA'],
+                referralBonus: 500,
+                youtubeUrl: 'https://www.youtube.com/@FahwaMusic',
+                websiteUrl: 'https://fahwa.io',
+                telegramUrl: 'https://t.me/fahwabot',
+                apiBaseUrl: 'https://api.fahwa.io/v1', // placeholder
+            };
+            
+            // ============================================================
+            // STATE
+            // ============================================================
+            const state = {
+                player: {
+                    id: null,
+                    username: 'Player',
+                    points: 0,
+                    energy: CONFIG.maxEnergy,
+                    level: 1,
+                    dailyStreak: 0,
+                    lastDailyClaim: null,
+                    totalClicks: 0,
+                    missionsCompleted: 0,
+                    supporterScore: 0,
+                    referrals: 0,
+                    referralCode: null,
+                },
+                dailyClaimed: false,
+                missions: [],
+                leaderboard: [],
+                stats: {
+                    clicks: 0,
+                    missionsDone: 0,
+                },
+                isTelegram: false,
+                telegramUser: null,
+            };
+            
+            // ============================================================
+            // STORAGE MANAGER
+            // ============================================================
+            const StorageManager = {
+                save() {
+                    try {
+                        const data = {
+                            player: state.player,
+                            dailyClaimed: state.dailyClaimed,
+                            missions: state.missions,
+                            stats: state.stats,
+                        };
+                        localStorage.setItem('fahwa_game_data', JSON.stringify(data));
+                    } catch (e) { /* ignore */ }
+                },
+                load() {
+                    try {
+                        const raw = localStorage.getItem('fahwa_game_data');
+                        if (!raw) return false;
+                        const data = JSON.parse(raw);
+                        state.player = { ...state.player, ...data.player };
+                        state.dailyClaimed = data.dailyClaimed || false;
+                        state.missions = data.missions || [];
+                        state.stats = data.stats || { clicks: 0, missionsDone: 0 };
+                        // ensure energy not over max
+                        if (state.player.energy > CONFIG.maxEnergy) {
+                            state.player.energy = CONFIG.maxEnergy;
+                        }
+                        return true;
+                    } catch (e) {
+                        return false;
+                    }
+                },
+                clear() {
+                    localStorage.removeItem('fahwa_game_data');
+                },
+                getPlayerId() {
+                    let id = localStorage.getItem('fahwa_player_id');
+                    if (!id) {
+                        id = 'web_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 6);
+                        localStorage.setItem('fahwa_player_id', id);
+                    }
+                    return id;
+                }
+            };
+            
+            // ============================================================
+            // TELEGRAM MANAGER
+            // ============================================================
+            const TelegramManager = {
+                isAvailable: false,
+                webApp: null,
