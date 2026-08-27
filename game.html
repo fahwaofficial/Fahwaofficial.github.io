@@ -926,7 +926,20 @@ input{
 (function(){
 
 "use strict";
+// ===================== SUPABASE =====================
+// اطلاعات را از:
+// Supabase → Project Settings → API
+// بگیر
 
+const SUPABASE_URL = 'https://lhqljhjhlhdyvcrbrlhp.supabase.co/auth/v1/.well-known/jwks.json';
+const SUPABASE_KEY = 'sb_publishable_RgMaihiyYt9D5NeFjJQBWw_njF7McNy';
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+console.log('Supabase connected:', SUPABASE_URL);
 /* =========================================================
    CONFIG
 ========================================================= */
