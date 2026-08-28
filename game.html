@@ -1,3127 +1,1001 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-
-<meta name="theme-color" content="#0a0c12">
-<title>FAHWA CLICK — Community Game</title>
-<meta name="description" content="FAHWA CLICK — Play, earn points and support Fahwa.">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
-}
-
-:root{
-    --bg:#0a0c12;
-    --card:#141821;
-    --card2:#1a1f2c;
-    --border:#2a3346;
-    --text:#f0f2f8;
-    --muted:#8892a8;
-    --dim:#4f5a6e;
-    --gold:#d4a373;
-    --gold2:#f0e6d0;
-    --blue:#5b7cfa;
-    --green:#4ade80;
-    --red:#f87171;
-}
-
-html,
-body{
-    width:100%;
-    height:100%;
-    background:var(--bg);
-    color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    overflow:hidden;
-}
-
-body{
-    touch-action:manipulation;
-}
-
-button,
-input{
-    font-family:inherit;
-}
-
-#loading-screen{
-    position:fixed;
-    inset:0;
-    z-index:99999;
-    background:var(--bg);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    transition:opacity .35s ease;
-}
-
-#loading-screen.hide{
-    opacity:0;
-    pointer-events:none;
-}
-
-#loading-screen h1{
-    font-size:34px;
-    margin-bottom:18px;
-    background:linear-gradient(135deg,var(--gold2),var(--gold));
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-.spinner{
-    width:42px;
-    height:42px;
-    border:3px solid var(--border);
-    border-top-color:var(--gold);
-    border-radius:50%;
-    animation:spin .8s linear infinite;
-}
-
-@keyframes spin{
-    to{transform:rotate(360deg);}
-}
-
-#app{
-    width:100%;
-    max-width:430px;
-    height:100dvh;
-    margin:auto;
-    padding:0 16px 82px;
-    overflow-y:auto;
-    overflow-x:hidden;
-    background:var(--bg);
-    -webkit-overflow-scrolling:touch;
-}
-
-.header{
-    height:58px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.brand{
-    font-size:20px;
-    font-weight:700;
-    background:linear-gradient(135deg,var(--gold2),var(--gold));
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-.status{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    padding:5px 10px;
-    border:1px solid var(--border);
-    background:var(--card);
-    border-radius:30px;
-    font-size:11px;
-    color:var(--muted);
-}
-
-.dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:var(--green);
-}
-
-.points{
-    text-align:center;
-    padding:5px 0;
-}
-
-.points-label{
-    color:var(--dim);
-    font-size:11px;
-    letter-spacing:1.5px;
-}
-
-.points-value{
-    font-size:48px;
-    line-height:1.05;
-    font-weight:750;
-    font-variant-numeric:tabular-nums;
-}
-
-.points-value.pop{
-    animation:pop .15s ease;
-}
-
-@keyframes pop{
-    50%{transform:scale(1.08);}
-}
-
-.click-wrapper{
-    height:300px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-shrink:0;
-}
-
-.click-area{
-    width:190px;
-    height:190px;
-    border-radius:50%;
-    border:2px solid var(--gold);
-    background:radial-gradient(circle at 35% 30%,#303a50,#141821 70%);
-    box-shadow:
-        0 0 60px rgba(212,163,115,.22),
-        inset 0 0 50px rgba(212,163,115,.06);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    position:relative;
-    overflow:hidden;
-    user-select:none;
-    cursor:pointer;
-    transition:transform .08s ease;
-}
-
-.click-area:active{
-    transform:scale(.93);
-}
-
-.click-area.busy{
-    opacity:.75;
-}
-
-.tap-text{
-    text-align:center;
-    color:var(--gold);
-    font-size:24px;
-    font-weight:700;
-    pointer-events:none;
-}
-
-.tap-text small{
-    display:block;
-    font-size:12px;
-    color:var(--muted);
-    font-weight:400;
-}
-
-.float-point{
-    position:fixed;
-    z-index:9999;
-    pointer-events:none;
-    color:var(--gold);
-    font-size:26px;
-    font-weight:700;
-    animation:floatUp .8s ease-out forwards;
-}
-
-@keyframes floatUp{
-    from{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
-    to{
-        opacity:0;
-        transform:translateY(-100px) scale(1.25);
-    }
-}
-
-.energy{
-    padding:5px 0 12px;
-    flex-shrink:0;
-}
-
-.energy-row{
-    display:flex;
-    justify-content:space-between;
-    color:var(--muted);
-    font-size:12px;
-    margin-bottom:5px;
-}
-
-.energy-bar{
-    height:8px;
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:20px;
-    overflow:hidden;
-}
-
-.energy-fill{
-    height:100%;
-    width:100%;
-    background:linear-gradient(90deg,var(--blue),#a78bfa);
-    transition:width .25s ease;
-}
-
-.page{
-    display:none;
-    flex-direction:column;
-    gap:10px;
-    padding-bottom:20px;
-}
-
-.page.active{
-    display:flex;
-}
-
-.card{
-    background:var(--card2);
-    border:1px solid var(--border);
-    border-radius:18px;
-    padding:15px;
-}
-
-.card-title{
-    color:var(--muted);
-    font-size:13px;
-    font-weight:650;
-    letter-spacing:.5px;
-    text-transform:uppercase;
-    margin-bottom:10px;
-}
-
-.row{
-    display:flex;
-    align-items:center;
-}
-
-.between{
-    justify-content:space-between;
-}
-
-.muted{
-    color:var(--muted);
-}
-
-.gold{
-    color:var(--gold);
-}
-
-.small{
-    font-size:12px;
-}
-
-.btn{
-    border:1px solid var(--border);
-    background:var(--card);
-    color:var(--text);
-    border-radius:40px;
-    padding:9px 15px;
-    font-size:13px;
-    cursor:pointer;
-}
-
-.btn:active{
-    transform:scale(.96);
-}
-
-.btn-primary{
-    background:var(--gold);
-    color:#0a0c12;
-    border-color:var(--gold);
-    font-weight:650;
-}
-
-.btn-block{
-    width:100%;
-}
-
-.btn:disabled{
-    cursor:not-allowed;
-    opacity:.5;
-}
-
-.mt{
-    margin-top:8px;
-}
-
-.daily-grid{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    gap:4px;
-}
-
-.daily-cell{
-    text-align:center;
-    padding:7px 2px;
-    border:1px solid var(--border);
-    background:var(--card);
-    border-radius:10px;
-    font-size:10px;
-}
-
-.daily-cell.today{
-    border-color:var(--gold);
-}
-
-.daily-cell.claimed{
-    opacity:.45;
-    border-color:var(--green);
-}
-
-.daily-day{
-    color:var(--dim);
-    font-size:9px;
-}
-
-.daily-amount{
-    color:var(--gold);
-    font-weight:700;
-}
-
-.mission{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:11px;
-    margin-bottom:7px;
-    border:1px solid var(--border);
-    border-left:4px solid var(--gold);
-    border-radius:13px;
-    background:var(--card);
-}
-
-.mission-info{
-    flex:1;
-}
-
-.mission-title{
-    font-size:13px;
-    font-weight:600;
-}
-
-.mission-desc{
-    color:var(--muted);
-    font-size:11px;
-    margin-top:2px;
-}
-
-.mission-reward{
-    color:var(--gold);
-    font-size:11px;
-    margin-top:2px;
-}
-
-.lb{
-    display:flex;
-    align-items:center;
-    padding:9px 3px;
-    border-bottom:1px solid var(--border);
-    gap:10px;
-}
-
-.lb:last-child{
-    border-bottom:0;
-}
-
-.rank{
-    width:28px;
-    color:var(--muted);
-    font-weight:700;
-}
-
-.name{
-    flex:1;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-}
-
-.pts{
-    color:var(--gold);
-    font-weight:700;
-}
-
-.avatar{
-    width:58px;
-    height:58px;
-    border-radius:50%;
-    border:2px solid var(--gold);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:var(--card);
-    font-size:25px;
-}
-
-.profile-name{
-    font-size:18px;
-    font-weight:650;
-}
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:7px;
-}
-
-.stat{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:10px 5px;
-    text-align:center;
-}
-
-.stat-value{
-    color:var(--gold);
-    font-weight:700;
-    font-size:16px;
-}
-
-.stat-label{
-    color:var(--muted);
-    font-size:9px;
-}
-
-input{
-    width:100%;
-    min-width:0;
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:30px;
-    color:var(--text);
-    padding:9px 12px;
-    outline:none;
-    font-size:11px;
-}
-
-.bottom-nav{
-    position:fixed;
-    left:50%;
-    transform:translateX(-50%);
-    bottom:0;
-    width:100%;
-    max-width:430px;
-    height:68px;
-    background:rgba(20,24,33,.96);
-    border-top:1px solid var(--border);
-    display:flex;
-    justify-content:space-around;
-    align-items:center;
-    z-index:500;
-    padding-bottom:5px;
-    backdrop-filter:blur(10px);
-}
-
-.nav{
-    border:0;
-    background:none;
-    color:var(--dim);
-    font-size:9px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:3px;
-    padding:6px 8px;
-    min-width:55px;
-    cursor:pointer;
-}
-
-.nav.active{
-    color:var(--gold);
-}
-
-.nav-icon{
-    font-size:20px;
-}
-
-#toast-container{
-    position:fixed;
-    left:50%;
-    bottom:85px;
-    transform:translateX(-50%);
-    z-index:10000;
-    width:calc(100% - 40px);
-    max-width:390px;
-    pointer-events:none;
-}
-
-.toast{
-    background:#202633;
-    border:1px solid var(--border);
-    color:var(--text);
-    padding:11px 15px;
-    border-radius:14px;
-    text-align:center;
-    font-size:13px;
-    margin-top:7px;
-    box-shadow:0 8px 25px rgba(0,0,0,.4);
-    animation:toastIn .25s ease,toastOut .25s ease 2.3s forwards;
-}
-
-@keyframes toastIn{
-    from{
-        opacity:0;
-        transform:translateY(10px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-@keyframes toastOut{
-    to{
-        opacity:0;
-        transform:translateY(-8px);
-    }
-}
-
-.ripple{
-    position:absolute;
-    width:30px;
-    height:30px;
-    border-radius:50%;
-    background:rgba(212,163,115,.25);
-    transform:translate(-50%,-50%);
-    pointer-events:none;
-    animation:ripple .6s ease-out forwards;
-}
-
-@keyframes ripple{
-    to{
-        width:250px;
-        height:250px;
-        opacity:0;
-    }
-}
-
-@media(max-width:380px){
-    .click-wrapper{
-        height:250px;
-    }
-
-    .click-area{
-        width:155px;
-        height:155px;
-    }
-
-    .points-value{
-        font-size:38px;
-    }
-
-    .nav{
-        min-width:48px;
-        padding-left:3px;
-        padding-right:3px;
-    }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0c12">
+    <title>FAHWA MINING — Community Game</title>
+    <meta name="description" content="FAHWA MINING — Mine points, support Fahwa and grow the community.">
+
+    <!-- Telegram Web App SDK (اختیاری) -->
+    <script src="https://telegram.org/js/telegram-web-app.js" async></script>
+
+    <style>
+        /* ============================================================
+           RESET & VARIABLES
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-primary: #0a0c12;
+            --bg-secondary: #141821;
+            --bg-card: #1a1f2c;
+            --border-color: #2a3346;
+            --text-primary: #f0f2f8;
+            --text-secondary: #8892a8;
+            --text-muted: #4f5a6e;
+            --gold: #d4a373;
+            --gold-glow: rgba(212, 163, 115, 0.25);
+            --blue: #5b7cfa;
+            --green: #4ade80;
+            --red: #f87171;
+            --radius: 20px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font);
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        /* ============================================================
+           LOADING SCREEN
+           ============================================================ */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.35s ease;
+        }
+        #loading-screen.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #loading-screen h1 {
+            font-size: 34px;
+            margin-bottom: 18px;
+            background: linear-gradient(135deg, #f0e6d0, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .spinner {
+            width: 42px;
+            height: 42px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ============================================================
+           APP CONTAINER
+           ============================================================ */
+        #app {
+            width: 100%;
+            max-width: 430px;
+            height: 100dvh;
+            margin: 0 auto;
+            padding: 0 16px 78px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: var(--bg-primary);
+            display: none;
+            flex-direction: column;
+        }
+        #app.active {
+            display: flex;
+        }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        .header {
+            height: 58px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .brand {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f0e6d0, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            border-radius: 30px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+        }
+        .dot.offline {
+            background: var(--text-muted);
+        }
+
+        /* ============================================================
+           LOGIN PAGE
+           ============================================================ */
+        #login-page {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+            text-align: center;
+            gap: 20px;
+        }
+        #login-page.active {
+            display: flex;
+        }
+        #login-page h1 {
+            font-size: 42px;
+            background: linear-gradient(135deg, #f0e6d0, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        #login-page p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            max-width: 300px;
+        }
+        .login-btn {
+            width: 100%;
+            max-width: 300px;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 60px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .login-btn:active {
+            transform: scale(0.96);
+        }
+        .login-btn.google {
+            background: #fff;
+            color: #000;
+        }
+        .login-btn.telegram {
+            background: #0088cc;
+            color: #fff;
+            border-color: #0088cc;
+        }
+
+        /* ============================================================
+           MINING PAGE (HOME)
+           ============================================================ */
+        .mining-stats {
+            text-align: center;
+            padding: 10px 0;
+        }
+        .mining-stats .level {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .mining-stats .power {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+        .mining-stats .power small {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+        .mining-progress {
+            background: var(--bg-secondary);
+            border-radius: 40px;
+            height: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin: 12px 0 6px;
+        }
+        .mining-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--gold), #e8c99e);
+            border-radius: 40px;
+            transition: width 0.5s ease;
+        }
+        .mining-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .countdown {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-align: center;
+            padding: 8px 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ============================================================
+           CARDS & COMMON
+           ============================================================ */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+        }
+        .card-title {
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 650;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .btn {
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: 60px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            touch-action: manipulation;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:active {
+            transform: scale(0.96);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-primary {
+            background: var(--gold);
+            color: #0a0c12;
+            border-color: var(--gold);
+        }
+        .btn-block {
+            width: 100%;
+        }
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 12px;
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .between {
+            justify-content: space-between;
+        }
+        .gold {
+            color: var(--gold);
+        }
+        .muted {
+            color: var(--text-secondary);
+        }
+        .small {
+            font-size: 13px;
+        }
+        .mt-1 {
+            margin-top: 8px;
+        }
+        .mb-1 {
+            margin-bottom: 8px;
+        }
+        .text-center {
+            text-align: center;
+        }
+
+        /* ============================================================
+           PAGES (Navigation)
+           ============================================================ */
+        .page {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            padding: 8px 0 12px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .page.active {
+            display: flex;
+        }
+
+        /* ============================================================
+           TASKS
+           ============================================================ */
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            background: var(--bg-secondary);
+            margin-bottom: 8px;
+        }
+        .task-item .info {
+            flex: 1;
+        }
+        .task-item .title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .task-item .desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .task-item .reward {
+            font-size: 12px;
+            color: var(--gold);
+        }
+        .task-status {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+        }
+        .task-status.verified {
+            border-color: var(--green);
+            color: var(--green);
+        }
+        .task-status.pending {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        .task-status.rewarded {
+            border-color: var(--text-muted);
+            color: var(--text-muted);
+        }
+
+        /* ============================================================
+           LEADERBOARD
+           ============================================================ */
+        .lb-entry {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 4px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .lb-entry .rank {
+            width: 30px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+        .lb-entry .name {
+            flex: 1;
+            font-weight: 500;
+        }
+        .lb-entry .pts {
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        /* ============================================================
+           PROFILE
+           ============================================================ */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            background: var(--bg-secondary);
+            flex-shrink: 0;
+        }
+        .profile-name {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .stat-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+        }
+        .stat-box .value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+        .stat-box .label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        /* ============================================================
+           REFERRAL
+           ============================================================ */
+        .referral-input {
+            display: flex;
+            gap: 6px;
+        }
+        .referral-input input {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 60px;
+            padding: 8px 14px;
+            color: var(--text-primary);
+            font-size: 12px;
+            outline: none;
+            min-width: 0;
+        }
+
+        /* ============================================================
+           BOTTOM NAV
+           ============================================================ */
+        .bottom-nav {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+            width: 100%;
+            max-width: 430px;
+            height: 68px;
+            background: rgba(20, 24, 33, 0.96);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 500;
+            padding-bottom: 5px;
+        }
+        .nav-item {
+            border: 0;
+            background: none;
+            color: var(--text-muted);
+            font-size: 9px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 6px 8px;
+            min-width: 52px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .nav-item.active {
+            color: var(--gold);
+        }
+        .nav-icon {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        /* ============================================================
+           TOAST
+           ============================================================ */
+        #toast-container {
+            position: fixed;
+            left: 50%;
+            bottom: 85px;
+            transform: translateX(-50%);
+            z-index: 10000;
+            width: calc(100% - 40px);
+            max-width: 390px;
+            pointer-events: none;
+        }
+        .toast {
+            background: #202633;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 11px 16px;
+            border-radius: 14px;
+            text-align: center;
+            font-size: 13px;
+            margin-top: 6px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            animation: toastIn 0.25s ease, toastOut 0.25s ease 2.5s forwards;
+        }
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes toastOut {
+            to {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 380px) {
+            .mining-stats .power {
+                font-size: 24px;
+            }
+            .countdown {
+                font-size: 20px;
+            }
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .nav-item {
+                min-width: 44px;
+                font-size: 8px;
+            }
+            .nav-icon {
+                font-size: 18px;
+            }
+        }
+        @media (min-width: 768px) {
+            .bottom-nav {
+                border-radius: 24px 24px 0 0;
+            }
+        }
+
+        /* ============================================================
+           SCROLLBAR
+           ============================================================ */
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+
+        /* ============================================================
+           MISC
+           ============================================================ */
+        .hidden {
+            display: none !important;
+        }
+        .mt-2 {
+            margin-top: 16px;
+        }
+        .gap-1 {
+            gap: 6px;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid var(--border-color);
+            margin: 12px 0;
+        }
+    </style>
 </head>
 
 <body>
 
-<div id="loading-screen">
-    <h1>✦ FAHWA</h1>
-    <div class="spinner"></div>
-    <div style="color:#8892a8;font-size:13px;margin-top:15px;">
-        Loading game...
-    </div>
-</div>
-
-<div id="app">
-
-    <div class="header">
-        <div class="brand">✦ FAHWA</div>
-
-        <div class="status">
-            <span class="dot"></span>
-            <span id="statusText">Online</span>
-        </div>
+    <!-- ============================================================
+    LOADING SCREEN
+    ============================================================ -->
+    <div id="loading-screen">
+        <h1>✦ FAHWA</h1>
+        <div class="spinner"></div>
+        <div style="color: #8892a8; font-size: 13px; margin-top: 15px;">Loading game...</div>
     </div>
 
-    <div class="points">
-        <div class="points-label">FAHWA POINTS</div>
-        <div class="points-value" id="points">0</div>
+    <!-- ============================================================
+    LOGIN PAGE
+    ============================================================ -->
+    <div id="login-page">
+        <h1>✦ FAHWA</h1>
+        <p>Join the community and start mining FAHWA Points</p>
+        <button class="login-btn google" id="loginGoogle">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Continue with Google
+        </button>
+        <button class="login-btn telegram" id="loginTelegram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            Continue with Telegram
+        </button>
+        <div class="small muted" style="margin-top: 12px;">No account? Just sign in and start mining</div>
     </div>
 
-    <div class="click-wrapper">
-        <div class="click-area" id="clickArea">
-            <div class="tap-text">
-                TAP
-                <small>FAHWA</small>
+    <!-- ============================================================
+    APP (GAME)
+    ============================================================ -->
+    <div id="app">
+
+        <!-- HEADER -->
+        <div class="header">
+            <div class="brand">✦ FAHWA</div>
+            <div class="status">
+                <span class="dot" id="statusDot"></span>
+                <span id="statusText">Online</span>
             </div>
         </div>
-    </div>
 
-    <div class="energy">
-        <div class="energy-row">
-            <span>⚡ ENERGY</span>
-            <span id="energyText">1000 / 1000</span>
-        </div>
-
-        <div class="energy-bar">
-            <div class="energy-fill" id="energyFill"></div>
-        </div>
-    </div>
-
-    <!-- HOME -->
-    <section class="page active" id="home">
-
-        <div class="card">
-
-            <div class="row between">
-                <div class="card-title">📅 Daily Reward</div>
-
-                <div class="gold small" id="dailyStatus">
-                    Available
-                </div>
-            </div>
-
-            <div class="daily-grid" id="dailyGrid"></div>
-
-            <button class="btn btn-primary btn-block mt" id="claimDaily">
-                Claim Daily Reward
-            </button>
-
-        </div>
-
-        <div class="card">
-
-            <div class="card-title">🎯 Quick Tasks</div>
-
-            <div id="quickTasks"></div>
-
-        </div>
-
-        <div class="card">
-
-            <div class="card-title">📊 Community</div>
-
-            <div class="row between small">
-                <span>Players <b class="gold">1,247</b></span>
-                <span>Active <b class="gold">342</b></span>
-                <span>YouTube <b class="gold">2.1K</b></span>
-            </div>
-
-        </div>
-
-    </section>
-
-    <!-- MISSIONS -->
-    <section class="page" id="missions">
-
-        <div class="card">
-
-            <div class="card-title">🎯 Missions</div>
-
-            <div class="small muted" style="margin-bottom:10px;">
-                Complete missions to earn FAHWA Points.
-            </div>
-
-            <div id="missionList"></div>
-
-            <div class="small muted">
-                * Mission verification is currently in demo mode.
-            </div>
-
-        </div>
-
-    </section>
-
-    <!-- LEADERBOARD -->
-    <section class="page" id="leaderboard">
-
-        <div class="card">
-
-            <div class="card-title">🏆 Leaderboard</div>
-
-            <div class="small muted" style="margin-bottom:8px;">
-                Community ranking.
-            </div>
-
-            <div id="leaderboardList"></div>
-
-        </div>
-
-    </section>
-
-    <!-- REWARDS -->
-    <section class="page" id="rewards">
-
-        <div class="card">
-
-            <div class="card-title">🎁 Rewards</div>
-
-            <div class="gold small">
-                FAHWA POINTS
-            </div>
-
-            <div class="small muted" style="margin-top:4px;">
-                Points are in-game points and have no monetary value.
-            </div>
-
-            <hr style="border:0;border-top:1px solid var(--border);margin:15px 0;">
-
-            <div class="card-title">
-                🏆 Community Rewards
-            </div>
-
-            <div class="small muted">
-                Future community rewards may be announced officially.
-            </div>
-
-            <div class="gold small" style="margin-top:8px;">
-                Coming Soon
-            </div>
-
-            <hr style="border:0;border-top:1px solid var(--border);margin:15px 0;">
-
-            <div class="card-title">
-                🔮 Future Token
-            </div>
-
-            <div class="gold small">
-                FAHWA TOKEN
-            </div>
-
-            <div class="small muted" style="margin-top:4px;">
-                Status: PLANNED
-            </div>
-
-            <div class="small muted" style="margin-top:5px;">
-                The current game uses Points only.
-                Points are not a cryptocurrency or transferable asset.
-            </div>
-
-        </div>
-
-    </section>
-
-    <!-- PROFILE -->
-    <section class="page" id="profile">
-
-        <div class="card">
-
-            <div class="row" style="gap:13px;">
-
-                <div class="avatar">
-                    👤
-                </div>
-
-                <div>
-
-                    <div class="profile-name" id="profileName">
-                        Player
+        <!-- ==========================================================
+        PAGE: MINING (HOME)
+        ========================================================== -->
+        <section class="page active" id="page-mining">
+            <div class="card">
+                <div class="mining-stats">
+                    <div class="level">LEVEL <span id="miningLevel">1</span></div>
+                    <div class="power">
+                        <span id="miningRate">100</span>
+                        <small>POINT / 24H</small>
                     </div>
+                </div>
+                <div class="mining-progress">
+                    <div class="mining-progress-fill" id="miningProgressFill"></div>
+                </div>
+                <div class="mining-info">
+                    <span>Mined: <span id="minedAmount">0</span> / <span id="maxMined">100</span></span>
+                    <span>Balance: <span id="balanceDisplay">0</span></span>
+                </div>
+                <div class="countdown" id="countdownDisplay">--:--:--</div>
+                <button class="btn btn-primary btn-block" id="claimBtn">⛏ CLAIM MINING</button>
+            </div>
 
-                    <div class="small muted" id="profileId">
-                        ID: web_xxxx
+            <div class="card">
+                <div class="card-title">⚡ Upgrade Mining</div>
+                <div class="row between">
+                    <span>Level <span id="upgradeCurrentLevel">1</span> → <span id="upgradeNextLevel">2</span></span>
+                    <span class="gold" id="upgradeCost">500 POINTS</span>
+                </div>
+                <button class="btn btn-block mt-1" id="upgradeBtn">Upgrade</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📊 Community</div>
+                <div class="row between small">
+                    <span>Players <b class="gold">1,247</b></span>
+                    <span>Active <b class="gold">342</b></span>
+                    <span>Total Mined <b class="gold">45.2K</b></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================
+        PAGE: TASKS
+        ========================================================== -->
+        <section class="page" id="page-tasks">
+            <div class="card">
+                <div class="card-title">🎯 Tasks</div>
+                <div class="small muted mb-1">Complete tasks to earn FAHWA Points.</div>
+                <div id="tasksContainer"></div>
+                <div class="small muted mt-1">* Verification is manual. Real verification requires official API/OAuth.</div>
+            </div>
+        </section>
+
+        <!-- ==========================================================
+        PAGE: LEADERBOARD
+        ========================================================== -->
+        <section class="page" id="page-leaderboard">
+            <div class="card">
+                <div class="card-title">🏆 Leaderboard</div>
+                <div id="leaderboardContainer"></div>
+            </div>
+        </section>
+
+        <!-- ==========================================================
+        PAGE: REWARDS
+        ========================================================== -->
+        <section class="page" id="page-rewards">
+            <div class="card">
+                <div class="card-title">🎁 Rewards</div>
+                <div class="gold small">FAHWA POINTS</div>
+                <div class="small muted">Points are in-game points and have no monetary value.</div>
+                <hr>
+                <div class="card-title">🏆 Community Rewards</div>
+                <div class="small muted">Future community rewards may be announced officially.</div>
+                <div class="gold small mt-1">Coming Soon</div>
+                <hr>
+                <div class="card-title">🔮 Future Token</div>
+                <div class="gold small">FAHWA TOKEN</div>
+                <div class="small muted">Status: PLANNED</div>
+                <div class="small muted mt-1">Points are not a cryptocurrency or transferable asset.</div>
+            </div>
+        </section>
+
+        <!-- ==========================================================
+        PAGE: PROFILE
+        ========================================================== -->
+        <section class="page" id="page-profile">
+            <div class="card">
+                <div class="profile-header">
+                    <div class="avatar">👤</div>
+                    <div>
+                        <div class="profile-name" id="profileName">Player</div>
+                        <div class="small muted" id="profileId">ID: loading...</div>
+                        <div class="small muted">Level: <span class="gold" id="profileLevel">1</span></div>
                     </div>
+                </div>
+            </div>
 
-                    <div class="small muted">
-                        Level:
-                        <span class="gold" id="profileLevel">1</span>
-                        —
-                        <span class="gold" id="profileLevelName">
-                            NEWCOMER
-                        </span>
+            <div class="card">
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <div class="value" id="profilePoints">0</div>
+                        <div class="label">Points</div>
                     </div>
-
+                    <div class="stat-box">
+                        <div class="value" id="profileMined">0</div>
+                        <div class="label">Mined</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="value" id="profileReferrals">0</div>
+                        <div class="label">Referrals</div>
+                    </div>
                 </div>
-
             </div>
 
-        </div>
-
-        <div class="card">
-
-            <div class="stats">
-
-                <div class="stat">
-                    <div class="stat-value" id="profilePoints">0</div>
-                    <div class="stat-label">POINTS</div>
+            <div class="card">
+                <div class="card-title">🔗 Referral</div>
+                <div class="referral-input">
+                    <input type="text" id="referralLink" readonly>
+                    <button class="btn btn-primary btn-sm" id="copyReferralBtn">Copy</button>
                 </div>
-
-                <div class="stat">
-                    <div class="stat-value" id="profileClicks">0</div>
-                    <div class="stat-label">CLICKS</div>
-                </div>
-
-                <div class="stat">
-                    <div class="stat-value" id="profileStreak">0</div>
-                    <div class="stat-label">STREAK</div>
-                </div>
-
+                <button class="btn btn-block mt-1" id="shareReferralBtn">📤 Share</button>
             </div>
 
-        </div>
-
-        <div class="card">
-
-            <div class="card-title">
-                📋 Statistics
+            <div class="card">
+                <div class="card-title">📋 Stats</div>
+                <div class="row between small"><span class="muted">Total Clicks</span><span id="statClicks">0</span></div>
+                <div class="row between small"><span class="muted">Missions Done</span><span id="statMissions">0</span></div>
+                <div class="row between small"><span class="muted">Supporter Score</span><span id="statSupporter">0</span></div>
             </div>
 
-            <div class="row between small" style="margin-bottom:7px;">
-                <span class="muted">Missions Done</span>
-                <span id="profileMissions">0</span>
+            <div class="card">
+                <div class="card-title">💳 Wallet (Coming Soon)</div>
+                <div class="small muted">TON and Solana wallet integration planned.</div>
+                <button class="btn btn-block mt-1" disabled>Connect Wallet</button>
             </div>
-
-            <div class="row between small">
-                <span class="muted">Referrals</span>
-                <span id="profileReferrals">0</span>
-            </div>
-
-        </div>
-
-        <div class="card">
-
-            <div class="card-title">
-                🔗 Referral
-            </div>
-
-            <div class="row" style="gap:6px;">
-
-                <input id="referralLink" readonly>
-
-                <button class="btn btn-primary" id="copyReferral">
-                    Copy
-                </button>
-
-            </div>
-
-            <button class="btn btn-block mt" id="shareReferral">
-                📤 Share Referral
-            </button>
-
-        </div>
-
-    </section>
-
-</div>
-
-<nav class="bottom-nav">
-
-    <button class="nav active" data-page="home">
-        <span class="nav-icon">⌂</span>
-        Home
-    </button>
-
-    <button class="nav" data-page="missions">
-        <span class="nav-icon">🎯</span>
-        Missions
-    </button>
-
-    <button class="nav" data-page="leaderboard">
-        <span class="nav-icon">🏆</span>
-        Ranking
-    </button>
-
-    <button class="nav" data-page="rewards">
-        <span class="nav-icon">🎁</span>
-        Rewards
-    </button>
-
-    <button class="nav" data-page="profile">
-        <span class="nav-icon">👤</span>
-        Profile
-    </button>
-
-</nav>
-
-<div id="toast-container"></div>
-
-<script>
-(function(){
-
-"use strict";
-
-/* =====================================================
-   SUPABASE
-===================================================== */
-
-const SUPABASE_URL =
-    "https://lhqljhjhlhdyvcrbrlhp.supabase.co";
-
-const SUPABASE_KEY =
-    "sb_publishable_RgMaihiyYt9D5NeFjJQBWw_njF7McNy";
-
-const GAME_TAP_URL =
-    "https://lhqljhjhlhdyvcrbrlhp.supabase.co/functions/v1/hello-world";
-
-let supabaseClient = null;
-
-try{
-
-    if(
-        window.supabase &&
-        typeof window.supabase.createClient === "function"
-    ){
-
-        supabaseClient =
-            window.supabase.createClient(
-                SUPABASE_URL,
-                SUPABASE_KEY
-            );
-
-        console.log("Supabase initialized.");
-
-    }
-
-}catch(error){
-
-    console.warn("Supabase initialization error:",error);
-
-}
-
-/* =====================================================
-   CONFIG
-===================================================== */
-
-const CONFIG = {
-
-    maxEnergy:1000,
-
-    pointsPerClick:1,
-
-    energyPerClick:1,
-
-    energyRegen:1,
-
-    energyInterval:3000,
-
-    dailyRewards:[
-        100,
-        200,
-        300,
-        500,
-        750,
-        1000,
-        2500
-    ],
-
-    levels:[
-        {
-            points:0,
-            name:"NEWCOMER"
-        },
-        {
-            points:1000,
-            name:"ACTIVE"
-        },
-        {
-            points:5000,
-            name:"SUPPORTER"
-        },
-        {
-            points:20000,
-            name:"BUILDER"
-        },
-        {
-            points:100000,
-            name:"LEGEND"
-        },
-        {
-            points:500000,
-            name:"FAHWA"
-        }
-    ],
-
-    links:{
-        website:"https://fahwa.io",
-        telegram:"https://t.me/fahwabot",
-        youtube:"https://youtube.com/@FahwaMusic",
-        instagram:"https://instagram.com/fahwaofficial"
-    }
-
-};
-
-/* =====================================================
-   STATE
-===================================================== */
-
-let state = {
-
-    id:null,
-
-    username:"Player",
-
-    points:0,
-
-    energy:CONFIG.maxEnergy,
-
-    clicks:0,
-
-    missionsDone:0,
-
-    referrals:0,
-
-    streak:0,
-
-    lastDaily:null,
-
-    completedMissions:[]
-
-};
-
-/* =====================================================
-   PLAYER ID
-===================================================== */
-
-function getPlayerId(){
-
-    try{
-
-        let id =
-            localStorage.getItem("fahwa_player_id");
-
-        if(!id){
-
-            id =
-                "web_" +
-                Date.now().toString(36) +
-                "_" +
-                Math.random()
-                    .toString(36)
-                    .substring(2,8);
-
-            localStorage.setItem(
-                "fahwa_player_id",
-                id
-            );
-
-        }
-
-        return id;
-
-    }catch(error){
-
-        return(
-            "web_" +
-            Date.now().toString(36) +
-            "_" +
-            Math.random()
-                .toString(36)
-                .substring(2,8)
-        );
-
-    }
-
-}
-
-/* =====================================================
-   LOCAL STORAGE
-===================================================== */
-
-function saveLocal(){
-
-    try{
-
-        localStorage.setItem(
-            "fahwa_click_state",
-            JSON.stringify(state)
-        );
-
-    }catch(error){
-
-        console.warn(
-            "Local storage unavailable."
-        );
-
-    }
-
-}
-
-function loadLocal(){
-
-    try{
-
-        const raw =
-            localStorage.getItem(
-                "fahwa_click_state"
-            );
-
-        if(!raw) return;
-
-        const saved =
-            JSON.parse(raw);
-
-        if(
-            saved &&
-            typeof saved === "object"
-        ){
-
-            state =
-                Object.assign(
-                    {},
-                    state,
-                    saved
-                );
-
-        }
-
-    }catch(error){
-
-        console.warn(
-            "Could not load local data."
-        );
-
-    }
-
-}
-
-/* =====================================================
-   TELEGRAM
-===================================================== */
-
-function initTelegram(){
-
-    try{
-
-        if(
-            !window.Telegram ||
-            !window.Telegram.WebApp
-        ){
-
-            document.getElementById(
-                "statusText"
-            ).textContent = "Online";
-
-            return;
-
-        }
-
-        const tg =
-            window.Telegram.WebApp;
-
-        try{
-            tg.ready();
-        }catch(e){}
-
-        try{
-            tg.expand();
-        }catch(e){}
-
-        try{
-
-            if(tg.setHeaderColor){
-
-                tg.setHeaderColor(
-                    "#0a0c12"
-                );
-
-            }
-
-        }catch(e){}
-
-        try{
-
-            if(tg.setBackgroundColor){
-
-                tg.setBackgroundColor(
-                    "#0a0c12"
-                );
-
-            }
-
-        }catch(e){}
-
-        const user =
-            tg.initDataUnsafe &&
-            tg.initDataUnsafe.user;
-
-        if(user){
-
-            state.username =
-                user.username ||
-                user.first_name ||
-                "Player";
-
-            if(user.id){
-
-                state.id =
-                    "tg_" +
-                    String(user.id);
-
-            }
-
-        }
-
-        document.getElementById(
-            "statusText"
-        ).textContent = "Telegram";
-
-    }catch(error){
-
-        console.warn(
-            "Telegram initialization failed.",
-            error
-        );
-
-    }
-
-}
-
-/* =====================================================
-   DATABASE LOAD
-===================================================== */
-
-async function loadFromSupabase(){
-
-    if(
-        !supabaseClient ||
-        !state.id
-    ){
-
-        return false;
-
-    }
-
-    try{
-
-        const {data,error} =
-            await supabaseClient
-                .from("fahwa_players")
-                .select("*")
-                .eq("id",state.id)
-                .maybeSingle();
-
-        if(error){
-
-            console.warn(
-                "Supabase load error:",
-                error
-            );
-
-            return false;
-
-        }
-
-        if(data){
-
-            state.points =
-                Number(data.points || 0);
-
-            state.energy =
-                Number(
-                    data.energy ??
-                    CONFIG.maxEnergy
-                );
-
-            state.clicks =
-                Number(data.clicks || 0);
-
-            state.missionsDone =
-                Number(
-                    data.missions_done || 0
-                );
-
-            state.referrals =
-                Number(
-                    data.referrals || 0
-                );
-
-            state.streak =
-                Number(data.streak || 0);
-
-            state.lastDaily =
-                data.last_daily || null;
-
-            state.completedMissions =
-                Array.isArray(
-                    data.completed_missions
-                )
-                ? data.completed_missions
-                : [];
-
-            if(data.username){
-
-                state.username =
-                    data.username;
-
-            }
-
-            saveLocal();
-
-        }
-
-        return true;
-
-    }catch(error){
-
-        console.warn(
-            "Supabase load failed:",
-            error
-        );
-
-        return false;
-
-    }
-
-}
-
-/* =====================================================
-   LOCAL SAVE ONLY
-   Server owns points/clicks/energy.
-===================================================== */
-
-function saveLocal(){
-
-    try{
-
-        localStorage.setItem(
-            "fahwa_click_state",
-            JSON.stringify(state)
-        );
-
-    }catch(error){}
-
-}
-
-/* =====================================================
-   SERVER TAP
-===================================================== */
-
-let tapInProgress = false;
-
-async function sendTapToServer(event){
-
-    if(tapInProgress){
-
-        return;
-
-    }
-
-    if(!state.id){
-
-        showToast(
-            "⚠️ Player ID not ready."
-        );
-
-        return;
-
-    }
-
-    tapInProgress = true;
-
-    const clickArea =
-        document.getElementById(
-            "clickArea"
-        );
-
-    if(clickArea){
-
-        clickArea.classList.add("busy");
-
-    }
-
-    try{
-
-        const response =
-            await fetch(
-                GAME_TAP_URL,
-                {
-                    method:"POST",
-
-                    headers:{
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:JSON.stringify({
-
-                        player_id:
-                            state.id,
-
-                        username:
-                            state.username ||
-                            "Player"
-
-                    })
+        </section>
+
+    </div>
+
+    <!-- ============================================================
+    BOTTOM NAV
+    ============================================================ -->
+    <nav class="bottom-nav" id="bottomNav">
+        <button class="nav-item active" data-page="mining">
+            <span class="nav-icon">⛏</span> Mining
+        </button>
+        <button class="nav-item" data-page="tasks">
+            <span class="nav-icon">🎯</span> Tasks
+        </button>
+        <button class="nav-item" data-page="leaderboard">
+            <span class="nav-icon">🏆</span> Ranking
+        </button>
+        <button class="nav-item" data-page="rewards">
+            <span class="nav-icon">🎁</span> Rewards
+        </button>
+        <button class="nav-item" data-page="profile">
+            <span class="nav-icon">👤</span> Profile
+        </button>
+    </nav>
+
+    <div id="toast-container"></div>
+
+    <!-- ============================================================
+    JAVASCRIPT — COMPLETE GAME ENGINE
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ============================================================
+            // CONFIG
+            // ============================================================
+            const CONFIG = {
+                SUPABASE_URL: 'YOUR_SUPABASE_URL', // جایگزین کنید
+                SUPABASE_ANON_KEY: 'YOUR_SUPABASE_ANON_KEY', // جایگزین کنید
+                TELEGRAM_BOT_USERNAME: 'fahwabot',
+                LINKS: {
+                    youtube: 'https://youtube.com/@fahwaofficial',
+                    twitter: 'https://x.com/fahwaofficial',
+                    instagram: 'https://instagram.com/fahwaofficial',
+                    telegram: 'https://t.me/fahwaofficial',
+                    spotify: 'https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK'
                 }
-            );
+            };
 
-        let result = null;
+            // ============================================================
+            // STATE
+            // ============================================================
+            let state = {
+                user: null,
+                session: null,
+                profile: null,
+                mining: null,
+                balance: 0,
+                tasks: [],
+                leaderboard: [],
+                miningStatus: {
+                    level: 1,
+                    rate: 100,
+                    claimable: 0,
+                    maxClaimable: 100,
+                    nextClaimIn: 0,
+                    lastClaimAt: null
+                },
+                isTelegram: false,
+                isAuthenticated: false,
+                isDemo: false
+            };
 
-        try{
+            // ============================================================
+            // DOM REFS
+            // ============================================================
+            const $ = (id) => document.getElementById(id);
+            const loadingScreen = $('loading-screen');
+            const loginPage = $('login-page');
+            const app = $('app');
+            const bottomNav = $('bottomNav');
 
-            result =
-                await response.json();
-
-        }catch(error){
-
-            result = null;
-
-        }
-
-        if(
-            !response.ok ||
-            !result
-        ){
-
-            console.warn(
-                "Game server response:",
-                response.status,
-                result
-            );
-
-            if(
-                result &&
-                result.error ===
-                "ENERGY_DEPLETED"
-            ){
-
-                state.points =
-                    Number(
-                        result.points ||
-                        state.points
-                    );
-
-                state.energy =
-                    Number(
-                        result.energy || 0
-                    );
-
-                state.clicks =
-                    Number(
-                        result.clicks ||
-                        state.clicks
-                    );
-
-                saveLocal();
-
-                renderPoints();
-
-                renderEnergy();
-
-                renderProfile();
-
-                showToast(
-                    "⚡ ENERGY DEPLETED"
-                );
-
-            }else{
-
-                showToast(
-                    "⚠️ Server error. Try again."
-                );
-
+            // ============================================================
+            // TOAST
+            // ============================================================
+            function showToast(message) {
+                const container = $('toast-container');
+                if (!container) return;
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.textContent = message;
+                container.appendChild(toast);
+                setTimeout(() => { if (toast.parentNode) toast.remove(); }, 2800);
             }
 
-            return;
-
-        }
-
-        if(result.success){
-
-            /*
-             IMPORTANT:
-             These values come from the server.
-            */
-
-            state.points =
-                Number(
-                    result.points ??
-                    state.points
-                );
-
-            state.energy =
-                Number(
-                    result.energy ??
-                    state.energy
-                );
-
-            state.clicks =
-                Number(
-                    result.clicks ??
-                    state.clicks
-                );
-
-            saveLocal();
-
-            renderPoints();
-
-            renderEnergy();
-
-            renderProfile();
-
-            createFloat(event);
-
-            createRipple(event);
-
-            haptic();
-
-        }else{
-
-            showToast(
-                "⚠️ Tap rejected."
-            );
-
-        }
-
-    }catch(error){
-
-        console.error(
-            "Tap request failed:",
-            error
-        );
-
-        showToast(
-            "⚠️ Connection error."
-        );
-
-    }finally{
-
-        tapInProgress = false;
-
-        if(clickArea){
-
-            clickArea.classList.remove(
-                "busy"
-            );
-
-        }
-
-    }
-
-}
-
-/* =====================================================
-   LEVEL
-===================================================== */
-
-function getLevel(){
-
-    let level = 1;
-
-    let name = "NEWCOMER";
-
-    for(
-        let i=0;
-        i<CONFIG.levels.length;
-        i++
-    ){
-
-        if(
-            state.points >=
-            CONFIG.levels[i].points
-        ){
-
-            level = i + 1;
-
-            name =
-                CONFIG.levels[i].name;
-
-        }
-
-    }
-
-    return{
-        level,
-        name
-    };
-
-}
-
-/* =====================================================
-   POINTS
-===================================================== */
-
-function renderPoints(){
-
-    const el =
-        document.getElementById(
-            "points"
-        );
-
-    if(!el) return;
-
-    el.textContent =
-        Number(
-            state.points || 0
-        ).toLocaleString();
-
-    el.classList.remove("pop");
-
-    void el.offsetWidth;
-
-    el.classList.add("pop");
-
-}
-
-/* =====================================================
-   ENERGY
-===================================================== */
-
-function renderEnergy(){
-
-    const energy =
-        Math.max(
-            0,
-            Math.min(
-                CONFIG.maxEnergy,
-                Number(
-                    state.energy
-                ) || 0
-            )
-        );
-
-    state.energy = energy;
-
-    const text =
-        document.getElementById(
-            "energyText"
-        );
-
-    const fill =
-        document.getElementById(
-            "energyFill"
-        );
-
-    if(text){
-
-        text.textContent =
-            energy +
-            " / " +
-            CONFIG.maxEnergy;
-
-    }
-
-    if(fill){
-
-        fill.style.width =
-            (
-                energy /
-                CONFIG.maxEnergy *
-                100
-            ) + "%";
-
-    }
-
-}
-
-/* =====================================================
-   FLOAT
-===================================================== */
-
-function createFloat(event){
-
-    const el =
-        document.createElement(
-            "div"
-        );
-
-    el.className =
-        "float-point";
-
-    el.textContent =
-        "+1";
-
-    let x =
-        window.innerWidth / 2;
-
-    let y =
-        window.innerHeight / 2;
-
-    if(
-        event &&
-        typeof event.clientX === "number"
-    ){
-
-        x = event.clientX;
-        y = event.clientY;
-
-    }
-
-    el.style.left =
-        (x - 10) + "px";
-
-    el.style.top =
-        (y - 20) + "px";
-
-    document.body.appendChild(el);
-
-    setTimeout(
-        function(){
-
-            if(el.parentNode){
-
-                el.remove();
-
+            // ============================================================
+            // SUPABASE CLIENT
+            // ============================================================
+            let supabase = null;
+            try {
+                if (window.supabase && typeof window.supabase.createClient === 'function') {
+                    supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+                    console.log('Supabase initialized.');
+                } else {
+                    console.warn('Supabase library not loaded. Running in demo mode.');
+                    state.isDemo = true;
+                }
+            } catch (e) {
+                console.warn('Supabase init error:', e);
+                state.isDemo = true;
             }
 
-        },
-        900
-    );
-
-}
-
-/* =====================================================
-   RIPPLE
-===================================================== */
-
-function createRipple(event){
-
-    const area =
-        document.getElementById(
-            "clickArea"
-        );
-
-    if(!area) return;
-
-    const ripple =
-        document.createElement(
-            "div"
-        );
-
-    ripple.className =
-        "ripple";
-
-    const rect =
-        area.getBoundingClientRect();
-
-    let x =
-        rect.width / 2;
-
-    let y =
-        rect.height / 2;
-
-    if(
-        event &&
-        typeof event.clientX === "number"
-    ){
-
-        x =
-            event.clientX -
-            rect.left;
-
-        y =
-            event.clientY -
-            rect.top;
-
-    }
-
-    ripple.style.left =
-        x + "px";
-
-    ripple.style.top =
-        y + "px";
-
-    area.appendChild(ripple);
-
-    setTimeout(
-        function(){
-
-            if(ripple.parentNode){
-
-                ripple.remove();
-
-            }
-
-        },
-        700
-    );
-
-}
-
-/* =====================================================
-   HAPTIC
-===================================================== */
-
-function haptic(){
-
-    try{
-
-        if(
-            window.Telegram &&
-            window.Telegram.WebApp &&
-            window.Telegram.WebApp.HapticFeedback
-        ){
-
-            window.Telegram.WebApp
-                .HapticFeedback
-                .impactOccurred("light");
-
-        }
-
-    }catch(error){}
-
-}
-
-/* =====================================================
-   TOAST
-===================================================== */
-
-function showToast(message){
-
-    const container =
-        document.getElementById(
-            "toast-container"
-        );
-
-    if(!container) return;
-
-    const toast =
-        document.createElement(
-            "div"
-        );
-
-    toast.className =
-        "toast";
-
-    toast.textContent =
-        message;
-
-    container.appendChild(toast);
-
-    setTimeout(
-        function(){
-
-            if(toast.parentNode){
-
-                toast.remove();
-
-            }
-
-        },
-        2700
-    );
-
-}
-
-/* =====================================================
-   DAILY
-===================================================== */
-
-function todayKey(){
-
-    const d =
-        new Date();
-
-    return(
-        d.getFullYear() +
-        "-" +
-        String(
-            d.getMonth()+1
-        ).padStart(2,"0") +
-        "-" +
-        String(
-            d.getDate()
-        ).padStart(2,"0")
-    );
-
-}
-
-function renderDaily(){
-
-    const grid =
-        document.getElementById(
-            "dailyGrid"
-        );
-
-    if(!grid) return;
-
-    grid.innerHTML = "";
-
-    const claimed =
-        state.lastDaily ===
-        todayKey();
-
-    let currentDay =
-        state.streak || 0;
-
-    if(
-        currentDay < 1 ||
-        currentDay > 7
-    ){
-
-        currentDay = 1;
-
-    }
-
-    CONFIG.dailyRewards.forEach(
-        function(amount,index){
-
-            const cell =
-                document.createElement(
-                    "div"
-                );
-
-            cell.className =
-                "daily-cell";
-
-            if(
-                index + 1 ===
-                currentDay
-            ){
-
-                cell.classList.add(
-                    "today"
-                );
-
-            }
-
-            if(
-                claimed &&
-                index + 1 <=
-                state.streak
-            ){
-
-                cell.classList.add(
-                    "claimed"
-                );
-
-            }
-
-            cell.innerHTML =
-                '<div class="daily-day">DAY ' +
-                (index+1) +
-                '</div>' +
-                '<div class="daily-amount">' +
-                amount +
-                '</div>';
-
-            grid.appendChild(cell);
-
-        }
-    );
-
-    const status =
-        document.getElementById(
-            "dailyStatus"
-        );
-
-    const button =
-        document.getElementById(
-            "claimDaily"
-        );
-
-    if(status){
-
-        status.textContent =
-            claimed
-            ? "Claimed today"
-            : "Available";
-
-    }
-
-    if(button){
-
-        button.disabled =
-            claimed;
-
-        button.textContent =
-            claimed
-            ? "Already Claimed"
-            : "Claim Daily Reward";
-
-    }
-
-}
-
-function claimDaily(){
-
-    const today =
-        todayKey();
-
-    if(
-        state.lastDaily ===
-        today
-    ){
-
-        showToast(
-            "✅ You already claimed today's reward."
-        );
-
-        return;
-
-    }
-
-    let nextStreak =
-        (state.streak || 0) + 1;
-
-    if(nextStreak > 7){
-
-        nextStreak = 1;
-
-    }
-
-    const reward =
-        CONFIG.dailyRewards[
-            nextStreak - 1
-        ];
-
-    state.streak =
-        nextStreak;
-
-    state.lastDaily =
-        today;
-
-    state.points +=
-        reward;
-
-    saveLocal();
-
-    renderAll();
-
-    showToast(
-        "🎁 +" +
-        reward +
-        " FAHWA Points!"
-    );
-
-}
-
-/* =====================================================
-   MISSIONS
-===================================================== */
-
-const missions = [
-
-    {
-        id:"website",
-        title:"Visit Fahwa Website",
-        desc:"Explore fahwa.io",
-        reward:500,
-        url:CONFIG.links.website
-    },
-
-    {
-        id:"telegram",
-        title:"Join Fahwa Telegram",
-        desc:"Join our community",
-        reward:500,
-        url:CONFIG.links.telegram
-    },
-
-    {
-        id:"youtube",
-        title:"Watch Fahwa on YouTube",
-        desc:"Visit the official channel",
-        reward:500,
-        url:CONFIG.links.youtube
-    },
-
-    {
-        id:"instagram",
-        title:"Follow Fahwa on Instagram",
-        desc:"Follow @fahwaofficial",
-        reward:500,
-        url:CONFIG.links.instagram
-    }
-
-];
-
-function isMissionCompleted(id){
-
-    return(
-        Array.isArray(
-            state.completedMissions
-        ) &&
-        state.completedMissions
-            .includes(id)
-    );
-
-}
-
-function renderMissionList(){
-
-    const list =
-        document.getElementById(
-            "missionList"
-        );
-
-    if(!list) return;
-
-    list.innerHTML = "";
-
-    missions.forEach(
-        function(mission){
-
-            const completed =
-                isMissionCompleted(
-                    mission.id
-                );
-
-            const row =
-                document.createElement(
-                    "div"
-                );
-
-            row.className =
-                "mission";
-
-            row.innerHTML =
-
-                '<div class="mission-info">' +
-
-                '<div class="mission-title">' +
-                mission.title +
-                '</div>' +
-
-                '<div class="mission-desc">' +
-                mission.desc +
-                '</div>' +
-
-                '<div class="mission-reward">+' +
-                mission.reward +
-                ' Points</div>' +
-
-                '</div>' +
-
-                '<button class="btn ' +
-                (completed
-                    ? ''
-                    : 'btn-primary') +
-                '">' +
-                (completed
-                    ? '✓ Done'
-                    : 'Start') +
-                '</button>';
-
-            const button =
-                row.querySelector(
-                    "button"
-                );
-
-            if(completed){
-
-                button.disabled = true;
-
-            }else{
-
-                button.addEventListener(
-                    "click",
-                    function(){
-
-                        completeMission(
-                            mission
-                        );
-
+            // ============================================================
+            // TELEGRAM DETECTION
+            // ============================================================
+            function detectTelegram() {
+                try {
+                    if (window.Telegram && window.Telegram.WebApp) {
+                        const tg = window.Telegram.WebApp;
+                        tg.ready();
+                        tg.expand();
+                        state.isTelegram = true;
+                        const user = tg.initDataUnsafe?.user;
+                        if (user) {
+                            return {
+                                id: String(user.id),
+                                username: user.username || user.first_name || 'Player',
+                                firstName: user.first_name || '',
+                                lastName: user.last_name || '',
+                                avatar: user.photo_url || null
+                            };
+                        }
                     }
-                );
-
-            }
-
-            list.appendChild(row);
-
-        }
-    );
-
-}
-
-function completeMission(mission){
-
-    if(
-        isMissionCompleted(
-            mission.id
-        )
-    ){
-
-        return;
-
-    }
-
-    try{
-
-        window.open(
-            mission.url,
-            "_blank"
-        );
-
-    }catch(error){
-
-        location.href =
-            mission.url;
-
-    }
-
-    state.completedMissions.push(
-        mission.id
-    );
-
-    state.missionsDone++;
-
-    state.points +=
-        mission.reward;
-
-    saveLocal();
-
-    renderAll();
-
-    showToast(
-        "🎯 +" +
-        mission.reward +
-        " Points!"
-    );
-
-}
-
-/* =====================================================
-   QUICK TASKS
-===================================================== */
-
-function renderQuickTasks(){
-
-    const container =
-        document.getElementById(
-            "quickTasks"
-        );
-
-    if(!container) return;
-
-    container.innerHTML = "";
-
-    missions
-        .slice(0,2)
-        .forEach(
-            function(mission){
-
-                const completed =
-                    isMissionCompleted(
-                        mission.id
-                    );
-
-                const row =
-                    document.createElement(
-                        "div"
-                    );
-
-                row.className =
-                    "mission";
-
-                row.innerHTML =
-
-                    '<div class="mission-info">' +
-
-                    '<div class="mission-title">' +
-                    mission.title +
-                    '</div>' +
-
-                    '<div class="mission-reward">+' +
-                    mission.reward +
-                    ' Points</div>' +
-
-                    '</div>' +
-
-                    '<button class="btn ' +
-                    (completed
-                        ? ''
-                        : 'btn-primary') +
-                    '">' +
-                    (completed
-                        ? '✓'
-                        : 'Start') +
-                    '</button>';
-
-                const button =
-                    row.querySelector(
-                        "button"
-                    );
-
-                if(completed){
-
-                    button.disabled = true;
-
-                }else{
-
-                    button.onclick =
-                        function(){
-
-                            completeMission(
-                                mission
-                            );
-
-                        };
-
+                } catch (e) {
+                    console.warn('Telegram detection error:', e);
                 }
-
-                container.appendChild(row);
-
-            }
-        );
-
-}
-
-/* =====================================================
-   PROFILE
-===================================================== */
-
-function renderProfile(){
-
-    const level =
-        getLevel();
-
-    const name =
-        document.getElementById(
-            "profileName"
-        );
-
-    const id =
-        document.getElementById(
-            "profileId"
-        );
-
-    const points =
-        document.getElementById(
-            "profilePoints"
-        );
-
-    const clicks =
-        document.getElementById(
-            "profileClicks"
-        );
-
-    const streak =
-        document.getElementById(
-            "profileStreak"
-        );
-
-    const missionsDone =
-        document.getElementById(
-            "profileMissions"
-        );
-
-    const referrals =
-        document.getElementById(
-            "profileReferrals"
-        );
-
-    const levelEl =
-        document.getElementById(
-            "profileLevel"
-        );
-
-    const levelName =
-        document.getElementById(
-            "profileLevelName"
-        );
-
-    if(name){
-
-        name.textContent =
-            state.username ||
-            "Player";
-
-    }
-
-    if(id){
-
-        id.textContent =
-            "ID: " +
-            (state.id || "unknown");
-
-    }
-
-    if(points){
-
-        points.textContent =
-            Number(
-                state.points || 0
-            ).toLocaleString();
-
-    }
-
-    if(clicks){
-
-        clicks.textContent =
-            Number(
-                state.clicks || 0
-            ).toLocaleString();
-
-    }
-
-    if(streak){
-
-        streak.textContent =
-            state.streak || 0;
-
-    }
-
-    if(missionsDone){
-
-        missionsDone.textContent =
-            state.missionsDone || 0;
-
-    }
-
-    if(referrals){
-
-        referrals.textContent =
-            state.referrals || 0;
-
-    }
-
-    if(levelEl){
-
-        levelEl.textContent =
-            level.level;
-
-    }
-
-    if(levelName){
-
-        levelName.textContent =
-            level.name;
-
-    }
-
-    renderReferral();
-
-}
-
-/* =====================================================
-   REFERRAL
-===================================================== */
-
-function renderReferral(){
-
-    const input =
-        document.getElementById(
-            "referralLink"
-        );
-
-    if(!input) return;
-
-    const id =
-        state.id ||
-        getPlayerId();
-
-    input.value =
-        CONFIG.links.telegram +
-        "?start=ref_" +
-        encodeURIComponent(id);
-
-}
-
-async function copyReferral(){
-
-    const input =
-        document.getElementById(
-            "referralLink"
-        );
-
-    if(!input) return;
-
-    try{
-
-        await navigator.clipboard.writeText(
-            input.value
-        );
-
-        showToast(
-            "✅ Referral link copied!"
-        );
-
-    }catch(error){
-
-        input.select();
-
-        document.execCommand(
-            "copy"
-        );
-
-        showToast(
-            "✅ Referral link copied!"
-        );
-
-    }
-
-}
-
-function shareReferral(){
-
-    const input =
-        document.getElementById(
-            "referralLink"
-        );
-
-    if(!input) return;
-
-    const link =
-        input.value;
-
-    const text =
-        "Join FAHWA CLICK and earn FAHWA Points!";
-
-    if(
-        window.Telegram &&
-        window.Telegram.WebApp &&
-        window.Telegram.WebApp.openTelegramLink
-    ){
-
-        const shareUrl =
-            "https://t.me/share/url?url=" +
-            encodeURIComponent(link) +
-            "&text=" +
-            encodeURIComponent(text);
-
-        window.Telegram.WebApp.openTelegramLink(
-            shareUrl
-        );
-
-        return;
-
-    }
-
-    if(
-        navigator.share
-    ){
-
-        navigator.share({
-
-            title:"FAHWA CLICK",
-
-            text:text,
-
-            url:link
-
-        }).catch(
-            function(){}
-        );
-
-        return;
-
-    }
-
-    copyReferral();
-
-}
-
-/* =====================================================
-   LEADERBOARD
-===================================================== */
-
-async function renderLeaderboard(){
-
-    const list =
-        document.getElementById(
-            "leaderboardList"
-        );
-
-    if(!list) return;
-
-    list.innerHTML = "";
-
-    let players = [];
-
-    if(supabaseClient){
-
-        try{
-
-            const {data,error} =
-                await supabaseClient
-                    .from("fahwa_players")
-                    .select(
-                        "username,points"
-                    )
-                    .order(
-                        "points",
-                        {
-                            ascending:false
-                        }
-                    )
-                    .limit(20);
-
-            if(
-                !error &&
-                Array.isArray(data)
-            ){
-
-                players = data;
-
+                return null;
             }
 
-        }catch(error){
-
-            console.warn(
-                "Leaderboard error:",
-                error
-            );
-
-        }
-
-    }
-
-    if(
-        !players.length
-    ){
-
-        players = [
-
-            {
-                username:"FAHWA Player",
-                points:25000
-            },
-
-            {
-                username:"Community",
-                points:18000
-            },
-
-            {
-                username:"Supporter",
-                points:12000
-            },
-
-            {
-                username:"Builder",
-                points:8500
-            },
-
-            {
-                username:"New Player",
-                points:5000
-            }
-
-        ];
-
-    }
-
-    const currentExists =
-        players.some(
-            function(player){
-
-                return(
-                    player.username ===
-                    state.username
-                );
-
-            }
-        );
-
-    if(!currentExists){
-
-        players.push({
-
-            username:
-                state.username ||
-                "You",
-
-            points:
-                Number(
-                    state.points || 0
-                )
-
-        });
-
-        players.sort(
-            function(a,b){
-
-                return(
-                    Number(b.points || 0) -
-                    Number(a.points || 0)
-                );
-
-            }
-        );
-
-        players =
-            players.slice(0,20);
-
-    }
-
-    players.forEach(
-        function(player,index){
-
-            const row =
-                document.createElement(
-                    "div"
-                );
-
-            row.className =
-                "lb";
-
-            row.innerHTML =
-
-                '<div class="rank">#' +
-                (index+1) +
-                '</div>' +
-
-                '<div class="name">' +
-                escapeHtml(
-                    player.username ||
-                    "Player"
-                ) +
-                '</div>' +
-
-                '<div class="pts">' +
-                Number(
-                    player.points || 0
-                ).toLocaleString() +
-                '</div>';
-
-            list.appendChild(row);
-
-        }
-    );
-
-}
-
-/* =====================================================
-   HTML ESCAPE
-===================================================== */
-
-function escapeHtml(value){
-
-    return String(value)
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
-}
-
-/* =====================================================
-   NAVIGATION
-===================================================== */
-
-function setupNavigation(){
-
-    document
-        .querySelectorAll(".nav")
-        .forEach(
-            function(button){
-
-                button.addEventListener(
-                    "click",
-                    async function(){
-
-                        const page =
-                            button.dataset.page;
-
-                        document
-                            .querySelectorAll(
-                                ".page"
-                            )
-                            .forEach(
-                                function(section){
-
-                                    section.classList.remove(
-                                        "active"
-                                    );
-
-                                }
-                            );
-
-                        const target =
-                            document.getElementById(
-                                page
-                            );
-
-                        if(target){
-
-                            target.classList.add(
-                                "active"
-                            );
-
-                        }
-
-                        document
-                            .querySelectorAll(
-                                ".nav"
-                            )
-                            .forEach(
-                                function(nav){
-
-                                    nav.classList.remove(
-                                        "active"
-                                    );
-
-                                }
-                            );
-
-                        button.classList.add(
-                            "active"
-                        );
-
-                        if(
-                            page ===
-                            "leaderboard"
-                        ){
-
-                            await renderLeaderboard();
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-}
-
-/* =====================================================
-   ENERGY DISPLAY REGENERATION
-===================================================== */
-
-function startEnergyRegen(){
-
-    /*
-     IMPORTANT:
-
-     We do NOT modify server energy here.
-
-     The server is the authority.
-
-     This timer only refreshes the player
-     from the server periodically.
-    */
-
-    setInterval(
-        async function(){
-
-            await loadFromSupabase();
-
-            renderEnergy();
-
-            renderPoints();
-
-            renderProfile();
-
-        },
-        15000
-    );
-
-}
-
-/* =====================================================
-   RENDER ALL
-===================================================== */
-
-function renderAll(){
-
-    renderPoints();
-
-    renderEnergy();
-
-    renderDaily();
-
-    renderMissionList();
-
-    renderQuickTasks();
-
-    renderProfile();
-
-}
-
-/* =====================================================
-   EVENT SETUP
-===================================================== */
-
-function setupEvents(){
-
-    const clickArea =
-        document.getElementById(
-            "clickArea"
-        );
-
-    if(clickArea){
-
-        clickArea.addEventListener(
-            "pointerdown",
-            function(event){
-
-                event.preventDefault();
-
-                sendTapToServer(event);
-
-            }
-        );
-
-    }
-
-    const claimButton =
-        document.getElementById(
-            "claimDaily"
-        );
-
-    if(claimButton){
-
-        claimButton.addEventListener(
-            "click",
-            claimDaily
-        );
-
-    }
-
-    const copyButton =
-        document.getElementById(
-            "copyReferral"
-        );
-
-    if(copyButton){
-
-        copyButton.addEventListener(
-            "click",
-            copyReferral
-        );
-
-    }
-
-    const shareButton =
-        document.getElementById(
-            "shareReferral"
-        );
-
-    if(shareButton){
-
-        shareButton.addEventListener(
-            "click",
-            shareReferral
-        );
-
-    }
-
-}
-
-/* =====================================================
-   START
-===================================================== */
-
-async function start(){
-
-    try{
-
-        /*
-         Create local identity.
-        */
-
-        const localId =
-            getPlayerId();
-
-        state.id =
-            state.id ||
-            localId;
-
-        /*
-         Load local display data.
-        */
-
-        loadLocal();
-
-        /*
-         Initialize Telegram.
-
-         If inside Telegram,
-         Telegram ID becomes the identity.
-        */
-
-        initTelegram();
-
-        /*
-         Load server data.
-        */
-
-        await loadFromSupabase();
-
-        /*
-         Make sure identity exists.
-        */
-
-        if(!state.id){
-
-            state.id =
-                getPlayerId();
-
-        }
-
-        saveLocal();
-
-        renderAll();
-
-        setupEvents();
-
-        setupNavigation();
-
-        startEnergyRegen();
-
-        setTimeout(
-            function(){
-
-                const loading =
-                    document.getElementById(
-                        "loading-screen"
-                    );
-
-                if(loading){
-
-                    loading.classList.add(
-                        "hide"
-                    );
-
-                    setTimeout(
-                        function(){
-
-                            loading.remove();
-
-                        },
-                        400
-                    );
-
+            // ============================================================
+            // AUTHENTICATION
+            // ============================================================
+            async function loginWithGoogle() {
+                if (!supabase) {
+                    showToast('Supabase not available. Demo mode active.');
+                    enterDemoMode();
+                    return;
                 }
+                try {
+                    const { data, error } = await supabase.auth.signInWithOAuth({
+                        provider: 'google',
+                        options: {
+                            redirectTo: window.location.origin + window.location.pathname
+                        }
+                    });
+                    if (error) throw error;
+                } catch (e) {
+                    showToast('Login failed: ' + e.message);
+                    console.error(e);
+                }
+            }
 
-            },
-            350
-        );
+            async function loginWithTelegram() {
+                // در حالت Web، کاربر را به ربات هدایت می‌کنیم
+                const botUrl = `https://t.me/${CONFIG.TELEGRAM_BOT_USERNAME}?start=web`;
+                window.open(botUrl, '_blank');
+                showToast('Open Telegram and start the bot');
+            }
 
-    }catch(error){
-
-        console.error(
-            "Game startup error:",
-            error
-        );
-
-        renderAll();
-
-        setupEvents();
-
-        setupNavigation();
-
-        const loading =
-            document.getElementById(
-                "loading-screen"
-            );
-
-        if(loading){
-
-            loading.classList.add(
-                "hide"
-            );
-
-        }
-
-    }
-
-}
-
-/* =====================================================
-   RUN
-===================================================== */
-
-start();
-
-})();
-</script>
-
-</body>
-</html>
-```
+            async function handleTelegramAuth(initData) {
+                if (!supabase) {
+                    enterDemoMode();
+                    return;
+                }
+                try {
+                    const { data, error } = await supabase.functions.invoke('auth-telegram', {
+                        body: { initData }
+                    });
+                    if (error) throw error;
+                    if (data.user) {
+                        state.profile = data.user;
+                        state.isAuthenticated = true;
+                        await loadGameData();
+                        showApp();
+                    } else {
+                        throw new Error('
