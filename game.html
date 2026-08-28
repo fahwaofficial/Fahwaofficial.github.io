@@ -194,6 +194,10 @@ input{
     transform:scale(.93);
 }
 
+.click-area.busy{
+    opacity:.75;
+}
+
 .tap-text{
     text-align:center;
     color:var(--gold);
@@ -668,6 +672,7 @@ input{
 
             <div class="row between">
                 <div class="card-title">📅 Daily Reward</div>
+
                 <div class="gold small" id="dailyStatus">
                     Available
                 </div>
@@ -942,6 +947,9 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
     "sb_publishable_RgMaihiyYt9D5NeFjJQBWw_njF7McNy";
 
+const GAME_TAP_URL =
+    "https://lhqljhjhlhdyvcrbrlhp.supabase.co/functions/v1/hello-world";
+
 let supabaseClient = null;
 
 try{
@@ -963,7 +971,7 @@ try{
 
 }catch(error){
 
-    console.warn("Supabase error:",error);
+    console.warn("Supabase initialization error:",error);
 
 }
 
@@ -1091,9 +1099,11 @@ function getPlayerId(){
 
         return(
             "web_" +
+            Date.now().toString(36) +
+            "_" +
             Math.random()
                 .toString(36)
-                .substring(2,10)
+                .substring(2,8)
         );
 
     }
@@ -1254,36 +1264,15 @@ function initTelegram(){
 }
 
 /* =====================================================
-   DATABASE
+   DATABASE LOAD
 ===================================================== */
-
-/*
- IMPORTANT:
-
- This code expects a Supabase table called:
-
- fahwa_players
-
- with these columns:
-
- id
- username
- points
- energy
- clicks
- missions_done
- referrals
- streak
- last_daily
- completed_missions
- updated_at
-
- The SQL for this table is provided below the code.
-*/
 
 async function loadFromSupabase(){
 
-    if(!supabaseClient || !state.id){
+    if(
+        !supabaseClient ||
+        !state.id
+    ){
 
         return false;
 
@@ -1372,111 +1361,229 @@ async function loadFromSupabase(){
 
 }
 
-let saveTimer = null;
+/* =====================================================
+   LOCAL SAVE ONLY
+   Server owns points/clicks/energy.
+===================================================== */
 
-function saveToSupabase(){
+function saveLocal(){
 
-    if(
-        !supabaseClient ||
-        !state.id
-    ){
+    try{
+
+        localStorage.setItem(
+            "fahwa_click_state",
+            JSON.stringify(state)
+        );
+
+    }catch(error){}
+
+}
+
+/* =====================================================
+   SERVER TAP
+===================================================== */
+
+let tapInProgress = false;
+
+async function sendTapToServer(event){
+
+    if(tapInProgress){
 
         return;
 
     }
 
-    clearTimeout(saveTimer);
+    if(!state.id){
 
-    saveTimer =
-        setTimeout(
-            async function(){
-
-                try{
-
-                    const payload = {
-
-                        id:state.id,
-
-                        username:state.username,
-
-                        points:Number(
-                            state.points || 0
-                        ),
-
-                        energy:Number(
-                            state.energy || 0
-                        ),
-
-                        clicks:Number(
-                            state.clicks || 0
-                        ),
-
-                        missions_done:Number(
-                            state.missionsDone || 0
-                        ),
-
-                        referrals:Number(
-                            state.referrals || 0
-                        ),
-
-                        streak:Number(
-                            state.streak || 0
-                        ),
-
-                        last_daily:
-                            state.lastDaily,
-
-                        completed_missions:
-                            Array.isArray(
-                                state.completedMissions
-                            )
-                            ? state.completedMissions
-                            : [],
-
-                        updated_at:
-                            new Date().toISOString()
-
-                    };
-
-                    const {error} =
-                        await supabaseClient
-                            .from("fahwa_players")
-                            .upsert(
-                                payload,
-                                {
-                                    onConflict:"id"
-                                }
-                            );
-
-                    if(error){
-
-                        console.warn(
-                            "Supabase save error:",
-                            error
-                        );
-
-                    }
-
-                }catch(error){
-
-                    console.warn(
-                        "Supabase save failed:",
-                        error
-                    );
-
-                }
-
-            },
-            700
+        showToast(
+            "⚠️ Player ID not ready."
         );
 
-}
+        return;
 
-function save(){
+    }
 
-    saveLocal();
+    tapInProgress = true;
 
-    saveToSupabase();
+    const clickArea =
+        document.getElementById(
+            "clickArea"
+        );
+
+    if(clickArea){
+
+        clickArea.classList.add("busy");
+
+    }
+
+    try{
+
+        const response =
+            await fetch(
+                GAME_TAP_URL,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        player_id:
+                            state.id,
+
+                        username:
+                            state.username ||
+                            "Player"
+
+                    })
+                }
+            );
+
+        let result = null;
+
+        try{
+
+            result =
+                await response.json();
+
+        }catch(error){
+
+            result = null;
+
+        }
+
+        if(
+            !response.ok ||
+            !result
+        ){
+
+            console.warn(
+                "Game server response:",
+                response.status,
+                result
+            );
+
+            if(
+                result &&
+                result.error ===
+                "ENERGY_DEPLETED"
+            ){
+
+                state.points =
+                    Number(
+                        result.points ||
+                        state.points
+                    );
+
+                state.energy =
+                    Number(
+                        result.energy || 0
+                    );
+
+                state.clicks =
+                    Number(
+                        result.clicks ||
+                        state.clicks
+                    );
+
+                saveLocal();
+
+                renderPoints();
+
+                renderEnergy();
+
+                renderProfile();
+
+                showToast(
+                    "⚡ ENERGY DEPLETED"
+                );
+
+            }else{
+
+                showToast(
+                    "⚠️ Server error. Try again."
+                );
+
+            }
+
+            return;
+
+        }
+
+        if(result.success){
+
+            /*
+             IMPORTANT:
+             These values come from the server.
+            */
+
+            state.points =
+                Number(
+                    result.points ??
+                    state.points
+                );
+
+            state.energy =
+                Number(
+                    result.energy ??
+                    state.energy
+                );
+
+            state.clicks =
+                Number(
+                    result.clicks ??
+                    state.clicks
+                );
+
+            saveLocal();
+
+            renderPoints();
+
+            renderEnergy();
+
+            renderProfile();
+
+            createFloat(event);
+
+            createRipple(event);
+
+            haptic();
+
+        }else{
+
+            showToast(
+                "⚠️ Tap rejected."
+            );
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "Tap request failed:",
+            error
+        );
+
+        showToast(
+            "⚠️ Connection error."
+        );
+
+    }finally{
+
+        tapInProgress = false;
+
+        if(clickArea){
+
+            clickArea.classList.remove(
+                "busy"
+            );
+
+        }
+
+    }
 
 }
 
@@ -1591,49 +1698,6 @@ function renderEnergy(){
             ) + "%";
 
     }
-
-}
-
-/* =====================================================
-   CLICK
-===================================================== */
-
-function handleClick(event){
-
-    if(
-        state.energy <
-        CONFIG.energyPerClick
-    ){
-
-        showToast(
-            "⚠️ ENERGY DEPLETED"
-        );
-
-        return;
-
-    }
-
-    state.energy -=
-        CONFIG.energyPerClick;
-
-    state.points +=
-        CONFIG.pointsPerClick;
-
-    state.clicks++;
-
-    save();
-
-    renderPoints();
-
-    renderEnergy();
-
-    renderProfile();
-
-    createFloat(event);
-
-    createRipple(event);
-
-    haptic();
 
 }
 
@@ -1997,7 +2061,7 @@ function claimDaily(){
     state.points +=
         reward;
 
-    save();
+    saveLocal();
 
     renderAll();
 
@@ -2182,7 +2246,7 @@ function completeMission(mission){
     state.points +=
         mission.reward;
 
-    save();
+    saveLocal();
 
     renderAll();
 
@@ -2468,10 +2532,15 @@ async function copyReferral(){
 
 function shareReferral(){
 
-    const link =
+    const input =
         document.getElementById(
             "referralLink"
-        ).value;
+        );
+
+    if(!input) return;
+
+    const link =
+        input.value;
 
     const text =
         "Join FAHWA CLICK and earn FAHWA Points!";
@@ -2801,34 +2870,35 @@ function setupNavigation(){
 }
 
 /* =====================================================
-   ENERGY REGENERATION
+   ENERGY DISPLAY REGENERATION
 ===================================================== */
 
 function startEnergyRegen(){
 
+    /*
+     IMPORTANT:
+
+     We do NOT modify server energy here.
+
+     The server is the authority.
+
+     This timer only refreshes the player
+     from the server periodically.
+    */
+
     setInterval(
-        function(){
+        async function(){
 
-            if(
-                state.energy <
-                CONFIG.maxEnergy
-            ){
+            await loadFromSupabase();
 
-                state.energy =
-                    Math.min(
-                        CONFIG.maxEnergy,
-                        state.energy +
-                        CONFIG.energyRegen
-                    );
+            renderEnergy();
 
-                save();
+            renderPoints();
 
-                renderEnergy();
-
-            }
+            renderProfile();
 
         },
-        CONFIG.energyInterval
+        15000
     );
 
 }
@@ -2868,7 +2938,13 @@ function setupEvents(){
 
         clickArea.addEventListener(
             "pointerdown",
-            handleClick
+            function(event){
+
+                event.preventDefault();
+
+                sendTapToServer(event);
+
+            }
         );
 
     }
@@ -2926,7 +3002,7 @@ async function start(){
     try{
 
         /*
-         First create/load local identity.
+         Create local identity.
         */
 
         const localId =
@@ -2937,35 +3013,28 @@ async function start(){
             localId;
 
         /*
-         Telegram can replace the
-         local web ID with Telegram ID.
-        */
-
-        initTelegram();
-
-        /*
-         Load local saved data first
-        so the UI appears immediately.
+         Load local display data.
         */
 
         loadLocal();
 
         /*
-         If Telegram is active,
-         use Telegram ID again after
-         loading local data.
+         Initialize Telegram.
+
+         If inside Telegram,
+         Telegram ID becomes the identity.
         */
 
         initTelegram();
 
         /*
-         Load cloud data.
+         Load server data.
         */
 
         await loadFromSupabase();
 
         /*
-         Make sure ID exists.
+         Make sure identity exists.
         */
 
         if(!state.id){
@@ -3055,3 +3124,4 @@ start();
 
 </body>
 </html>
+```
