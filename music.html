@@ -1,63 +1,1444 @@
 <!DOCTYPE html>
-<html>
+<html lang="fa" dir="rtl">
 <head>
-  <link rel="canonical" href="https://fahwaofficial.github.io/music.html">
-<a href="index.html" class="back-home">← Home</a>
-<title>Music</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Fahwa Music | فهوا رپفارسی موزیک </title>
+    <meta name="description" content="Official music hub of Fahwa. Stream and download songs, watch videos on YouTube, listen on Spotify, Apple Music, and all platforms. Official Fahwa Music.">
+    <link rel="canonical" href="https://Fahwaofficial.github.io/music.html">
+    <meta property="og:title" content="Fahwa Music | Official Songs, Spotify, YouTube & All Platforms">
+    <meta property="og:description" content="Official music hub of Fahwa. Stream and download songs, watch videos on YouTube, listen on Spotify, Apple Music, and all platforms.">
+    <meta property="og:url" content="https://Fahwaofficial.github.io/music.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://Fahwaofficial.github.io/assets/og-image-music.jpg">
+    <meta property="og:site_name" content="Fahwa">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fahwa Music | Official Songs, Spotify, YouTube & All Platforms">
+    <meta name="twitter:description" content="Official music hub of Fahwa. Stream and download songs, watch videos on YouTube, listen on Spotify, Apple Music, and all platforms.">
+    <meta name="twitter:image" content="https://Fahwaofficial.github.io/assets/og-image-music.jpg">
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "MusicGroup",
+            "name": "Fahwa",
+            "url": "https://Fahwaofficial.github.io",
+            "sameAs": [
+                "https://www.instagram.com/fahwaofficial?igsh=MWY2M3h1cnZnZW00dw==",
+                "https://music.apple.com/mx/artist/fahwa/1813073821",
+                "https://youtube.com/@fahwaofficial?si=ZOC9pHhkG4HSHU3L",
+                "https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK?si=OSjGCMdiRha0Sfus15aU7Q ",
+                "https://soundcloud.com/fahwaofficial?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
+                "https://www.tiktok.com/@fahwaofficial?_r=1&_d=dfj79h7h7bg66d&sec_uid=MS4wLjABAAAAedKz2xnRTCBQoTtnBUL09h5nIxWLG1kxNB7jqqDdmItiq7xWtGHxsT4T_X2jYYY9&share_author_id=7603187326018323464&sharer_language=en&source=h5_m&u_code=f1lh7hmi0ma778&utm_source=copy&utm_campaign=client_share&share_link_id=ba0f3127-6379-4d62-90e7-767cb43a78b0&share_app_id=1340&ugbiz_name=Account&lang=en&user_id=7603187326018323464&sec_user_id=MS4wLjABAAAAedKz2xnRTCBQoTtnBUL09h5nIxWLG1kxNB7jqqDdmItiq7xWtGHxsT4T_X2jYYY9&enable_checksum=1",
+                "https://x.com/fahwaofficial?t=FwD5_1e1MYA541awWEOGpg&s=09"
+            ],
+            "genre": ["Hip-Hop", "Rap"],
+            "foundingDate": "2020",
+            "description": "Fahwa (فهوا) is an independent Iranian rapper, songwriter, and producer. His music focuses on personal narratives, emotions, and human experiences."
+        }
+    </script>
+    <style>
+        /* ----- RESET & BASE ----- */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #0a0a0a;
+            color: #f0f0f0;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #666;
+        }
+        a {
+            color: #f0f0f0;
+            text-decoration: none;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.5px;
+            color: #fff;
+            border-right: 4px solid #b8860b;
+            padding-right: 1rem;
+        }
+        .section-sub {
+            color: #aaa;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        /* ----- GLASSMORPHISM UTILITY ----- */
+        .glass {
+            background: rgba(20, 20, 20, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ----- HEADER / NAV ----- */
+        .header {
+            padding: 0.8rem 0;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #f5e56b, #b8860b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .logo span {
+            font-size: 0.9rem;
+            font-weight: 300;
+            background: none;
+            -webkit-text-fill-color: #aaa;
+            color: #aaa;
+            margin-right: 0.3rem;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+            list-style: none;
+            font-weight: 500;
+        }
+        .nav-links a {
+            transition: color 0.2s;
+            font-size: 0.95rem;
+        }
+        .nav-links a:hover {
+            color: #f5e56b;
+        }
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0.3rem;
+        }
+        .hamburger span {
+            display: block;
+            width: 26px;
+            height: 2.5px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            transition: 0.25s;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* ----- HERO ----- */
+        .hero {
+            padding: 4rem 0 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 30%, rgba(184, 134, 11, 0.06), transparent 60%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #fff 20%, #b8860b 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero .sub {
+            font-size: 1.3rem;
+            color: #ccc;
+            margin: 0.5rem 0 1.2rem;
+            font-weight: 300;
+        }
+        .hero p {
+            max-width: 640px;
+            margin: 0 auto 2rem;
+            color: #aaa;
+            font-size: 1.05rem;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            background: #2a2a2a;
+            color: #f0f0f0;
+            font-size: 1rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #f5e56b, #b8860b);
+            color: #0a0a0a;
+            box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(184, 134, 11, 0.5);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #555;
+        }
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #b8860b;
+        }
+
+        /* ----- MUSIC PLAYER ----- */
+        .player-section {
+            padding: 2rem 0 3rem;
+        }
+        .player-wrapper {
+            padding: 1.8rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .player-cover {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .player-cover img {
+            width: 180px;
+            height: 180px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+            object-fit: cover;
+            background: #222;
+        }
+        .player-cover .track-info {
+            text-align: center;
+        }
+        .player-cover .track-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .player-cover .artist-name {
+            color: #aaa;
+            font-size: 1rem;
+        }
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.8rem;
+            margin: 1.5rem 0;
+        }
+        .player-controls button {
+            background: none;
+            border: none;
+            color: #f0f0f0;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0.3rem;
+            display: inline-flex;
+            border-radius: 50%;
+        }
+        .player-controls button:hover {
+            color: #f5e56b;
+            transform: scale(1.05);
+        }
+        .player-controls .play-btn {
+            background: #b8860b;
+            color: #0a0a0a;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 20px rgba(184, 134, 11, 0.3);
+        }
+        .player-controls .play-btn:hover {
+            background: #f5e56b;
+            transform: scale(1.05);
+        }
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: #333;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #f5e56b, #b8860b);
+            border-radius: 10px;
+            transition: width 0.1s;
+        }
+        .time {
+            font-size: 0.8rem;
+            color: #aaa;
+            min-width: 45px;
+        }
+
+        /* ----- PLAYLIST (TRACKS) ----- */
+        .playlist-section {
+            padding: 1.5rem 0 3rem;
+        }
+        .track-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .track-card {
+            background: #151515;
+            border-radius: 16px;
+            padding: 1rem;
+            transition: 0.2s;
+            border: 1px solid transparent;
+            cursor: pointer;
+            text-align: center;
+        }
+        .track-card:hover {
+            border-color: #b8860b;
+            transform: translateY(-4px);
+            background: #1c1c1c;
+        }
+        .track-card.active {
+            border-color: #f5e56b;
+            background: #1e1e1e;
+        }
+        .track-card img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border-radius: 12px;
+            background: #222;
+            margin-bottom: 0.5rem;
+        }
+        .track-card .name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .track-card .meta {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 0.2rem;
+        }
+        .track-card .actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.6rem;
+            flex-wrap: wrap;
+        }
+        .track-card .actions a,
+        .track-card .actions button {
+            background: #2a2a2a;
+            border: none;
+            color: #ccc;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .track-card .actions a:hover,
+        .track-card .actions button:hover {
+            background: #b8860b;
+            color: #0a0a0a;
+        }
+
+        /* ----- EMBED SECTIONS (Spotify, YouTube, Instagram) ----- */
+        .embed-section {
+            padding: 2.5rem 0;
+        }
+        .embed-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .embed-item {
+            background: #111;
+            border-radius: 16px;
+            padding: 1.2rem;
+            border: 1px solid #222;
+        }
+        .embed-item h3 {
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .embed-item iframe {
+            width: 100%;
+            border-radius: 12px;
+            background: #000;
+            aspect-ratio: 16/9;
+            border: none;
+        }
+        .embed-item .spotify-iframe {
+            aspect-ratio: 1/1;
+            min-height: 352px;
+        }
+
+        /* ----- INSTAGRAM FALLBACK ----- */
+        .instagram-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+        .instagram-card {
+            background: #151515;
+            border-radius: 16px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid #222;
+            transition: 0.2s;
+        }
+        .instagram-card:hover {
+            border-color: #b8860b;
+        }
+        .instagram-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.3rem;
+        }
+        .instagram-card a {
+            display: inline-block;
+            margin-top: 0.5rem;
+            background: #2a2a2a;
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+        .instagram-card a:hover {
+            background: #b8860b;
+            color: #0a0a0a;
+        }
+
+        /* ----- PLATFORM HUB ----- */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+        .platform-card {
+            background: #141414;
+            border-radius: 14px;
+            padding: 1.2rem 0.8rem;
+            text-align: center;
+            transition: 0.2s;
+            border: 1px solid #222;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .platform-card:hover {
+            border-color: #b8860b;
+            transform: translateY(-4px);
+            background: #1a1a1a;
+        }
+        .platform-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+        .platform-card .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .platform-card .btn-sm {
+            margin-top: 0.5rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            background: #2a2a2a;
+            font-size: 0.7rem;
+            transition: 0.2s;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+        }
+        .platform-card .btn-sm:hover {
+            background: #b8860b;
+            color: #0a0a0a;
+        }
+
+        /* ----- NEWS ----- */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .news-card {
+            background: #131313;
+            padding: 1.2rem;
+            border-radius: 14px;
+            border: 1px solid #222;
+            transition: 0.2s;
+        }
+        .news-card:hover {
+            border-color: #b8860b;
+        }
+        .news-card .date {
+            color: #888;
+            font-size: 0.75rem;
+        }
+        .news-card h4 {
+            margin: 0.3rem 0 0.5rem;
+        }
+        .news-card .read-more {
+            color: #b8860b;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* ----- FOOTER ----- */
+        .footer {
+            margin-top: 3rem;
+            padding: 2.5rem 0 1.5rem;
+            background: #0d0d0d;
+            border-top: 1px solid #1e1e1e;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .footer h4 {
+            color: #fff;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+        .footer ul {
+            list-style: none;
+        }
+        .footer ul li {
+            margin-bottom: 0.4rem;
+        }
+        .footer ul a {
+            color: #aaa;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        .footer ul a:hover {
+            color: #f5e56b;
+        }
+        .footer-bottom {
+            border-top: 1px solid #1e1e1e;
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .footer-bottom .stats {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        .footer-bottom .stats span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* ----- MINI PLAYER (Sticky) ----- */
+        .mini-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid #222;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 200;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            justify-content: space-between;
+        }
+        .mini-player.visible {
+            transform: translateY(0);
+        }
+        .mini-player .mini-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex: 1;
+            min-width: 0;
+        }
+        .mini-player .mini-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #222;
+        }
+        .mini-player .mini-info .mini-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .mini-player .mini-info .mini-text .mini-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .mini-player .mini-info .mini-text .mini-artist {
+            font-size: 0.7rem;
+            color: #aaa;
+        }
+        .mini-player .mini-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .mini-player .mini-controls button {
+            background: none;
+            border: none;
+            color: #f0f0f0;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0.2rem;
+        }
+        .mini-player .mini-controls .mini-close {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 820px) {
+            .embed-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+        }
+        @media (max-width: 680px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background: rgba(10, 10, 10, 0.98);
+                padding: 1.2rem 0;
+                gap: 1.2rem;
+                border-top: 1px solid #222;
+                margin-top: 0.8rem;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero .sub {
+                font-size: 1rem;
+            }
+            .track-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            .platform-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            }
+            .player-wrapper {
+                padding: 1rem;
+            }
+            .player-cover img {
+                width: 140px;
+                height: 140px;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .mini-player .mini-info img {
+                width: 32px;
+                height: 32px;
+            }
+        }
+        @media (max-width: 400px) {
+            .hero-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-<section class="music-page">
-  <h1>Music</h1>
-  <p>Official releases by Fahwa.</p>
 
-  <div class="music-grid">
+    <!-- ===== HEADER ===== -->
+    <header class="header" role="banner">
+        <div class="container nav-container">
+            <a href="https://Fahwaofficial.github.io/" class="logo" aria-label="Fahwa Home">FAHWA <span>Music</span></a>
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="navLinks" role="navigation">
+                <li><a href="https://Fahwaofficial.github.io/">Home</a></li>
+                <li><a href="https://Fahwaofficial.github.io/music.html" aria-current="page">Music</a></li>
+                <li><a href="https://Fahwaofficial.github.io/news.html">News</a></li>
+                <li><a href="https://Fahwaofficial.github.io/download.html">Download</a></li>
+                <li><a href="https://Fahwaofficial.github.io/game.html">Game</a></li>
+            </ul>
+        </div>
+    </header>
 
-    <div class="track-card">
-      <img src="images/cover1.jpg" alt="Track Cover">
-      <h2>MoTenaferam</h2>
-      <p>Released: 2026</p>
+    <main>
 
-      <div class="stream-links">
-        <a href="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK?si=OSjGCMdiRha0Sfus15aU7Q" target="_blank">Spotify</a>
-        <a href="https://music.apple.com/mx/artist/fahwa/1813073821" target="_blank">Apple Music</a>
-        <a href="https://music.youtube.com/watch?v=8vQ2muT05ts&si=KSTvjvQJ_9ckaMNu" target="_blank">YouTube Music</a>
-        <a href="https://soundcloud.com/fahwaofficial?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" target="_blank">SoundCloud</a>
-      </div>
+        <!-- ===== HERO ===== -->
+        <section class="hero container" aria-labelledby="hero-title">
+            <h1 id="hero-title">FAHWA</h1>
+            <div class="sub">OFFICIAL MUSIC HUB</div>
+            <p>مرکز رسمی موسیقی فهوا؛ شنیدن، تماشای موزیک و دسترسی به تمامی پلتفرم‌های رسمی فهوا.</p>
+            <div class="hero-buttons">
+                <a href="#player" class="btn btn-primary">🎧 گوش دادن به موسیقی</a>
+                <a href="#platforms" class="btn btn-outline">🎵 همه پلتفرم‌ها</a>
+            </div>
+        </section>
 
+        <!-- ===== MUSIC PLAYER ===== -->
+        <section class="player-section container" id="player" aria-labelledby="player-title">
+            <h2 class="section-title" id="player-title">🎧 FAHWA MUSIC PLAYER</h2>
+            <div class="player-wrapper glass">
+                <div class="player-cover">
+                    <img id="playerCover" src="https://Fahwaofficial.github.io/assets/cover-placeholder.jpg" alt="Fahwa track cover" loading="lazy">
+                    <div class="track-info">
+                        <div class="track-name" id="trackName">Mo Tenaferam</div>
+                        <div class="artist-name" id="trackArtist">Fahwa</div>
+                    </div>
+                </div>
+                <div class="player-controls">
+                    <button id="prevBtn" aria-label="Previous track">⏮</button>
+                    <button id="playBtn" class="play-btn" aria-label="Play or pause">▶</button>
+                    <button id="nextBtn" aria-label="Next track">⏭</button>
+                </div>
+                <div class="progress-container">
+                    <span class="time" id="currentTime">0:00</span>
+                    <div class="progress-bar" id="progressBar" role="progressbar" aria-label="Music progress">
+                        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+                    </div>
+                    <span class="time" id="durationTime">0:00</span>
+                </div>
+                <audio id="audioPlayer" src="https://Fahwaofficial.github.io/assets/tracks/mo-tenaferam.mp3" preload="metadata"></audio>
+            </div>
+        </section>
+
+        <!-- ===== TRACKS / PLAYLIST ===== -->
+        <section class="playlist-section container" aria-labelledby="playlist-title">
+            <h2 class="section-title" id="playlist-title">🎵 FAHWA TRACKS</h2>
+            <p class="section-sub">انتخاب و پخش آهنگ‌های رسمی فهوا</p>
+            <div class="track-grid" id="trackGrid">
+                <!-- cards generated by JS -->
+            </div>
+        </section>
+
+        <!-- ===== SPOTIFY EMBED ===== -->
+        <section class="embed-section container" aria-labelledby="spotify-title">
+            <h2 class="section-title" id="spotify-title">🎵 Listen on Spotify</h2>
+            <div class="embed-item">
+                <div style="position:relative;padding-bottom:100%;height:0;">
+                    <iframe src="https://open.spotify.com/embed/artist/REPLACE_WITH_FAHWA_SPOTIFY_ID?utm_source=generator" 
+                            class="spotify-iframe" 
+                            style="position:absolute;top:0;left:0;width:100%;height:100%;" 
+                            frameborder="0" 
+                            allowfullscreen="" 
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                            loading="lazy">
+                    </iframe>
+                </div>
+                <p style="color:#888;font-size:0.8rem;margin-top:0.5rem;">برای پخش کامل، اپلیکیشن Spotify را باز کنید.</p>
+            </div>
+        </section>
+
+        <!-- ===== YOUTUBE EMBED ===== -->
+        <section class="embed-section container" aria-labelledby="youtube-title">
+            <h2 class="section-title" id="youtube-title">▶️ Watch & Listen on YouTube</h2>
+            <div class="embed-grid">
+                <div class="embed-item">
+                    <h3>🎬 Official Videos</h3>
+                    <iframe src="https://www.youtube.com/embed/REPLACE_WITH_FAHWA_VIDEO_ID_1" 
+                            title="Fahwa Official Video" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen 
+                            loading="lazy">
+                    </iframe>
+                </div>
+                <div class="embed-item">
+                    <h3>🎧 YouTube Music</h3>
+                    <iframe src="https://www.youtube.com/embed/REPLACE_WITH_FAHWA_VIDEO_ID_2" 
+                            title="Fahwa YouTube Music" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen 
+                            loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== INSTAGRAM ===== -->
+        <section class="embed-section container" aria-labelledby="instagram-title">
+            <h2 class="section-title" id="instagram-title">📸 FAHWA ON INSTAGRAM</h2>
+            <div class="instagram-grid" id="instagramGrid">
+                <!-- cards generated by JS (fallback) -->
+            </div>
+        </section>
+
+        <!-- ===== PLATFORM HUB ===== -->
+        <section class="embed-section container" id="platforms" aria-labelledby="platforms-title">
+            <h2 class="section-title" id="platforms-title">🌐 FAHWA ON EVERY PLATFORM</h2>
+            <div class="platform-grid" id="platformGrid">
+                <!-- generated by JS -->
+            </div>
+        </section>
+
+        <!-- ===== LATEST NEWS ===== -->
+        <section class="embed-section container" aria-labelledby="news-title">
+            <h2 class="section-title" id="news-title">📰 LATEST FAHWA NEWS</h2>
+            <div class="news-grid" id="newsGrid">
+                <!-- generated by JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h4>FAHWA</h4>
+                    <p style="color:#888;font-size:0.9rem;">Official Music Project</p>
+                </div>
+                <div>
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="https://Fahwaofficial.github.io/">Home</a></li>
+                        <li><a href="https://Fahwaofficial.github.io/music.html">Music</a></li>
+                        <li><a href="https://Fahwaofficial.github.io/download.html">Download</a></li>
+                        <li><a href="https://Fahwaofficial.github.io/news.html">News</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Official Platforms</h4>
+                    <ul>
+                        <li><a href="https://open.spotify.com/artist/REPLACE_WITH_FAHWA_SPOTIFY_ID">Spotify</a></li>
+                        <li><a href="https://www.youtube.com/@REPLACE_WITH_FAHWA_YOUTUBE_HANDLE">YouTube</a></li>
+                        <li><a href="https://music.apple.com/artist/REPLACE_WITH_FAHWA_APPLE_ID">Apple Music</a></li>
+                        <li><a href="https://soundcloud.com/REPLACE_WITH_FAHWA_SOUNDCLOUD">SoundCloud</a></li>
+                        <li><a href="https://REPLACE_WITH_FAHWA_BANDCAMP.bandcamp.com">Bandcamp</a></li>
+                        <li><a href="https://www.instagram.com/REPLACE_WITH_FAHWA_INSTAGRAM">Instagram</a></li>
+                        <li><a href="https://www.tiktok.com/@REPLACE_WITH_FAHWA_TIKTOK">TikTok</a></li>
+                        <li><a href="https://x.com/REPLACE_WITH_FAHWA_X">X</a></li>
+                        <li><a href="https://t.me/REPLACE_WITH_FAHWA_TELEGRAM">Telegram</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div>© 2026 FAHWA. All Rights Reserved.</div>
+                <div class="stats">
+                    <span id="pageViewDisplay">👁 بازدید: <span id="viewCount">---</span></span>
+                    <span>🕒 آخرین بروزرسانی: <span id="lastUpdate">بارگذاری...</span></span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== MINI PLAYER ===== -->
+    <div class="mini-player" id="miniPlayer" role="complementary" aria-label="Mini music player">
+        <div class="mini-info">
+            <img id="miniCover" src="https://Fahwaofficial.github.io/assets/cover-placeholder.jpg" alt="Track cover" loading="lazy">
+            <div class="mini-text">
+                <div class="mini-name" id="miniName">Mo Tenaferam</div>
+                <div class="mini-artist" id="miniArtist">Fahwa</div>
+            </div>
+        </div>
+        <div class="mini-controls">
+            <button id="miniPrev" aria-label="Previous">⏮</button>
+            <button id="miniPlay" aria-label="Play or pause">▶</button>
+            <button id="miniNext" aria-label="Next">⏭</button>
+            <button class="mini-close" id="miniClose" aria-label="Close mini player">✕</button>
+        </div>
     </div>
 
-    <!-- Track دوم -->
-    <div class="track-card">
-      <img src="images/photo3" alt="Track Cover">
-      <h2>HamAknon</h2>
-      <p>Released: 2026</p>
+    <script>
+        (function() {
+            'use strict';
 
-      <div class="stream-links">
-        <a href="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK?si=OSjGCMdiRha0Sfus15aU7Q">Spotify</a>
-        <a href="https://music.apple.com/mx/artist/fahwa/1813073821">Apple Music</a>
-        <a href="https://music.youtube.com/channel/UCqLJehqjOYOh9NVv5Ducj_Q?si=k_Qgbu9LvV0M1Qax">YouTube Music</a>
-        <a href="https://soundcloud.com/fahwaofficial?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing">SoundCloud</a>
-      </div>
+            // ================================================================
+            // 1. TRACK DATA (replace URLs with actual files if exist)
+            // ================================================================
+            const tracks = [{
+                id: 1,
+                name: 'Mo Tenaferam',
+                artist: 'Fahwa',
+                cover: 'https://Fahwaofficial.github.io/assets/covers/mo-tenaferam.jpg',
+                src: 'https://Fahwaofficial.github.io/assets/tracks/mo-tenaferam.mp3',
+                duration: '3:45',
+                spotify: 'https://open.spotify.com/track/REPLACE_ID',
+                youtube: 'https://www.youtube.com/watch?v=REPLACE_ID',
+                release: '2024'
+            }, {
+                id: 2,
+                name: 'Forsat Mahdod',
+                artist: 'Fahwa',
+                cover: 'https://Fahwaofficial.github.io/assets/covers/forsat-mahdod.jpg',
+                src: 'https://Fahwaofficial.github.io/assets/tracks/forsat-mahdod.mp3',
+                duration: '4:12',
+                spotify: 'https://open.spotify.com/track/REPLACE_ID',
+                youtube: 'https://www.youtube.com/watch?v=REPLACE_ID',
+                release: '2024'
+            }, {
+                id: 3,
+                name: 'Dictator',
+                artist: 'Fahwa',
+                cover: 'https://Fahwaofficial.github.io/assets/covers/dictator.jpg',
+                src: 'https://Fahwaofficial.github.io/assets/tracks/dictator.mp3',
+                duration: '3:28',
+                spotify: 'https://open.spotify.com/track/REPLACE_ID',
+                youtube: 'https://www.youtube.com/watch?v=REPLACE_ID',
+                release: '2023'
+            }, {
+                id: 4,
+                name: 'HamAknon',
+                artist: 'Fahwa',
+                cover: 'https://Fahwaofficial.github.io/assets/covers/hamaknon.jpg',
+                src: 'https://Fahwaofficial.github.io/assets/tracks/hamaknon.mp3',
+                duration: '4:01',
+                spotify: 'https://open.spotify.com/track/REPLACE_ID',
+                youtube: 'https://www.youtube.com/watch?v=REPLACE_ID',
+                release: '2023'
+            }, {
+                id: 5,
+                name: 'Azad',
+                artist: 'Fahwa',
+                cover: 'https://Fahwaofficial.github.io/assets/covers/azad.jpg',
+                src: 'https://Fahwaofficial.github.io/assets/tracks/azad.mp3',
+                duration: '3:55',
+                spotify: 'https://open.spotify.com/track/REPLACE_ID',
+                youtube: 'https://www.youtube.com/watch?v=REPLACE_ID',
+                release: '2023'
+            }];
 
-    </div>
+            // ================================================================
+            // 2. DOM REFS
+            // ================================================================
+            const audio = document.getElementById('audioPlayer');
+            const playBtn = document.getElementById('playBtn');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const progressFill = document.getElementById('progressFill');
+            const progressBar = document.getElementById('progressBar');
+            const currentTimeEl = document.getElementById('currentTime');
+            const durationTimeEl = document.getElementById('durationTime');
+            const trackName = document.getElementById('trackName');
+            const trackArtist = document.getElementById('trackArtist');
+            const playerCover = document.getElementById('playerCover');
 
-  </div>
-  </section>
-<h1>Music</h1>
+            // Mini player
+            const miniPlayer = document.getElementById('miniPlayer');
+            const miniPlay = document.getElementById('miniPlay');
+            const miniPrev = document.getElementById('miniPrev');
+            const miniNext = document.getElementById('miniNext');
+            const miniClose = document.getElementById('miniClose');
+            const miniName = document.getElementById('miniName');
+            const miniArtist = document.getElementById('miniArtist');
+            const miniCover = document.getElementById('miniCover');
 
-<p>Coming Soon...</p>
+            const trackGrid = document.getElementById('trackGrid');
 
+            let currentTrackIndex = 0;
+            let isPlaying = false;
+            let isUserSeeking = false;
 
-    <div class="spotify-wrapper">
+            // ================================================================
+            // 3. PLAYER FUNCTIONS
+            // ================================================================
+            function loadTrack(index) {
+                const track = tracks[index];
+                if (!track) return;
+                audio.src = track.src;
+                trackName.textContent = track.name;
+                trackArtist.textContent = track.artist;
+                playerCover.src = track.cover;
+                miniName.textContent = track.name;
+                miniArtist.textContent = track.artist;
+                miniCover.src = track.cover;
+                // Update active card
+                document.querySelectorAll('.track-card').forEach((card, i) => {
+                    card.classList.toggle('active', i === index);
+                });
+                // Reset progress
+                progressFill.style.width = '0%';
+                currentTimeEl.textContent = '0:00';
+                if (audio.readyState >= 2) {
+                    durationTimeEl.textContent = formatTime(audio.duration);
+                } else {
+                    durationTimeEl.textContent = '0:00';
+                }
+                if (isPlaying) {
+                    audio.play().catch(() => {});
+                }
+            }
 
-        <iframe
-            src="https://open.spotify.com/embed/artist/6qOw3MNO2ngGLW17HquCQK?utm_source=generator"
-            title="Fahwa Official Spotify Artist Profile"
-            loading="lazy"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
-        </iframe>
+            function togglePlay() {
+                if (audio.paused) {
+                    audio.play().then(() => {
+                        isPlaying = true;
+                        updatePlayButtons();
+                        miniPlayer.classList.add('visible');
+                    }).catch(() => {});
+                } else {
+                    audio.pause();
+                    isPlaying = false;
+                    updatePlayButtons();
+                }
+            }
 
-    </div>
+            function updatePlayButtons() {
+                const icon = isPlaying ? '⏸' : '▶';
+                playBtn.textContent = icon;
+                miniPlay.textContent = icon;
+            }
+
+            function formatTime(seconds) {
+                if (isNaN(seconds) || seconds === Infinity) return '0:00';
+                const m = Math.floor(seconds / 60);
+                const s = Math.floor(seconds % 60);
+                return m + ':' + (s < 10 ? '0' : '') + s;
+            }
+
+            function updateProgress() {
+                if (!isUserSeeking && audio.duration) {
+                    const percent = (audio.currentTime / audio.duration) * 100;
+                    progressFill.style.width = percent + '%';
+                    currentTimeEl.textContent = formatTime(audio.currentTime);
+                }
+            }
+
+            function setProgress(e) {
+                const rect = progressBar.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const percent = Math.min(Math.max(x, 0), 1);
+                if (audio.duration) {
+                    audio.currentTime = percent * audio.duration;
+                    progressFill.style.width = percent * 100 + '%';
+                }
+            }
+
+            function nextTrack() {
+                currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+                loadTrack(currentTrackIndex);
+                if (!audio.paused) {
+                    audio.play().catch(() => {});
+                    isPlaying = true;
+                } else {
+                    isPlaying = false;
+                }
+                updatePlayButtons();
+            }
+
+            function prevTrack() {
+                currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+                loadTrack(currentTrackIndex);
+                if (!audio.paused) {
+                    audio.play().catch(() => {});
+                    isPlaying = true;
+                } else {
+                    isPlaying = false;
+                }
+                updatePlayButtons();
+            }
+
+            // ================================================================
+            // 4. EVENT LISTENERS
+            // ================================================================
+            playBtn.addEventListener('click', togglePlay);
+            miniPlay.addEventListener('click', togglePlay);
+            prevBtn.addEventListener('click', prevTrack);
+            miniPrev.addEventListener('click', prevTrack);
+            nextBtn.addEventListener('click', nextTrack);
+            miniNext.addEventListener('click', nextTrack);
+
+            audio.addEventListener('timeupdate', updateProgress);
+            audio.addEventListener('loadedmetadata', function() {
+                durationTimeEl.textContent = formatTime(audio.duration);
+            });
+            audio.addEventListener('ended', function() {
+                isPlaying = false;
+                updatePlayButtons();
+                nextTrack();
+            });
+            audio.addEventListener('play', function() {
+                isPlaying = true;
+                updatePlayButtons();
+                miniPlayer.classList.add('visible');
+            });
+            audio.addEventListener('pause', function() {
+                isPlaying = false;
+                updatePlayButtons();
+            });
+
+            progressBar.addEventListener('mousedown', function(e) {
+                isUserSeeking = true;
+                setProgress(e);
+            });
+            document.addEventListener('mousemove', function(e) {
+                if (isUserSeeking) setProgress(e);
+            });
+            document.addEventListener('mouseup', function() {
+                isUserSeeking = false;
+            });
+            // Touch support
+            progressBar.addEventListener('touchstart', function(e) {
+                isUserSeeking = true;
+                setProgress(e.touches[0]);
+            });
+            progressBar.addEventListener('touchmove', function(e) {
+                if (isUserSeeking) setProgress(e.touches[0]);
+            });
+            progressBar.addEventListener('touchend', function() {
+                isUserSeeking = false;
+            });
+
+            miniClose.addEventListener('click', function() {
+                miniPlayer.classList.remove('visible');
+            });
+
+            // ================================================================
+            // 5. RENDER TRACKS
+            // ================================================================
+            function renderTracks() {
+                trackGrid.innerHTML = '';
+                tracks.forEach((track, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'track-card' + (index === currentTrackIndex ? ' active' : '');
+                    card.innerHTML = `
+                        <img src="${track.cover}" alt="Cover of ${track.name}" loading="lazy">
+                        <div class="name">${track.name}</div>
+                        <div class="meta">${track.artist} • ${track.release}</div>
+                        <div class="actions">
+                            <button class="play-track" data-index="${index}" aria-label="Play ${track.name}">▶ Play</button>
+                            <a href="${track.spotify}" target="_blank" rel="noopener noreferrer" aria-label="Open on Spotify">Spotify</a>
+                            <a href="${track.youtube}" target="_blank" rel="noopener noreferrer" aria-label="Open on YouTube">YouTube</a>
+                            ${track.src ? `<a href="${track.src}" download aria-label="Download ${track.name}">⬇ Download</a>` : ''}
+                        </div>
+                    `;
+                    trackGrid.appendChild(card);
+                });
+
+                // Play button on cards
+                document.querySelectorAll('.play-track').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const idx = parseInt(this.dataset.index);
+                        if (idx === currentTrackIndex && !audio.paused) {
+                            audio.pause();
+                            isPlaying = false;
+                            updatePlayButtons();
+                        } else {
+                            currentTrackIndex = idx;
+                            loadTrack(currentTrackIndex);
+                            audio.play().then(() => {
+                                isPlaying = true;
+                                updatePlayButtons();
+                                miniPlayer.classList.add('visible');
+                            }).catch(() => {});
+                        }
+                    });
+                });
+            }
+
+            // ================================================================
+            // 6. RENDER PLATFORMS
+            // ================================================================
+            function renderPlatforms() {
+                const platforms = [{
+                    name: 'Spotify',
+                    icon: '🎵',
+                    url: 'https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK?si=OSjGCMdiRha0Sfus15aU7Q '
+                }, {
+                    name: 'Apple Music',
+                    icon: '🍎',
+                    url: 'https://music.apple.com/mx/artist/fahwa/1813073821'
+                }, {
+                    name: 'Amazon Music',
+                    icon: '🎶',
+                    url: 'https://music.amazon.it/artists/B0F7RW3YL2'
+                }, {
+                    name: 'SoundCloud',
+                    icon: '☁️',
+                    url: 'https://soundcloud.com/fahwaofficial?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing'
+                }, {
+                    name: 'Bandcamp',
+                    icon: '🏷️',
+                    url: 'https://fahwa.bandcamp.com/'
+                }, {
+                    name: 'YouTube',
+                    icon: '▶️',
+                    url: 'https://www.youtube.com/@fahwaofficial'
+                }, {
+                    name: 'TikTok',
+                    icon: '🎵',
+                    url: 'https://www.tiktok.com/@fahwaofficial'
+                }, {
+                    name: 'Instagram',
+                    icon: '📸',
+                    url: 'https://www.instagram.com/fahwaofficial'
+                }, {
+                    name: 'X',
+                    icon: '🐦',
+                    url: 'https://x.com/fahwaofficial'
+                }, {
+                    name: 'Telegram',
+                    icon: '✈️',
+                    url: 'https://t.me/fahwaofficial'
+                }, {
+                    name: 'Genius',
+                    icon: '🧠',
+                    url: 'https://genius.com/artists/Fahwa'
+                }, {
+                    name: 'musicbrainz'
+                    icon: '🎼',
+                    url: 'https://musicbrainz.org/artist/85623249-de16-4582-ab32-a73b7aff093a'
+                }];
+
+                const grid = document.getElementById('platformGrid');
+                grid.innerHTML = '';
+                platforms.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'platform-card';
+                    card.innerHTML = `
+                        <div class="icon">${p.icon}</div>
+                        <div class="name">${p.name}</div>
+                        <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="btn-sm">Open ${p.name}</a>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            // ================================================================
+            // 7. RENDER INSTAGRAM (Fallback)
+            // ================================================================
+            function renderInstagram() {
+                const posts = [
+                    { id: 'REPLACE_POST_ID_1', url: 'https://www.instagram.com/p/REPLACE_I/' },
+                    { id: 'REPLACE_POST_ID_2', url: 'https://www.instagram.com/p/REPLACE_ID/' },
+                    { id: 'REPLACE_POST_ID_3', url: 'https://www.instagram.com/p/REPLACE_ID/' }
+                ];
+                const grid = document.getElementById('instagramGrid');
+                grid.innerHTML = '';
+                posts.forEach(post => {
+                    const card = document.createElement('div');
+                    card.className = 'instagram-card';
+                    card.innerHTML = `
+                        <div class="icon">📷</div>
+                        <p style="color:#aaa;font-size:0.8rem;">Official Post</p>
+                        <a href="${post.url}" target="_blank" rel="noopener noreferrer">View on Instagram</a>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            // ================================================================
+            // 8. RENDER NEWS
+            // ================================================================
+            function renderNews() {
+                const newsItems = [{
+                    title: 'جدیدترین تک‌آهنگ فهوا منتشر شد',
+                    date: '28 آگوست 2026',
+                    summary: 'قطعه جدید با نام «Mo Tenaferam» در تمامی پلتفرم‌ها در دسترس است.',
+                    link: 'https://Fahwaofficial.github.io/news/motenaferam'
+                }, {
+                    title: 'فهوا در جشنواره موسیقی مستقل',
+                    date: '15 آگوست 2026',
+                    summary: 'اجرای زنده فهوا در جشنواره تابستانی موسیقی مستقل تهران.',
+                    link: 'https://Fahwaofficial.github.io/news/festival'
+                }, {
+                    title: 'آلبوم جدید فهوا در حال تولید',
+                    date: '1 آگوست 2026',
+                    summary: 'آلبوم جدید با همکاری چند هنرمند دیگر در مراحل نهایی ضبط است.',
+                    link: 'https://Fahwaofficial.github.io/news/new-album'
+                }];
+                const grid = document.getElementById('newsGrid');
+                grid.innerHTML = '';
+                newsItems.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'news-card';
+                    card.innerHTML = `
+                        <div class="date">${item.date}</div>
+                        <h4>${item.title}</h4>
+                        <p style="color:#aaa;font-size:0.85rem;">${item.summary}</p>
+                        <a href="${item.link}" class="read-more">Read More →</a>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            // ================================================================
+            // 9. PAGE VIEW (placeholder for API)
+            // ================================================================
+            function setupPageView() {
+                const viewEl = document.getElementById('viewCount');
+                // This is a placeholder. Replace with actual API call.
+                // Example: fetch('/api/pageview/music')
+                // For now, show a static number or a friendly message.
+                viewEl.textContent = '12.4K'; // Placeholder
+                // To connect to a real backend, replace the line above with:
+                // fetch('https://your-api.com/pageview/music')
+                //   .then(res => res.json())
+                //   .then(data => viewEl.textContent = data.views)
+                //   .catch(() => viewEl.textContent = '---');
+            }
+
+            // ================================================================
+            // 10. LAST UPDATE (dynamic)
+            // ================================================================
+            function setLastUpdate() {
+                const now = new Date();
+                const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+                document.getElementById('lastUpdate').textContent = now.toLocaleDateString('fa-IR', options);
+            }
+
+            // ================================================================
+            // 11. HAMBURGER MENU
+            // ================================================================
+            function setupHamburger() {
+                const btn = document.getElementById('hamburgerBtn');
+                const links = document.getElementById('navLinks');
+                btn.addEventListener('click', function() {
+                    const isOpen = links.classList.toggle('open');
+                    this.classList.toggle('active');
+                    this.setAttribute('aria-expanded', isOpen);
+                });
+            }
+
+            // ================================================================
+            // 12. INIT
+            // ================================================================
+            function init() {
+                renderTracks();
+                renderPlatforms();
+                renderInstagram();
+                renderNews();
+                setupPageView();
+                setLastUpdate();
+                setupHamburger();
+                // Load first track
+                loadTrack(0);
+                // Show mini player when playing starts
+                audio.addEventListener('play', function() {
+                    miniPlayer.classList.add('visible');
+                });
+                // If user clicks anywhere on the page, we can keep mini player visible
+                // but close button works.
+                console.log('FAHWA Music Hub initialized.');
+            }
+
+            document.addEventListener('DOMContentLoaded', init);
+
+        })();
+    </script>
+
 </body>
 </html>
