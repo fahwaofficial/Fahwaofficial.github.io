@@ -1,0 +1,644 @@
+
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فهوا (Fahwa) — رپر مستقل ایرانی | بیوگرافی کامل</title>
+    <meta name="description" content="بیوگرافی کامل فهوا (ایمان کرمعلی)، رپر مستقل ایرانی و ستاره نوظهور رپ فارسی نسل پنجم. دیسکوگرافی، پلتفرم‌ها و تحلیل سبک با منابع رسمی.">
+    <meta name="keywords" content="فهوا, Fahwa, رپر ایرانی, رپ فارسی, ایمان کرمعلی, هیپ هاپ ایرانی, رپ مستقل">
+    <meta property="og:title" content="فهوا (Fahwa) — رپر مستقل ایرانی">
+    <meta property="og:description" content="بیوگرافی کامل، دیسکوگرافی و تحلیل سبک فهوا، رپر نوظهور رپ فارسی نسل پنجم">
+    <meta property="og:type" content="article">
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --card-bg: #1a1a2e;
+            --card-bg-alt: #16213e;
+            --accent: #e94560;
+            --accent2: #0f3460;
+            --text: #e8e8e8;
+            --text-dim: #a0a0b0;
+            --text-bright: #ffffff;
+            --border: #2a2a4a;
+            --link: #4da6ff;
+            --link-hover: #6db8ff;
+            --green: #4caf50;
+            --table-stripe: #12122a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tahoma', 'Segoe UI', 'IRANSans', 'Vazirmatn', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 2;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        /* ===== Hero Header ===== */
+        .hero {
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a3e 50%, #0f0f1e 100%);
+            border-bottom: 3px solid var(--accent);
+            padding: 50px 20px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(233,69,96,0.08) 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            color: var(--text-bright);
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 30px rgba(233,69,96,0.3);
+        }
+
+        .hero .subtitle {
+            font-size: 1.15rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+            font-weight: bold;
+        }
+
+        .hero .real-name {
+            font-size: 1rem;
+            color: var(--text-dim);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero .badges {
+            margin-top: 18px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .badge {
+            background: var(--accent2);
+            color: var(--link);
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+        }
+
+        /* ===== Article Body ===== */
+        .article-content {
+            margin-top: 35px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: var(--text-bright);
+            margin: 45px 0 18px;
+            padding-right: 16px;
+            border-right: 4px solid var(--accent);
+            line-height: 1.6;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            color: var(--accent);
+            margin: 30px 0 12px;
+            line-height: 1.6;
+        }
+
+        h4 {
+            font-size: 1.05rem;
+            color: var(--text-bright);
+            margin: 20px 0 10px;
+            line-height: 1.6;
+        }
+
+        p {
+            margin-bottom: 18px;
+            line-height: 2.1;
+            text-align: justify;
+        }
+
+        a {
+            color: var(--link);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: var(--link-hover);
+            text-decoration: underline;
+        }
+
+        strong {
+            color: var(--text-bright);
+            font-weight: bold;
+        }
+
+        /* ===== Blockquote / Sources ===== */
+        blockquote {
+            background: var(--card-bg);
+            border-right: 4px solid var(--accent2);
+            padding: 14px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.92rem;
+            color: var(--text-dim);
+        }
+
+        blockquote a {
+            font-weight: 600;
+        }
+
+        /* ===== Tables ===== */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+
+        th {
+            background: var(--accent2);
+            color: var(--text-bright);
+            padding: 14px 16px;
+            text-align: right;
+            font-weight: bold;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        tr:nth-child(even) {
+            background: var(--table-stripe);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        td a {
+            font-weight: 600;
+        }
+
+        /* ===== Lyric Box ===== */
+        .lyric-box {
+            background: linear-gradient(135deg, var(--card-bg), var(--card-bg-alt));
+            border: 1px solid var(--border);
+            border-right: 4px solid var(--accent);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 20px 0;
+            font-style: italic;
+            color: var(--text);
+            line-height: 2.2;
+            font-size: 1.05rem;
+        }
+
+        .lyric-box::before {
+            content: '🎤';
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* ===== Platform Cards ===== */
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 14px;
+            margin: 20px 0;
+        }
+
+        .platform-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+        }
+
+        .platform-card .icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .platform-card .name {
+            color: var(--text-bright);
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .platform-card .link {
+            font-size: 0.8rem;
+            color: var(--link);
+            word-break: break-all;
+        }
+
+        /* ===== Info Box ===== */
+        .info-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin: 20px 0;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-box li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .info-box li:last-child {
+            border-bottom: none;
+        }
+
+        .info-box .label {
+            color: var(--accent);
+            font-weight: bold;
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+
+        .info-box .value {
+            color: var(--text);
+        }
+
+        /* ===== References Section ===== */
+        .references {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid var(--border);
+        }
+
+        .references h2 {
+            font-size: 1.5rem;
+        }
+
+        .references ol {
+            list-style: decimal;
+            padding-right: 25px;
+            counter-reset: ref-counter;
+        }
+
+        .references li {
+            margin-bottom: 14px;
+            padding: 10px 16px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border-right: 3px solid var(--accent2);
+            line-height: 1.9;
+            font-size: 0.92rem;
+            color: var(--text-dim);
+        }
+
+        .references li a {
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .hero .subtitle { font-size: 1rem; }
+            h2 { font-size: 1.35rem; }
+            h3 { font-size: 1.1rem; }
+            body { font-size: 15px; }
+            .info-box .label { min-width: 90px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+    <h1>فهوا (Fahwa)</h1>
+    <div class="subtitle">رپر مستقل ایرانی — ستاره نوظهور رپ فارسی</div>
+    <div class="real-name">نام واقعی: ایمان کرمعلی</div>
+    <div class="badges">
+        <span class="badge">رپ فارسی</span>
+        <span class="badge">هیپ‌هاپ</span>
+        <span class="badge">نسل پنجم</span>
+        <span class="badge">هنرمند مستقل</span>
+    </div>
+</header>
+
+<div class="container">
+
+<!-- ===== INFO BOX ===== -->
+<div class="article-content">
+
+<div class="info-box">
+    <ul>
+        <li><span class="label">نام هنری:</span> <span class="value">فهوا (Fahwa)</span></li>
+        <li><span class="label">نام واقعی:</span> <span class="value">ایمان کرمعلی</span></li>
+        <li><span class="label">ملیت:</span> <span class="value">ایرانی</span></li>
+        <li><span class="label">سبک:</span> <span class="value">رپ، هیپ‌هاپ</span></li>
+        <li><span class="label">زبان:</span> <span class="value">فارسی</span></li>
+        <li><span class="label">نسل:</span> <span class="value">پنجم رپ فارسی</span></li>
+        <li><span class="label">نوع فعالیت:</span> <span class="value">مستقل (Independent)</span></li>
+        <li><span class="label">شروع فعالیت:</span> <span class="value">۲۰۲۱</span></li>
+        <li><span class="label">پلتفرم‌ها:</span> <span class="value">Spotify، SoundCloud، YouTube، Apple Music</span></li>
+    </ul>
+</div>
+
+<!-- ===== معرفی ===== -->
+<h2>معرفی</h2>
+
+<p><strong>فهوا</strong> (با نام واقعی <strong>ایمان کرمعلی</strong>) یک رپر و هنرمند هیپ‌هاپ ایرانی است که به‌عنوان یکی از ستاره‌های نوظهور رپ فارسی در نسل پنجم این سبک شناخته می‌شود. او به‌صورت مستقل فعالیت می‌کند و آثارش را در پلتفرم‌های دیجیتال موسیقی منتشر می‌کند. سبک او شامل رپ و هیپ‌هاپ به زبان فارسی است و موضوعات آثارش عمدتاً حول محور آزادی، رهایی از محدودیت‌ها و تجربیات شخصی و اجتماعی می‌چرخد.</p>
+
+<blockquote>منبع: <a href="https://fa.wikipedia.org/wiki/%D9%85%D9%88%D8%B3%DB%8C%D9%82%DB%8C_%D9%87%DB%8C%D9%BE%E2%80%8C%D9%87%D8%A7%D9%BE" target="_blank" rel="noopener">ویکی‌پدیا فارسی — موسیقی هیپ‌هاپ</a> — در این مقاله، ایمان کرمعلی با نام هنری «فهوا» به‌عنوان یکی از رپرهای نسل پنجم و ستاره‌های نوظهور رپ فارسی معرفی شده است.</blockquote>
+
+<!-- ===== نام واقعی ===== -->
+<h2>نام واقعی و هویت هنری</h2>
+
+<p>نام هنری او <strong>فهوا</strong> (Fahwa) است و نام واقعی او <strong>ایمان کرمعلی</strong> ذکر شده است. در برخی از توضیحات ویدیوهای یوتیوب، نام «ایمان فحوا» نیز به‌صراحت ذکر شده و از مخاطبان خواسته شده است که از این هنرمند حمایت کنند.</p>
+
+<blockquote>منبع: <a href="https://fa.wikipedia.org/wiki/%D9%85%D9%88%D8%B3%DB%8C%D9%82%DB%8C_%D9%87%DB%8C%D9%BE%E2%80%8C%D9%87%D8%A7%D9%BE" target="_blank" rel="noopener">ویکی‌پدیا فارسی — موسیقی هیپ‌هاپ</a><br>
+منبع: <a href="https://www.youtube.com/watch?v=I2ghF7Jkrcs" target="_blank" rel="noopener">یوتیوب — ویدیو FAHWA_FORSAT MAHDOD</a> — در توضیحات این ویدیو آمده است: «ایمان فحوا رو حمایت کنید»</blockquote>
+
+<!-- ===== نسل‌بندی ===== -->
+<h2>نسل‌بندی در رپ فارسی</h2>
+
+<p>رپ فارسی در اواخر دهه ۱۳۷۰ خورشیدی در ایران شکل گرفت و طی دهه‌ها تکامل یافت. هنرمندان این سبک معمولاً بر اساس دوره فعالیتشان به «نسل‌ها» تقسیم می‌شوند. سروش لشکری (هیچکس) که به‌عنوان «پدر رپ فارسی» شناخته می‌شود، از نسل اول به شمار می‌رود.</p>
+
+<p>بر اساس مقاله ویکی‌پدیا فارسی درباره موسیقی هیپ‌هاپ، <strong>ایمان کرمعلی (فهوا)</strong> همراه با ابوالفضل میربلوک (الموت)، دانیال فرجی (مشکی) و ابوالفضل عظیمی (آشنا) از <strong>رپرهای نسل پنجم</strong> و <strong>ستاره‌های نوظهور رپ فارسی</strong> معرفی شده‌اند.</p>
+
+<blockquote>منبع: <a href="https://fa.wikipedia.org/wiki/%D9%85%D9%88%D8%B3%DB%8C%D9%82%DB%8C_%D9%87%DB%8C%D9%BE%E2%80%8C%D9%87%D8%A7%D9%BE" target="_blank" rel="noopener">ویکی‌پدیا فارسی — موسیقی هیپ‌هاپ</a><br>
+منبع: <a href="https://fa.wikipedia.org/wiki/%D8%B1%D9%BE_%D9%81%D8%A7%D8%B1%D8%B3%DB%8C" target="_blank" rel="noopener">ویکی‌پدیا فارسی — رپ فارسی</a> — برای اطلاعات درباره تاریخچه رپ فارسی و نسل‌بندی</blockquote>
+
+<!-- ===== فعالیت هنری ===== -->
+<h2>فعالیت هنری و سبک</h2>
+
+<p>فهوا به‌عنوان یک <strong>هنرمند مستقل</strong> (Independent Artist) فعالیت می‌کند. آثار او در سبک‌های زیر منتشر می‌شود:</p>
+
+<ul style="margin-bottom: 18px; padding-right: 25px; line-height: 2.2;">
+    <li><strong>رپ (Rap)</strong></li>
+    <li><strong>هیپ‌هاپ (Hip-Hop)</strong></li>
+</ul>
+
+<p>زبان آثار او <strong>فارسی</strong> است و او آثارش را از طریق پلتفرم‌های دیجیتال و رسانه‌های اجتماعی در دسترس مخاطبان قرار می‌دهد.</p>
+
+<blockquote>منبع: <a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener">SoundCloud — صفحه رسمی Fahwa Official</a></blockquote>
+
+<!-- ===== دیسکوگرافی ===== -->
+<h2>دیسکوگرافی</h2>
+
+<p>بر اساس صفحات رسمی فهوا در پلتفرم‌های موسیقی، آثار منتشر شده او به شرح زیر است:</p>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>عنوان ترک</th>
+                <th>سال انتشار</th>
+                <th>پلتفرم</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Dictator</strong></td>
+                <td>۲۰۲۱ (۱۴۰۰)</td>
+                <td><a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener">SoundCloud</a></td>
+            </tr>
+            <tr>
+                <td><strong>Ham Aknoon</strong> (هم اکنون)</td>
+                <td>۲۰۲۲ (۱۴۰۰)</td>
+                <td><a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener">SoundCloud</a></td>
+            </tr>
+            <tr>
+                <td><strong>Forsat Mahdod</strong> (فرصت محدود)</td>
+                <td>۲۰۲۲ (۱۴۰۰)</td>
+                <td><a href="https://www.youtube.com/watch?v=I2ghF7Jkrcs" target="_blank" rel="noopener">YouTube</a> / <a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener">SoundCloud</a> / <a href="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK" target="_blank" rel="noopener">Spotify</a></td>
+            </tr>
+            <tr>
+                <td><strong>Halat Negat</strong></td>
+                <td>۲۰۲۵ (۱۴۰۴)</td>
+                <td><a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener">SoundCloud</a></td>
+            </tr>
+            <tr>
+                <td><strong>Azad</strong> (آزاد)</td>
+                <td>۲۰۲۵ (۱۴۰۴)</td>
+                <td><a href="https://www.youtube.com/watch?v=oX4BHsrvoQU" target="_blank" rel="noopener">YouTube</a> / <a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener">SoundCloud</a> / <a href="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK" target="_blank" rel="noopener">Spotify</a></td>
+            </tr>
+            <tr>
+                <td><strong>MoTenaferam</strong></td>
+                <td>۲۰۲۶ (۱۴۰۵)</td>
+                <td><a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener">SoundCloud</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<blockquote>منابع: <a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener">SoundCloud — صفحه رسمی Fahwa Official</a> | <a href="https://www.youtube.com/watch?v=I2ghF7Jkrcs" target="_blank" rel="noopener">یوتیوب — Forsat Mahdod</a> | <a href="https://www.youtube.com/watch?v=oX4BHsrvoQU" target="_blank" rel="noopener">یوتیوب — Azad</a></blockquote>
+
+<!-- ===== توضیح ترک‌ها ===== -->
+<h3>توضیح ترک‌ها</h3>
+
+<h4>فرصت محدود (Forsat Mahdod)</h4>
+<p>این ترک در مارس ۲۰۲۲ منتشر شد و با هشتگ‌های freestyle، hiphop، rap، رپ، رپر، رپ فارسی، هیپ هاپ و گنگ برچسب‌گذاری شده است. فهوا در توضیحات این ویدیو از مخاطبان خواسته که آهنگ را در اسپاتیفای نیز بشنوند و آرتیست را فالو کنند.</p>
+
+<blockquote>منبع: <a href="https://www.youtube.com/watch?v=I2ghF7Jkrcs" target="_blank" rel="noopener">یوتیوب — ویدیو FAHWA_FORSAT MAHDOD</a></blockquote>
+
+<h4>آزاد (Azad)</h4>
+<p>این ترک در نوامبر ۲۰۲۵ منتشر شد و یکی از جدیدترین آثار فهوا است. متن این ترک درباره رهایی از قفس زندگی، آزادی، و غلبه بر محدودیت‌هاست. فهوا در این ترک می‌خواند:</p>
+
+<div class="lyric-box">
+    «قفس زندگی میشه بشم آزاد... آزاد اسیر قلبمم، مسیر دردمم بلدم...»
+</div>
+
+<p>در توضیحات این ویدیو، فهوا لینک پلتفرم‌های مختلف از جمله ساندکلاود، اسپاتیفای و لینک جامع همه پلتفرم‌ها (fanlink) را قرار داده است.</p>
+
+<blockquote>منبع: <a href="https://www.youtube.com/watch?v=oX4BHsrvoQU" target="_blank" rel="noopener">یوتیوب — ویدیو Azad Official Track</a></blockquote>
+
+<!-- ===== پلتفرم‌ها ===== -->
+<h2>حضور در پلتفرم‌ها</h2>
+
+<p>فهوا آثارش را در پلتفرم‌های متعدد منتشر می‌کند:</p>
+
+<div class="platforms-grid">
+    <a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener" style="text-decoration:none;">
+        <div class="platform-card">
+            <div class="icon">☁️</div>
+            <div class="name">SoundCloud</div>
+            <div class="link">soundcloud.com/fahwaofficial</div>
+        </div>
+    </a>
+    <a href="https://youtube.com/channel/UCT9Sr5B0iW_voiFJQk8xPwQ" target="_blank" rel="noopener" style="text-decoration:none;">
+        <div class="platform-card">
+            <div class="icon">📺</div>
+            <div class="name">YouTube</div>
+            <div class="link">فهوا | Fahwa</div>
+        </div>
+    </a>
+    <a href="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK" target="_blank" rel="noopener" style="text-decoration:none;">
+        <div class="platform-card">
+            <div class="icon">🎵</div>
+            <div class="name">Spotify</div>
+            <div class="link">Artist ID: 6qOw3MNO...</div>
+        </div>
+    </a>
+    <a href="https://fahwa.fanlink.tv/FAHWA" target="_blank" rel="noopener" style="text-decoration:none;">
+        <div class="platform-card">
+            <div class="icon">🔗</div>
+            <div class="name">Fanlink</div>
+            <div class="link">fahwa.fanlink.tv/FAHWA</div>
+        </div>
+    </a>
+    <a href="https://Fahwaofficial.github.io" target="_blank" rel="noopener" style="text-decoration:none;">
+        <div class="platform-card">
+            <div class="icon">🌐</div>
+            <div class="name">وب‌سایت</div>
+            <div class="link">Fahwaofficial.github.io</div>
+        </div>
+    </a>
+</div>
+
+<blockquote>منابع: <a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener">SoundCloud — صفحه رسمی</a> | <a href="https://www.youtube.com/watch?v=oX4BHsrvoQU" target="_blank" rel="noopener">یوتیوب — Azad (شامل لینک‌های همه پلتفرم‌ها)</a></blockquote>
+
+<!-- ===== BookBrainz ===== -->
+<h2>حضور در پایگاه‌های داده موسیقی</h2>
+
+<p>فهوا در پایگاه داده <strong>BookBrainz</strong> (پروژه‌ای مرتبط با MusicBrainz) با توضیح «Iranian rapper and hip-hop artist» ثبت شده است. این ثبت در تاریخ ۲۵ اوت ۲۰۲۶ انجام شده است.</p>
+
+<blockquote>منبع: <a href="https://bookbrainz.org/collections" target="_blank" rel="noopener">BookBrainz — Collections</a></blockquote>
+
+<!-- ===== ویکی‌پدیا ===== -->
+<h2>فعالیت در ویکی‌پدیا</h2>
+
+<p>یک کاربر ویکی‌پدیا فارسی با نام کاربری <strong>Fahwa ik</strong> در تاریخ ۲۵ دسامبر ۲۰۲۵ حساب کاربری ایجاد کرده و بیوگرافی فهوا را به‌عنوان «آرتیست ایرانی رپ فارسی» با لینک پلتفرم‌های او به ویکی‌پدیا اضافه کرده است. این کاربر مجموعاً ۱۰ ویرایش در ویکی‌پدیا فارسی انجام داده است.</p>
+
+<blockquote>منبع: <a href="https://fa.wikipedia.org/wiki/%D9%88%DB%8C%DA%98%D9%87:%D9%85%D8%B4%D8%A7%D8%B1%DA%A9%D8%AA%E2%80%8C%D9%87%D8%A7/Fahwa_ik" target="_blank" rel="noopener">ویکی‌پدیا فارسی — صفحه مشارکت‌های کاربری Fahwa ik</a></blockquote>
+
+<!-- ===== فعالیت اجتماعی ===== -->
+<h2>فعالیت‌های اجتماعی و تعامل با جامعه رپ فارسی</h2>
+
+<p>فهوا در ساندکلاود علاوه بر انتشار آثار خود، <strong>پلی‌لیست‌های جمع‌آوری‌شده</strong> از رپرهای برتر ایرانی ایجاد کرده است که نشان‌دهنده درگیری فعال او با صحنه رپ فارسی است:</p>
+
+<ul style="margin-bottom: 18px; padding-right: 25px; line-height: 2.4;">
+    <li><strong>Boutique Persian Rap 2026</strong> — شامل آثار هنرمندانی مانند <a href="https://soundcloud.com/shahinnajafimusic/hame?in=fahwaofficial/sets/boutique-persian-rap-2026" target="_blank" rel="noopener">شاهین نجفی (ترک «همه»)</a> و <a href="https://soundcloud.com/sijalofficial/dele-man?in=fahwaofficial/sets/boutique-persian-rap-2026" target="_blank" rel="noopener">سیجال (ترک «Dele Man»)</a></li>
+    <li><strong>List of the Best Rappers</strong> — شامل آثار هنرمندانی مانند <a href="https://soundcloud.com/officialmajhool/ruud-gullit?in=fahwaofficial/sets/list-of-the-best-rappers-of" target="_blank" rel="noopener">مجهول (ترک «Ruud Gullit»)</a></li>
+</ul>
+
+<p>او همچنین در کامنت‌های آثار دیگر هنرمندان در ساندکلاود فعال است و از همکاران خود حمایت می‌کند — برای مثال، در صفحه ترک «Jibete» از عرفان پایدار، کامنت‌هایی مانند «عالی خلوت»، «ورس امیر عالیه»، «بیت ناب» و «فهوا هم فالو کنید» ثبت کرده است.</p>
+
+<blockquote>منابع: <a href="https://soundcloud.com/shahinnajafimusic/hame?in=fahwaofficial/sets/boutique-persian-rap-2026" target="_blank" rel="noopener">SoundCloud — پلی‌لیست Boutique Persian Rap 2026</a> | <a href="https://soundcloud.com/officialmajhool/ruud-gullit?in=fahwaofficial/sets/list-of-the-best-rappers-of" target="_blank" rel="noopener">SoundCloud — پلی‌لیست List of the Best Rappers</a> | <a href="https://soundcloud.com/erfanpaydar/jibete" target="_blank" rel="noopener">SoundCloud — کامنت‌های فهوا در ترک Jibete</a></blockquote>
+
+<!-- ===== تحلیل سبک ===== -->
+<h2>تحلیل سبک و محتوا</h2>
+
+<p>بر اساس متن ترک «آزاد»، که به‌طور کامل از روی ترانسکریپت یوتیوب قابل بررسی است، محتوای شعری فهوا شامل موارد زیر است:</p>
+
+<ul style="margin-bottom: 18px; padding-right: 25px; line-height: 2.4;">
+    <li><strong>آزادی و رهایی</strong> — تم اصلی ترک «آزاد»، رهایی از قفس زندگی و محدودیت‌هاست</li>
+    <li><strong>انتقاد اجتماعی</strong> — اشاره به بی‌عدالتی، فشار اقتصادی و نابرابری</li>
+    <li><strong>تجربه شخصی</strong> — بیان احساسات فردی درباره درد، رهایی و امید</li>
+    <li><strong>تصاویر شعری</strong> — استفاده از استعاره‌های بصری مانند «تصویرم سیاه و سفید» و «قفس»</li>
+</ul>
+
+<p>سبک او ترکیبی از رپ فارسی با مضامین اجتماعی و شخصی است که در خط کلی رپ مستقل ایرانی قرار می‌گیرد.</p>
+
+<blockquote>منبع: <a href="https://www.youtube.com/watch?v=oX4BHsrvoQU" target="_blank" rel="noopener">یوتیوب — ویدیو Azad Official Track</a> — متن کامل ترک از ترانسکریپت استخراج شده است</blockquote>
+
+<!-- ===== جمع‌بندی ===== -->
+<h2>جمع‌بندی</h2>
+
+<p>فهوا (ایمان کرمعلی) یکی از هنرمندان نوظهور رپ فارسی است که در نسل پنجم این سبک جای می‌گیرد. او به‌صورت مستقل فعالیت می‌کند و آثارش را در پلتفرم‌هایی مانند اسپاتیفای، ساندکلاود، یوتیوب و اپل موزیک منتشر می‌کند. دیسکوگرافی او شامل حداقل شش ترک از سال ۲۰۲۱ تا ۲۰۲۶ است و سبک او ترکیبی از رپ و هیپ‌هاپ فارسی با محتوای اجتماعی و شخصی است. با وجود اینکه فهوا هنوز در مراحل اولیه فعالیت هنری خود قرار دارد، حضور فعال او در پلتفرم‌های دیجیتال و تعامل با جامعه رپ فارسی نشان‌دهنده پتانسیل رشد او در این صحنه است.</p>
+
+<!-- ===== REFERENCES ===== -->
+<div class="references">
+    <h2>فهرست منابع</h2>
+    <ol>
+        <li><a href="https://fa.wikipedia.org/wiki/%D9%85%D9%88%D8%B3%DB%8C%D9%82%DB%8C_%D9%87%DB%8C%D9%BE%E2%80%8C%D9%87%D8%A7%D9%BE" target="_blank" rel="noopener">ویکی‌پدیا فارسی — موسیقی هیپ‌هاپ</a> — معرفی فهوا به‌عنوان رپر نسل پنجم و نام واقعی او</li>
+        <li><a href="https://fa.wikipedia.org/wiki/%D8%B1%D9%BE_%D9%81%D8%A7%D8%B1%D8%B3%DB%8C" target="_blank" rel="noopener">ویکی‌پدیا فارسی — رپ فارسی</a> — تاریخچه رپ فارسی و نسل‌بندی</li>
+        <li><a href="https://soundcloud.com/fahwaofficial" target="_blank" rel="noopener">SoundCloud — صفحه رسمی Fahwa Official</a> — دیسکوگراسی و اطلاعات هنرمند</li>
+        <li><a href="https://www.youtube.com/watch?v=I2ghF7Jkrcs" target="_blank" rel="noopener">یوتیوب — ویدیو FAHWA_FORSAT MAHDOD</a> — ترک فرصت محدود (۲۰۲۲)</li>
+        <li><a href="https://www.youtube.com/watch?v=oX4BHsrvoQU" target="_blank" rel="noopener">یوتیوب — ویدیو Azad Official Track</a> — ترک آزاد (۲۰۲۵) و لینک پلتفرم‌ها</li>
+        <li><a href="https://bookbrainz.org/collections" target="_blank" rel="noopener">BookBrainz — Collections</a> — ثبت فهوا به‌عنوان Iranian rapper and hip-hop artist</li>
+        <li><a href="https://fa.wikipedia.org/wiki/%D9%88%DB%8C%DA%98%D9%87:%D9%85%D8%B4%D8%A7%D8%B1%DA%A9%D8%AA%E2%80%8C%D9%87%D8%A7/Fahwa_ik" target="_blank" rel="noopener">ویکی‌پدیا فارسی — صفحه مشارکت‌های کاربری Fahwa ik</a> — فعالیت کاربری در ویکی‌پدیا</li>
+        <li><a href="https://soundcloud.com/shahinnajafimusic/hame?in=fahwaofficial/sets/boutique-persian-rap-2026" target="_blank" rel="noopener">SoundCloud — پلی‌لیست Boutique Persian Rap 2026</a> — فعالیت در جامعه رپ فارسی</li>
+        <li><a href="https://soundcloud.com/erfanpaydar/jibete" target="_blank" rel="noopener">SoundCloud — کامنت‌های فهوا در ترک Jibete</a> — تعامل با هنرمندان دیگر</li>
+        <li><a href="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK" target="_blank" rel="noopener">Spotify — صفحه آرتیست فهوا</a> — حضور در اسپاتیفای</li>
+        <li><a href="https://fahwa.fanlink.tv/FAHWA" target="_blank" rel="noopener">Fanlink — لینک جامع پلتفرم‌ها</a> — دسترسی به همه پلتفرم‌ها</li>
+        <li><a href="https://soundcloud.com/officialmajhool/ruud-gullit?in=fahwaofficial/sets/list-of-the-best-rappers-of" target="_blank" rel="noopener">SoundCloud — پلی‌لیست List of the Best Rappers</a> — فعالیت کراتور پلی‌لیست</li>
+    </ol>
+</div>
+
+</div><!-- end article-content -->
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+    <p>این مقاله با استفاده از منابع رسمی و قابل دسترس عمومی تهیه شده است. تمامی لینک‌ها در تاریخ ۱۷ سپتامبر ۲۰۲۶ بررسی شده‌اند.</p>
+    <p style="margin-top:8px;">© 2026 — مقاله درباره فهوا (Fahwa)</p>
+</div>
+
+</div><!-- end container -->
+
+</body>
+</html>
