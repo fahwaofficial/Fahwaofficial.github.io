@@ -621,7 +621,7 @@
     <p class="section-sub">Official music video — watch the latest release</p>
     <div class="featured-embed">
       <!-- Replace YOUTUBE_FEATURED_ID with actual ID -->
-      <iframe src="https://www.youtube.com/embed/YOUTUBE_FEATURED_ID" 
+      <iframe src="https://youtube.com/channel/UCqLJehqjOYOh9NVv5Ducj_Q?si=ct_ZuvMmuKiDmtYa" 
               title="Fahwa featured official music video" 
               allowfullscreen 
               loading="lazy"
@@ -768,7 +768,7 @@
             <h3>${video.title}</h3>
             <span class="cat">${video.category || 'Video'}</span>
             <p>${video.description || ''}</p>
-            <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank" rel="noopener" class="watch-link">Watch on YouTube →</a>
+            <a href="https://youtube.com/channel/UCqLJehqjOYOh9NVv5Ducj_Q?si=ct_ZuvMmuKiDmtYa"_blank" rel="noopener" class="watch-link">Watch on YouTube →</a>
           </div>
         `;
         return card;
@@ -819,7 +819,7 @@
       // Update featured embed ID if needed (replace placeholder)
       const featuredIframe = document.querySelector('.featured-embed iframe');
       if (featuredIframe && YOUTUBE_FEATURED_ID !== 'YOUTUBE_FEATURED_ID') {
-        featuredIframe.src = `https://www.youtube.com/embed/${YOUTUBE_FEATURED_ID}`;
+        featuredIframe.src = `https://www.youtube.com/@fahwaofficial/${YOUTUBE_FEATURED_ID}`;
       }
 
       // close nav on link click (mobile)
