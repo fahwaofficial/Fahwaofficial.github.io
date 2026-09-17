@@ -6,7 +6,7 @@
     <title>دانلود آهنگ‌های فهوا | Fahwa Official Music & Downloads</title>
     <meta name="description" content="دانلود و پخش آنلاین آهنگ‌های فهوا (Fahwa) شامل ترک‌های جدید، فرصت محدود، دیکتاتور و مو تنفرم. گوش دهید، دانلود کنید و در Spotify دنبال کنید.">
     <meta name="keywords" content="فهوا, FAHWA, دانلود آهنگ فهوا, ترک جدید فهوا, آهنگ جدید فهوا, دانلود موزیک فهوا, Fahwa music, Fahwa songs, Fahwa new track, Fahwa download, رپ فهوا, ایمان فهوا">
-    <link rel="canonical" href="https://fahwaofficial.github.io/download.html"> <!-- EDIT: replace with your actual domain -->
+    <link rel="canonical" href="https://fahwaofficial.github.io/download.html">
     <link rel="icon" href="images/favicon.jpg" type="image/jpeg">
     <link rel="apple-touch-icon" href="images/fahwafavicon.jpg">
     <meta property="og:title" content="دانلود آهنگ‌های فهوا | Fahwa Official Music & Downloads">
@@ -530,9 +530,8 @@
                 </div>
                 <div class="footer-col">
                     <h4>پلتفرم‌های رسمی</h4>
-                    <!-- EDIT: replace # with official URLs -->
                     <a href="https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK?si=OSjGCMdiRha0Sfus15aU7Q" target="_blank" rel="noopener noreferrer">Spotify</a>
-                    <a href="hhttps://music.apple.com/mx/artist/fahwa/1813073821" target="_blank" rel="noopener noreferrer">Apple Music</a>
+                    <a href="https://music.apple.com/mx/artist/fahwa/1813073821" target="_blank" rel="noopener noreferrer">Apple Music</a>
                     <a href="https://youtube.com/@fahwaofficial?si=ZOC9pHhkG4HSHU3L" target="_blank" rel="noopener noreferrer">YouTube</a>
                     <a href="https://soundcloud.com/fahwaofficial?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" target="_blank" rel="noopener noreferrer">SoundCloud</a>
                     <a href="https://fahwa.bandcamp.com/" target="_blank" rel="noopener noreferrer">Bandcamp</a>
@@ -564,7 +563,6 @@
             "use strict";
 
             // ======================== SITE CONFIG ========================
-            // EDIT: replace with your actual domain and page paths
             const SITE_CONFIG = {
                 home: "./index.html",
                 news: "./news.html",
@@ -574,7 +572,6 @@
             };
 
             // ======================== TRACKS DATA ========================
-            // EDIT: add new tracks here (copy the object)
             const tracks = [{
                 id: "forsatmahdod",
                 title: "Forsat Mahdood",
@@ -582,7 +579,7 @@
                 artist: "Fahwa",
                 audio: "./forsatmahdod.mp3",
                 cover: "images/photo1.jpeg",
-                spotify: "" // PUT REAL SPOTIFY TRACK URL HERE
+                spotify: ""
             }, {
                 id: "dictator",
                 title: "Dictator",
@@ -590,7 +587,7 @@
                 artist: "Fahwa",
                 audio: "./Dictator.mp3",
                 cover: "images/photo3.jpg",
-                spotify: "" // PUT REAL SPOTIFY TRACK URL HERE
+                spotify: ""
             }, {
                 id: "motenaferam",
                 title: "Mo Tenaferam",
@@ -598,22 +595,20 @@
                 artist: "Fahwa",
                 audio: "./MoTenaferam.mp3",
                 cover: "images/fahwafavicon.jpg",
-                spotify: "" // PUT REAL SPOTIFY TRACK URL HERE
+                spotify: ""
             }];
 
             // ======================== GALLERY IMAGES ========================
-            // EDIT: add or remove images as needed
             const galleryImages = [
                 { src: "images/photo1.jpg", alt: "Fahwa official artist photo 1" },
                 { src: "images/photo3.jpg", alt: "Fahwa official artist photo 2" },
-                { src: "images/phone4.gpj", alt: "Fahwa official artist photo 3" }, // typo preserved
+                { src: "images/photo4.jpg", alt: "Fahwa official artist photo 3" },
                 { src: "images/favicon.jpg", alt: "Fahwa favicon" },
                 { src: "images/fahwafavicon.jpg", alt: "Fahwa official favicon" }
             ];
 
             // ======================== SPOTIFY FOLLOW URL ========================
-            // EDIT: replace with actual Spotify artist URL
-            const SPOTIFY_FOLLOW_URL = "https://open.spotify.com/artist/YOUR_ARTIST_ID"; // PUT REAL ARTIST URL
+            const SPOTIFY_FOLLOW_URL = "https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK?si=OSjGCMdiRha0Sfus15aU7Q";
 
             // ======================== RENDER TRACKS ========================
             const container = document.getElementById('trackContainer');
@@ -627,7 +622,7 @@
                             <iframe src="https://open.spotify.com/embed/track/${extractSpotifyId(track.spotify)}" allow="encrypted-media" loading="lazy"></iframe>
                         </div>` :
                         `<div class="spotify-embed" style="background:#1a1a1a;padding:0.5rem;border-radius:12px;border:1px solid #2a2a2a;color:#999;text-align:center;font-size:0.85rem;">
-                            <span>🎧 Spotify: <a href="${track.spotify || '#'}" target="_blank" rel="noopener noreferrer" style="color:#1db954;">گوش دادن در Spotify</a></span>
+                            <span>🎧 Spotify: <a href="${track.spotify || SPOTIFY_FOLLOW_URL}" target="_blank" rel="noopener noreferrer" style="color:#1db954;">گوش دادن در Spotify</a></span>
                         </div>`;
 
                     html += `
@@ -650,7 +645,7 @@
 
                             <div class="track-actions">
                                 <a href="${track.audio}" download class="download-btn">⬇ دانلود آهنگ</a>
-                                <a href="#" onclick="event.preventDefault(); playTrack(${index});">▶ پخش</a>
+                                <a href="#" class="play-link" data-index="${index}">▶ پخش</a>
                             </div>
 
                             ${spotifyEmbed}
@@ -673,7 +668,7 @@
                 let html = '';
                 galleryImages.forEach(img => {
                     html += `
-                        <div class="gallery-item" onclick="this.querySelector('img').requestFullscreen?.()">
+                        <div class="gallery-item">
                             <img src="${img.src}" alt="${img.alt}" loading="lazy" onerror="this.src='photo1.jpg'">
                         </div>
                     `;
@@ -685,7 +680,6 @@
             let currentAudio = null;
             let currentTrackId = null;
             let isPlaying = false;
-            let progressInterval = null;
 
             function playTrack(index) {
                 const track = tracks[index];
@@ -693,21 +687,18 @@
                 const audioSrc = track.audio;
                 const trackId = track.id;
 
-                // If same track and playing -> pause
                 if (currentTrackId === trackId && currentAudio && !currentAudio.paused) {
                     currentAudio.pause();
                     updatePlayButton(trackId, false);
                     return;
                 }
 
-                // If same track and paused -> resume
                 if (currentTrackId === trackId && currentAudio && currentAudio.paused) {
                     currentAudio.play().catch(() => {});
                     updatePlayButton(trackId, true);
                     return;
                 }
 
-                // New track: stop previous
                 if (currentAudio) {
                     currentAudio.pause();
                     currentAudio.currentTime = 0;
@@ -717,13 +708,11 @@
                     }
                 }
 
-                // Create new audio
                 const audio = new Audio(audioSrc);
                 audio.preload = 'metadata';
                 currentAudio = audio;
                 currentTrackId = trackId;
 
-                // Set up events
                 audio.addEventListener('loadedmetadata', function() {
                     const duration = formatTime(audio.duration);
                     const durEl = document.getElementById(`duration-${trackId}`);
@@ -757,14 +746,11 @@
                     updatePlayButton(trackId, false);
                 });
 
-                // Play
                 audio.play().catch(err => {
                     console.warn('Play failed:', err);
-                    // fallback: autoplay blocked? show message
                 });
                 updatePlayButton(trackId, true);
 
-                // Progress slider interaction
                 const slider = document.getElementById(`slider-${trackId}`);
                 if (slider) {
                     slider.addEventListener('input', function() {
@@ -784,7 +770,6 @@
                     btn.textContent = playing ? '⏸' : '▶';
                     btn.setAttribute('aria-label', playing ? 'توقف' : 'پخش');
                 }
-                // Also update the global state
                 if (playing && currentTrackId === trackId) {
                     isPlaying = true;
                 } else if (!playing && currentTrackId === trackId) {
@@ -797,7 +782,6 @@
                 if (curEl) curEl.textContent = '0:00';
                 const slider = document.getElementById(`slider-${trackId}`);
                 if (slider) slider.value = 0;
-                // duration remains
             }
 
             function formatTime(seconds) {
@@ -807,17 +791,12 @@
                 return `${mins}:${secs.toString().padStart(2, '0')}`;
             }
 
-            // ======================== GLOBAL PLAY FUNCTION (for inline onclick) ========================
-            window.playTrack = function(index) {
-                playTrack(index);
-            };
-
             // ======================== SPOTIFY FOLLOW (render once) ========================
-            // We'll add a follow section after each track if SPOTIFY_FOLLOW_URL is set
             function addSpotifyFollow() {
                 if (!SPOTIFY_FOLLOW_URL || SPOTIFY_FOLLOW_URL.includes('YOUR_ARTIST_ID')) return;
                 const containers = document.querySelectorAll('.track-card');
                 containers.forEach(card => {
+                    if (card.querySelector('.spotify-follow')) return;
                     const followDiv = document.createElement('div');
                     followDiv.className = 'spotify-follow';
                     followDiv.innerHTML = `<a href="${SPOTIFY_FOLLOW_URL}" target="_blank" rel="noopener noreferrer">🎧 دنبال کردن در Spotify</a>`;
@@ -829,9 +808,25 @@
             function init() {
                 renderTracks();
                 renderGallery();
-                // After render, add follow links if available
-                setTimeout(addSpotifyFollow, 100);
-                // Fix for gallery click fullscreen (basic)
+
+                // Attach play button listeners
+                document.querySelectorAll('.play-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.dataset.index, 10);
+                        playTrack(index);
+                    });
+                });
+
+                // Attach play link listeners
+                document.querySelectorAll('.play-link').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const index = parseInt(this.dataset.index, 10);
+                        playTrack(index);
+                    });
+                });
+
+                // Gallery fullscreen
                 document.querySelectorAll('.gallery-item img').forEach(img => {
                     img.addEventListener('click', function() {
                         if (this.requestFullscreen) {
@@ -839,6 +834,8 @@
                         }
                     });
                 });
+
+                setTimeout(addSpotifyFollow, 100);
             }
 
             document.addEventListener('DOMContentLoaded', init);
@@ -852,23 +849,23 @@
             "@type": "WebPage",
             "name": "دانلود آهنگ‌های فهوا | Fahwa Official Music & Downloads",
             "description": "دانلود و پخش آنلاین آهنگ‌های فهوا شامل ترک‌های جدید، فرصت محدود، دیکتاتور و مو تنفرم. گوش دهید، دانلود کنید و در Spotify دنبال کنید.",
-            "url": "https://YOUR-DOMAIN/download.html",
+            "url": "https://fahwaofficial.github.io/download.html",
             "breadcrumb": {
                 "@type": "BreadcrumbList",
                 "itemListElement": [
-                    { "@type": "ListItem", "position": 1, "name": "خانه", "item": "https://YOUR-DOMAIN/index.html" },
-                    { "@type": "ListItem", "position": 2, "name": "دانلود", "item": "https://YOUR-DOMAIN/download.html" }
+                    { "@type": "ListItem", "position": 1, "name": "خانه", "item": "https://fahwaofficial.github.io/index.html" },
+                    { "@type": "ListItem", "position": 2, "name": "دانلود", "item": "https://fahwaofficial.github.io/download.html" }
                 ]
             },
             "about": {
                 "@type": "MusicGroup",
                 "name": "Fahwa",
-                "url": "https://YOUR-DOMAIN",
+                "url": "https://fahwaofficial.github.io",
                 "sameAs": [
                     "https://instagram.com/fahwaofficial",
-                    "https://tiktok.com/@fahwa",
-                    "https://x.com/fahwa",
-                    "https://open.spotify.com/artist/YOUR_ARTIST_ID"
+                    "https://tiktok.com/@fahwaofficial",
+                    "https://x.com/fahwaofficial",
+                    "https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK"
                 ]
             },
             "mainEntity": {
@@ -880,4 +877,24 @@
                         "@type": "MusicRecording",
                         "name": "Forsat Mahdood",
                         "byArtist": { "@type": "MusicGroup", "name": "Fahwa" },
-                        "url": "https://YOUR-DOMAIN/download.html#forsatmahdod",
+                        "url": "https://fahwaofficial.github.io/download.html#forsatmahdod"
+                    },
+                    {
+                        "@type": "MusicRecording",
+                        "name": "Dictator",
+                        "byArtist": { "@type": "MusicGroup", "name": "Fahwa" },
+                        "url": "https://fahwaofficial.github.io/download.html#dictator"
+                    },
+                    {
+                        "@type": "MusicRecording",
+                        "name": "Mo Tenaferam",
+                        "byArtist": { "@type": "MusicGroup", "name": "Fahwa" },
+                        "url": "https://fahwaofficial.github.io/download.html#motenaferam"
+                    }
+                ]
+            }
+        }
+    </script>
+
+</body>
+</html>
