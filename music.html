@@ -243,13 +243,12 @@
         
         .sidebar-toggle:hover { transform: scale(1.08); }
         
+        /* Sidebar is now sticky and scrolls with the page */
         .sidebar {
-            position: fixed;
-            top: 120px;
-            right: 24px;
+            position: sticky;
+            top: 130px;
+            align-self: start;
             width: var(--sidebar-width);
-            max-height: calc(100vh - 150px);
-            overflow-y: auto;
             background: rgba(14,14,18,0.92);
             backdrop-filter: blur(18px);
             border-radius: 28px;
@@ -259,9 +258,6 @@
             z-index: 800;
             transition: transform 0.35s ease;
         }
-        
-        .sidebar::-webkit-scrollbar { width: 5px; }
-        .sidebar::-webkit-scrollbar-thumb { background: #2a2a32; border-radius: 10px; }
         
         .sidebar-title {
             font-size: 0.7rem;
@@ -327,6 +323,7 @@
             display: grid;
             grid-template-columns: 1fr var(--sidebar-width);
             gap: 40px;
+            align-items: start;
         }
         
         @media (max-width: 1100px) {
@@ -335,11 +332,12 @@
                 position: fixed;
                 top: 0; right: 0;
                 height: 100vh;
-                max-height: 100vh;
                 border-radius: 0;
                 transform: translateX(110%);
                 width: 300px;
                 padding-top: 80px;
+                overflow-y: auto;
+                align-self: auto;
             }
             .sidebar.open { transform: translateX(0); }
             .sidebar-toggle { display: flex; align-items: center; justify-content: center; }
@@ -616,6 +614,12 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         
+        .track-row.playing {
+            border-color: rgba(168,85,247,0.55);
+            background: rgba(30,22,45,0.85);
+            box-shadow: 0 0 30px rgba(168,85,247,0.18);
+        }
+        
         .track-num {
             font-size: 1rem;
             font-weight: 800;
@@ -692,6 +696,12 @@
             color: #fff;
             box-shadow: 0 6px 20px rgba(168,85,247,0.35);
             transform: translateY(-2px);
+        }
+        
+        .track-btn.listen.active {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(168,85,247,0.45);
         }
         
         .track-btn.download {
@@ -854,7 +864,7 @@
         /* ===== BACK TO TOP ===== */
         .back-top {
             position: fixed;
-            bottom: 24px;
+            bottom: 100px;
             right: 24px;
             width: 46px; height: 46px;
             border-radius: 50%;
@@ -876,6 +886,136 @@
         .back-top.show { opacity: 1; visibility: visible; }
         .back-top:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-3px); }
         
+        /* ===== MINI AUDIO PLAYER ===== */
+        .mini-player {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(140%);
+            width: min(640px, calc(100% - 32px));
+            background: rgba(14,14,20,0.95);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(168,85,247,0.25);
+            border-radius: 24px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.9), 0 0 40px rgba(168,85,247,0.15);
+            z-index: 1500;
+            transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+        
+        .mini-player.show { transform: translateX(-50%) translateY(0); }
+        
+        .mini-cover {
+            width: 52px; height: 52px;
+            border-radius: 12px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+        }
+        
+        .mini-info {
+            flex: 1;
+            min-width: 100px;
+            overflow: hidden;
+        }
+        
+        .mini-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 3px;
+        }
+        
+        .mini-progress {
+            height: 4px;
+            background: #2a2a32;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .mini-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.2s linear;
+        }
+        
+        .mini-time {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            margin-top: 4px;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .mini-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        
+        .mini-btn {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+        
+        .mini-btn:hover {
+            background: rgba(168,85,247,0.2);
+            color: #fff;
+            border-color: rgba(168,85,247,0.4);
+        }
+        
+        .mini-btn.play-btn {
+            width: 46px; height: 46px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            box-shadow: 0 8px 24px rgba(168,85,247,0.4);
+        }
+        
+        .mini-btn.play-btn:hover { transform: scale(1.06); }
+        
+        .mini-close {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: #888;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+            font-family: inherit;
+        }
+        
+        .mini-close:hover { color: #fff; border-color: #ef4444; background: rgba(239,68,68,0.15); }
+        
         /* ===== RESPONSIVE ===== */
         @media (max-width: 700px) {
             .topbar { padding: 6px 14px; font-size: 0.68rem; }
@@ -894,6 +1034,11 @@
             .track-btn span { display: none; }
             .track-btn i { font-size: 0.9rem; }
             .seo-content { padding: 22px 18px; }
+            .mini-player { padding: 10px 12px; gap: 10px; bottom: 14px; }
+            .mini-cover { width: 44px; height: 44px; }
+            .mini-btn { width: 36px; height: 36px; font-size: 0.8rem; }
+            .mini-btn.play-btn { width: 40px; height: 40px; }
+            .mini-info { min-width: 70px; }
         }
         
         @media (max-width: 480px) {
@@ -1025,7 +1170,6 @@
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen>
                     </iframe>
-                    <!-- راهنمایی: لینک پلی‌لیست یوتیوب خود را در بخش PLACEHOLDER قرار دهید -->
                 </div>
             </section>
 
@@ -1084,7 +1228,7 @@
                 <div class="tracks-list">
 
                     <!-- 1 -->
-                    <div class="track-row">
+                    <div class="track-row" data-track-row>
                         <div class="track-num">01</div>
                         <img class="track-thumb" src="https://Fahwaofficial.github.io/images/profile.jpg" alt="آهنگ MoTenaferam فهوا" />
                         <div class="track-info">
@@ -1092,13 +1236,20 @@
                             <p>فهوا <span class="tag">ترپ</span> <span class="tag">۲۰۲۵</span></p>
                         </div>
                         <div class="track-actions">
-                            <a class="track-btn listen" href="songs/MoTenaferam.html"><i class="fas fa-play"></i><span> پخش</span></a>
+                            <button class="track-btn listen" 
+                                data-src="MoTenaferam.mp3"
+                                data-title="MoTenaferam"
+                                data-artist="Fahwa"
+                                data-cover="https://Fahwaofficial.github.io/images/profile.jpg"
+                                onclick="playTrack(this)">
+                                <i class="fas fa-play"></i><span> پخش</span>
+                            </button>
                             <a class="track-btn download" href="MoTenaferam.mp3" download><i class="fas fa-download"></i><span> دانلود</span></a>
                         </div>
                     </div>
 
                     <!-- 2 -->
-                    <div class="track-row">
+                    <div class="track-row" data-track-row>
                         <div class="track-num">02</div>
                         <img class="track-thumb" src="https://Fahwaofficial.github.io/images/fahwafavicon.jpg" alt="آهنگ فرصت محدود فهوا" />
                         <div class="track-info">
@@ -1106,13 +1257,20 @@
                             <p>فهوا <span class="tag">رپ</span> <span class="tag">۲۰۲۵</span></p>
                         </div>
                         <div class="track-actions">
-                            <a class="track-btn listen" href="songs/FORSATMAHDOD.html"><i class="fas fa-play"></i><span> پخش</span></a>
+                            <button class="track-btn listen" 
+                                data-src="forsatmahdod.mp3"
+                                data-title="فرصت محدود"
+                                data-artist="Fahwa"
+                                data-cover="https://Fahwaofficial.github.io/images/fahwafavicon.jpg"
+                                onclick="playTrack(this)">
+                                <i class="fas fa-play"></i><span> پخش</span>
+                            </button>
                             <a class="track-btn download" href="forsatmahdod.mp3" download><i class="fas fa-download"></i><span> دانلود</span></a>
                         </div>
                     </div>
 
                     <!-- 3 -->
-                    <div class="track-row">
+                    <div class="track-row" data-track-row>
                         <div class="track-num">03</div>
                         <img class="track-thumb" src="https://Fahwaofficial.github.io/images/photo5.jpg" alt="آهنگ Dictator فهوا" />
                         <div class="track-info">
@@ -1120,13 +1278,20 @@
                             <p>فهوا <span class="tag">ترپ</span> <span class="tag">هیپ‌هاپ</span></p>
                         </div>
                         <div class="track-actions">
-                            <a class="track-btn listen" href="songs/Dictator.html"><i class="fas fa-play"></i><span> پخش</span></a>
+                            <button class="track-btn listen" 
+                                data-src="Dictator.mp3"
+                                data-title="Dictator"
+                                data-artist="Fahwa"
+                                data-cover="https://Fahwaofficial.github.io/images/photo5.jpg"
+                                onclick="playTrack(this)">
+                                <i class="fas fa-play"></i><span> پخش</span>
+                            </button>
                             <a class="track-btn download" href="Dictator.mp3" download><i class="fas fa-download"></i><span> دانلود</span></a>
                         </div>
                     </div>
 
                     <!-- 4 -->
-                    <div class="track-row">
+                    <div class="track-row" data-track-row>
                         <div class="track-num">04</div>
                         <img class="track-thumb" src="https://Fahwaofficial.github.io/images/fahwafavicon.jpg" alt="آهنگ آزاد فهوا" />
                         <div class="track-info">
@@ -1134,13 +1299,20 @@
                             <p>فهوا <span class="tag">رپ احساسی</span></p>
                         </div>
                         <div class="track-actions">
-                            <a class="track-btn listen" href="songs/Azad_officalTrack.html"><i class="fas fa-play"></i><span> پخش</span></a>
+                            <button class="track-btn listen" 
+                                data-src="Azad_officalTrack.mp3"
+                                data-title="آزاد - Azad"
+                                data-artist="Fahwa"
+                                data-cover="https://Fahwaofficial.github.io/images/fahwafavicon.jpg"
+                                onclick="playTrack(this)">
+                                <i class="fas fa-play"></i><span> پخش</span>
+                            </button>
                             <a class="track-btn download" href="Azad_officalTrack.mp3" download><i class="fas fa-download"></i><span> دانلود</span></a>
                         </div>
                     </div>
 
                     <!-- 5 -->
-                    <div class="track-row">
+                    <div class="track-row" data-track-row>
                         <div class="track-num">05</div>
                         <img class="track-thumb" src="https://Fahwaofficial.github.io/images/fahwafavicon.jpg" alt="آهنگ هم اکنون فهوا" />
                         <div class="track-info">
@@ -1148,7 +1320,14 @@
                             <p>فهوا <span class="tag">ترپ</span> <span class="tag">جدید</span></p>
                         </div>
                         <div class="track-actions">
-                            <a class="track-btn listen" href="Hamaknon.html"><i class="fas fa-play"></i><span> پخش</span></a>
+                            <button class="track-btn listen" 
+                                data-src="songs/Hamaknon.mp3"
+                                data-title="هم اکنون - Hamaknon"
+                                data-artist="Fahwa"
+                                data-cover="https://Fahwaofficial.github.io/images/fahwafavicon.jpg"
+                                onclick="playTrack(this)">
+                                <i class="fas fa-play"></i><span> پخش</span>
+                            </button>
                             <a class="track-btn download" href="songs/Hamaknon.mp3" download><i class="fas fa-download"></i><span> دانلود</span></a>
                         </div>
                     </div>
@@ -1201,7 +1380,7 @@
 
         </main>
 
-        <!-- ===== SIDEBAR ===== -->
+        <!-- ===== SIDEBAR (Sticky) ===== -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-title"><i class="fas fa-bolt"></i> آهنگ‌های جدید</div>
             <div class="sidebar-links">
@@ -1294,6 +1473,30 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
+    <!-- ===== MINI AUDIO PLAYER ===== -->
+    <div class="mini-player" id="miniPlayer">
+        <img class="mini-cover" id="miniCover" src="https://Fahwaofficial.github.io/images/fahwafavicon.jpg" alt="cover" />
+        <div class="mini-info">
+            <div class="mini-title" id="miniTitle">در حال پخش...</div>
+            <div class="mini-progress" id="miniProgress">
+                <div class="mini-progress-bar" id="miniProgressBar"></div>
+            </div>
+            <div class="mini-time">
+                <span id="miniCurrent">0:00</span>
+                <span id="miniDuration">0:00</span>
+            </div>
+        </div>
+        <div class="mini-controls">
+            <button class="mini-btn" onclick="seekBy(-10)" title="۱۰ ثانیه عقب"><i class="fas fa-backward"></i></button>
+            <button class="mini-btn play-btn" id="miniPlayBtn" onclick="toggleMiniPlay()" title="پخش/توقف"><i class="fas fa-pause"></i></button>
+            <button class="mini-btn" onclick="seekBy(10)" title="۱۰ ثانیه جلو"><i class="fas fa-forward"></i></button>
+        </div>
+        <button class="mini-close" onclick="closeMiniPlayer()" title="بستن"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- Hidden audio element -->
+    <audio id="globalAudio" preload="metadata"></audio>
+
     <!-- ===== SCRIPTS ===== -->
     <script>
         // ===== LIVE CLOCK & DATE =====
@@ -1302,13 +1505,11 @@
             const clockEl = document.getElementById('liveClock');
             const dateEl = document.getElementById('liveDate');
             
-            // Time
             const h = String(now.getHours()).padStart(2,'0');
             const m = String(now.getMinutes()).padStart(2,'0');
             const s = String(now.getSeconds()).padStart(2,'0');
             clockEl.textContent = `${h}:${m}:${s}`;
             
-            // Persian Date
             try {
                 const persianDate = now.toLocaleDateString('fa-IR', {
                     year: 'numeric', month: '2-digit', day: '2-digit'
@@ -1333,19 +1534,17 @@
             }
         })();
 
-        // ===== VIEW COUNTER (localStorage-based) =====
+        // ===== VIEW COUNTER =====
         (function() {
             const KEY = 'fahwa_music_page_views';
             let views = parseInt(localStorage.getItem(KEY) || '0', 10);
             
-            // ثبت بازدید جدید (فقط یک بار در هر session)
             if (!sessionStorage.getItem('viewed_music')) {
                 views += 1;
                 localStorage.setItem(KEY, views);
                 sessionStorage.setItem('viewed_music', '1');
             }
             
-            // انیمیشن شمارنده
             const el = document.getElementById('viewCount');
             let current = 0;
             const target = views;
@@ -1393,6 +1592,147 @@
                     document.querySelector('.sidebar').classList.remove('open');
                 }
             });
+        });
+
+        // =========================================================
+        // ======  MINI AUDIO PLAYER — INLINE PLAY / STOP  =========
+        // =========================================================
+        const audio = document.getElementById('globalAudio');
+        const miniPlayer = document.getElementById('miniPlayer');
+        const miniCover = document.getElementById('miniCover');
+        const miniTitle = document.getElementById('miniTitle');
+        const miniPlayBtn = document.getElementById('miniPlayBtn');
+        const miniProgress = document.getElementById('miniProgress');
+        const miniProgressBar = document.getElementById('miniProgressBar');
+        const miniCurrent = document.getElementById('miniCurrent');
+        const miniDuration = document.getElementById('miniDuration');
+
+        let currentBtn = null;
+
+        // فرمت زمان به mm:ss
+        function fmtTime(sec) {
+            if (!isFinite(sec) || isNaN(sec)) return '0:00';
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return `${m}:${String(s).padStart(2,'0')}`;
+        }
+
+        // پخش ترک با کلیک روی دکمه
+        function playTrack(btn) {
+            const src = btn.getAttribute('data-src');
+            const title = btn.getAttribute('data-title');
+            const cover = btn.getAttribute('data-cover');
+            const artist = btn.getAttribute('data-artist');
+
+            // اگر همان ترک در حال پخش است → توقف
+            if (currentBtn === btn && !audio.paused) {
+                audio.pause();
+                btn.innerHTML = '<i class="fas fa-play"></i><span> پخش</span>';
+                btn.classList.remove('active');
+                miniPlayBtn.innerHTML = '<i class="fas fa-play"></i>';
+                return;
+            }
+
+            // پاک کردن وضعیت قبلی
+            if (currentBtn) {
+                currentBtn.innerHTML = '<i class="fas fa-play"></i><span> پخش</span>';
+                currentBtn.classList.remove('active');
+                const row = currentBtn.closest('[data-track-row]');
+                if (row) row.classList.remove('playing');
+            }
+
+            // ست کردن سورس و پخش
+            audio.src = src;
+            audio.play().catch(err => {
+                console.warn('خطا در پخش:', err);
+            });
+
+            // بروزرسانی دکمه
+            btn.innerHTML = '<i class="fas fa-pause"></i><span> توقف</span>';
+            btn.classList.add('active');
+            const row = btn.closest('[data-track-row]');
+            if (row) row.classList.add('playing');
+
+            // بروزرسانی مینی پلیر
+            miniCover.src = cover || 'https://Fahwaofficial.github.io/images/fahwafavicon.jpg';
+            miniTitle.textContent = `${title} — ${artist}`;
+            miniPlayBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            miniPlayer.classList.add('show');
+
+            currentBtn = btn;
+        }
+
+        // کنترل پلی/پاز مینی پلیر
+        function toggleMiniPlay() {
+            if (!audio.src) return;
+            if (audio.paused) {
+                audio.play();
+                miniPlayBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                if (currentBtn) currentBtn.innerHTML = '<i class="fas fa-pause"></i><span> توقف</span>';
+            } else {
+                audio.pause();
+                miniPlayBtn.innerHTML = '<i class="fas fa-play"></i>';
+                if (currentBtn) currentBtn.innerHTML = '<i class="fas fa-play"></i><span> پخش</span>';
+            }
+        }
+
+        // جلو/عقب بردن
+        function seekBy(sec) {
+            if (!audio.src || !isFinite(audio.duration)) return;
+            audio.currentTime = Math.max(0, Math.min(audio.duration, audio.currentTime + sec));
+        }
+
+        // بستن مینی پلیر
+        function closeMiniPlayer() {
+            audio.pause();
+            audio.currentTime = 0;
+            miniPlayer.classList.remove('show');
+            if (currentBtn) {
+                currentBtn.innerHTML = '<i class="fas fa-play"></i><span> پخش</span>';
+                currentBtn.classList.remove('active');
+                const row = currentBtn.closest('[data-track-row]');
+                if (row) row.classList.remove('playing');
+                currentBtn = null;
+            }
+        }
+
+        // وقتی متادیتا لود شد → مدت زمان
+        audio.addEventListener('loadedmetadata', () => {
+            miniDuration.textContent = fmtTime(audio.duration);
+        });
+
+        // بروزرسانی نوار پیشرفت
+        audio.addEventListener('timeupdate', () => {
+            if (audio.duration) {
+                const pct = (audio.currentTime / audio.duration) * 100;
+                miniProgressBar.style.width = pct + '%';
+                miniCurrent.textContent = fmtTime(audio.currentTime);
+                miniDuration.textContent = fmtTime(audio.duration);
+            }
+        });
+
+        // کلیک روی نوار پیشرفت برای پرش
+        miniProgress.addEventListener('click', (e) => {
+            if (!audio.duration) return;
+            const rect = miniProgress.getBoundingClientRect();
+            const pct = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = pct * audio.duration;
+        });
+
+        // وقتی پخش تموم شد
+        audio.addEventListener('ended', () => {
+            miniPlayBtn.innerHTML = '<i class="fas fa-play"></i>';
+            if (currentBtn) {
+                currentBtn.innerHTML = '<i class="fas fa-play"></i><span> پخش</span>';
+                currentBtn.classList.remove('active');
+                const row = currentBtn.closest('[data-track-row]');
+                if (row) row.classList.remove('playing');
+            }
+        });
+
+        // اگر خطایی رخ داد
+        audio.addEventListener('error', () => {
+            console.warn('خطا در بارگذاری فایل صوتی — ممکن است فایل موجود نباشد.');
         });
     </script>
 
