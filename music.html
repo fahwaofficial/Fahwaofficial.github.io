@@ -245,19 +245,21 @@
         
         /* Sidebar is now sticky and scrolls with the page */
         .sidebar {
-            position: sticky;
-            top: 130px;
-            align-self: start;
-            width: var(--sidebar-width);
-            background: rgba(14,14,18,0.92);
-            backdrop-filter: blur(18px);
-            border-radius: 28px;
-            padding: 22px 18px;
-            border: 1px solid var(--border);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-            z-index: 800;
-            transition: transform 0.35s ease;
-        }
+    position: fixed;
+    top: 130px;
+    right: 24px;
+    width: var(--sidebar-width);
+    max-height: calc(100vh - 154px);
+    overflow-y: auto;
+    background: rgba(14,14,18,0.92);
+    backdrop-filter: blur(18px);
+    border-radius: 28px;
+    padding: 22px 18px;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+    z-index: 800;
+    transition: transform 0.35s ease;
+			}
         
         .sidebar-title {
             font-size: 0.7rem;
@@ -316,29 +318,18 @@
         }
         
         /* ===== MAIN LAYOUT ===== */
-        .layout {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 30px 24px 80px;
-            display: grid;
-            grid-template-columns: 1fr var(--sidebar-width);
-            gap: 40px;
-            align-items: start;
-        }
-        
-        @media (max-width: 1100px) {
-            .layout { grid-template-columns: 1fr; }
-            .sidebar {
-                position: fixed;
-                top: 0; right: 0;
-                height: 100vh;
-                border-radius: 0;
-                transform: translateX(110%);
-                width: 300px;
-                padding-top: 80px;
-                overflow-y: auto;
-                align-self: auto;
-            }
+     .layout {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 24px 80px;
+    display: block;
+	 }
+        @media (min-width: 1101px) {
+    .layout main {
+        margin-left: 0;
+        margin-right: calc(var(--sidebar-width) + 40px);
+    }
+		}
             .sidebar.open { transform: translateX(0); }
             .sidebar-toggle { display: flex; align-items: center; justify-content: center; }
         }
