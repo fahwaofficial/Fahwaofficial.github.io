@@ -1,1000 +1,539 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#0a0c12">
-    <title>FAHWA MINING — Community Game</title>
-    <meta name="description" content="FAHWA MINING — Mine points, support Fahwa and grow the community.">
-
-    <!-- Telegram Web App SDK (اختیاری) -->
-    <script src="https://telegram.org/js/telegram-web-app.js" async></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFC Mining Game | TON</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
-        /* ============================================================
-           RESET & VARIABLES
-           ============================================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
         :root {
-            --bg-primary: #0a0c12;
-            --bg-secondary: #141821;
-            --bg-card: #1a1f2c;
-            --border-color: #2a3346;
-            --text-primary: #f0f2f8;
-            --text-secondary: #8892a8;
-            --text-muted: #4f5a6e;
-            --gold: #d4a373;
-            --gold-glow: rgba(212, 163, 115, 0.25);
-            --blue: #5b7cfa;
-            --green: #4ade80;
-            --red: #f87171;
-            --radius: 20px;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            --bg: #070b14; --bg2: #0d1424; --card: rgba(16,24,40,0.88);
+            --border: rgba(255,255,255,0.07); --primary: #0098ea;
+            --primary-glow: rgba(0,152,234,0.35); --accent: #00e5c0;
+            --gold: #f0b90b; --text: #e8eaf0; --muted: #7b8aa5;
+            --danger: #ff5c6c;
         }
-
-        html,
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            width: 100%;
-            height: 100%;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: var(--font);
-            overflow: hidden;
-            touch-action: manipulation;
+            font-family: 'Vazirmatn', sans-serif;
+            background: radial-gradient(ellipse at 20% 0%, #0f1a30 0%, var(--bg) 60%);
+            color: var(--text); min-height:100vh;
+            display:flex; justify-content:center; padding:24px 16px 60px;
+        }
+        .app { width:100%; max-width:960px; display:flex; flex-direction:column; gap:20px; }
+
+        /* Header */
+        .header { text-align:center; padding:10px 0 4px; }
+        .header .logo {
+            width:110px; height:110px; margin:0 auto 16px; border-radius:50%;
+            background:linear-gradient(145deg,#0e1c33,#060b13);
+            border:2px solid rgba(0,152,234,0.5);
+            box-shadow:0 0 40px var(--primary-glow), inset 0 0 20px rgba(0,0,0,0.6);
+            display:flex; align-items:center; justify-content:center; overflow:hidden;
+        }
+        .header .logo img { width:78%; height:78%; object-fit:contain; }
+        .header h1 {
+            font-size:28px; font-weight:900;
+            background:linear-gradient(90deg,#fff 10%,var(--primary) 55%,var(--accent) 100%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        }
+        .header p { color:var(--muted); font-size:14px; margin-top:6px; }
+        .net-badge {
+            display:inline-flex; align-items:center; gap:6px; margin-top:10px;
+            padding:4px 14px; border-radius:30px;
+            background:rgba(0,152,234,0.1); border:1px solid rgba(0,152,234,0.25);
+            color:var(--primary); font-size:12px; font-weight:700;
+        }
+        .net-badge::before {
+            content:''; width:7px; height:7px; border-radius:50%;
+            background:var(--accent); box-shadow:0 0 8px var(--accent);
         }
 
-        /* ============================================================
-           LOADING SCREEN
-           ============================================================ */
-        #loading-screen {
-            position: fixed;
-            inset: 0;
-            z-index: 99999;
-            background: var(--bg-primary);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.35s ease;
-        }
-        #loading-screen.hide {
-            opacity: 0;
-            pointer-events: none;
-        }
-        #loading-screen h1 {
-            font-size: 34px;
-            margin-bottom: 18px;
-            background: linear-gradient(135deg, #f0e6d0, var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .spinner {
-            width: 42px;
-            height: 42px;
-            border: 3px solid var(--border-color);
-            border-top-color: var(--gold);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ============================================================
-           APP CONTAINER
-           ============================================================ */
-        #app {
-            width: 100%;
-            max-width: 430px;
-            height: 100dvh;
-            margin: 0 auto;
-            padding: 0 16px 78px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            background: var(--bg-primary);
-            display: none;
-            flex-direction: column;
-        }
-        #app.active {
-            display: flex;
-        }
-
-        /* ============================================================
-           HEADER
-           ============================================================ */
-        .header {
-            height: 58px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-        }
-        .brand {
-            font-size: 20px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #f0e6d0, var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .status {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 5px 10px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-secondary);
-            border-radius: 30px;
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--green);
-        }
-        .dot.offline {
-            background: var(--text-muted);
-        }
-
-        /* ============================================================
-           LOGIN PAGE
-           ============================================================ */
-        #login-page {
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding: 20px;
-            text-align: center;
-            gap: 20px;
-        }
-        #login-page.active {
-            display: flex;
-        }
-        #login-page h1 {
-            font-size: 42px;
-            background: linear-gradient(135deg, #f0e6d0, var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        #login-page p {
-            color: var(--text-secondary);
-            font-size: 16px;
-            max-width: 300px;
-        }
-        .login-btn {
-            width: 100%;
-            max-width: 300px;
-            padding: 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 60px;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .login-btn:active {
-            transform: scale(0.96);
-        }
-        .login-btn.google {
-            background: #fff;
-            color: #000;
-        }
-        .login-btn.telegram {
-            background: #0088cc;
-            color: #fff;
-            border-color: #0088cc;
-        }
-
-        /* ============================================================
-           MINING PAGE (HOME)
-           ============================================================ */
-        .mining-stats {
-            text-align: center;
-            padding: 10px 0;
-        }
-        .mining-stats .level {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        .mining-stats .power {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--gold);
-        }
-        .mining-stats .power small {
-            font-size: 16px;
-            font-weight: 400;
-            color: var(--text-secondary);
-        }
-        .mining-progress {
-            background: var(--bg-secondary);
-            border-radius: 40px;
-            height: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            margin: 12px 0 6px;
-        }
-        .mining-progress-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--gold), #e8c99e);
-            border-radius: 40px;
-            transition: width 0.5s ease;
-        }
-        .mining-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-        .countdown {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-primary);
-            text-align: center;
-            padding: 8px 0;
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* ============================================================
-           CARDS & COMMON
-           ============================================================ */
+        /* Cards */
         .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 16px;
-            box-shadow: var(--shadow);
+            background:var(--card); backdrop-filter:blur(14px);
+            border:1px solid var(--border); border-radius:20px; padding:22px 24px;
         }
         .card-title {
-            color: var(--text-secondary);
-            font-size: 13px;
-            font-weight: 650;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
+            font-size:16px; font-weight:700; margin-bottom:16px;
+            display:flex; align-items:center; gap:10px;
         }
-        .btn {
-            border: 1px solid var(--border-color);
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border-radius: 60px;
-            padding: 10px 18px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            touch-action: manipulation;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .btn:active {
-            transform: scale(0.96);
-        }
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .btn-primary {
-            background: var(--gold);
-            color: #0a0c12;
-            border-color: var(--gold);
-        }
-        .btn-block {
-            width: 100%;
-        }
-        .btn-sm {
-            padding: 6px 14px;
-            font-size: 12px;
-        }
-        .row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .between {
-            justify-content: space-between;
-        }
-        .gold {
-            color: var(--gold);
-        }
-        .muted {
-            color: var(--text-secondary);
-        }
-        .small {
-            font-size: 13px;
-        }
-        .mt-1 {
-            margin-top: 8px;
-        }
-        .mb-1 {
-            margin-bottom: 8px;
-        }
-        .text-center {
-            text-align: center;
-        }
+        .card-title .icon { font-size:20px; }
 
-        /* ============================================================
-           PAGES (Navigation)
-           ============================================================ */
-        .page {
-            display: none;
-            flex-direction: column;
-            gap: 12px;
-            padding: 8px 0 12px;
-            flex: 1;
-            overflow-y: auto;
+        /* Wallet */
+        #ton-connect-button { display:flex; justify-content:center; min-height:48px; }
+        .wallet-status { text-align:center; font-size:13px; color:var(--muted); margin-top:12px; }
+        .wallet-status.connected { color:var(--accent); font-weight:600; }
+        .warning-box {
+            display:none; margin-top:14px; padding:12px 16px; border-radius:12px;
+            background:rgba(255,92,108,0.08); border:1px solid rgba(255,92,108,0.3);
+            color:var(--danger); font-size:13px; line-height:1.6;
         }
-        .page.active {
-            display: flex;
-        }
+        .warning-box.show { display:block; }
 
-        /* ============================================================
-           TASKS
-           ============================================================ */
-        .task-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            background: var(--bg-secondary);
-            margin-bottom: 8px;
-        }
-        .task-item .info {
-            flex: 1;
-        }
-        .task-item .title {
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .task-item .desc {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        .task-item .reward {
-            font-size: 12px;
-            color: var(--gold);
-        }
-        .task-status {
-            font-size: 11px;
-            padding: 3px 10px;
-            border-radius: 40px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-        }
-        .task-status.verified {
-            border-color: var(--green);
-            color: var(--green);
-        }
-        .task-status.pending {
-            border-color: var(--gold);
-            color: var(--gold);
-        }
-        .task-status.rewarded {
-            border-color: var(--text-muted);
-            color: var(--text-muted);
-        }
-
-        /* ============================================================
-           LEADERBOARD
-           ============================================================ */
-        .lb-entry {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 4px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .lb-entry .rank {
-            width: 30px;
-            font-weight: 700;
-            color: var(--text-secondary);
-        }
-        .lb-entry .name {
-            flex: 1;
-            font-weight: 500;
-        }
-        .lb-entry .pts {
-            font-weight: 600;
-            color: var(--gold);
-        }
-
-        /* ============================================================
-           PROFILE
-           ============================================================ */
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 2px solid var(--gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            background: var(--bg-secondary);
-            flex-shrink: 0;
-        }
-        .profile-name {
-            font-size: 20px;
-            font-weight: 700;
-        }
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
+        /* Miner */
+        #minerSection { display:none; }
+        .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
         .stat-box {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 10px;
-            text-align: center;
+            background:rgba(255,255,255,0.025); border:1px solid var(--border);
+            border-radius:14px; padding:16px; text-align:center;
         }
-        .stat-box .value {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--gold);
+        .stat-box .label { font-size:12px; color:var(--muted); margin-bottom:6px; }
+        .stat-box .value { font-size:24px; font-weight:900; color:var(--primary); }
+        .stat-box .value.gold { color:var(--gold); }
+        .level-track { height:8px; background:rgba(255,255,255,0.06); border-radius:10px; overflow:hidden; margin:4px 0 6px; }
+        .level-fill { height:100%; width:0%; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:10px; transition:width 0.6s ease; }
+        .hint { font-size:12px; color:var(--muted); text-align:center; line-height:1.7; }
+
+        /* Buttons */
+        .btn {
+            width:100%; border:none; border-radius:14px; padding:15px;
+            font-family:inherit; font-size:15px; font-weight:700; cursor:pointer;
+            transition:transform 0.15s,opacity 0.2s; margin-top:14px;
         }
-        .stat-box .label {
-            font-size: 10px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
+        .btn:active { transform:scale(0.98); }
+        .btn:disabled { opacity:0.4; cursor:not-allowed; }
+        .btn-primary {
+            background:linear-gradient(135deg,var(--primary),#0077c2);
+            color:#fff; box-shadow:0 6px 24px var(--primary-glow);
+        }
+        .btn-gold {
+            background:linear-gradient(135deg,var(--gold),#c99800);
+            color:#0a0e17; box-shadow:0 6px 24px rgba(240,185,11,0.3);
+        }
+        .btn-ghost {
+            background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--text);
+        }
+        #claimMsg { text-align:center; font-size:13px; margin-top:10px; min-height:20px; }
+        #claimMsg.ok { color:var(--accent); }
+        #claimMsg.err { color:var(--danger); }
+
+        /* Tasks */
+        .task-list { display:flex; flex-direction:column; gap:8px; }
+        .task {
+            display:flex; align-items:center; justify-content:space-between; gap:12px;
+            background:rgba(255,255,255,0.025); border:1px solid var(--border);
+            border-radius:12px; padding:13px 16px;
+        }
+        .task .t-label { font-size:14px; font-weight:500; }
+        .task .t-link {
+            color:var(--primary); text-decoration:none; font-size:13px; font-weight:700;
+            white-space:nowrap; padding:4px 12px; border-radius:8px;
+            background:rgba(0,152,234,0.1); border:none; cursor:pointer; font-family:inherit;
+        }
+        .task .t-link:hover { background:rgba(0,152,234,0.2); }
+        .task .t-link.verified { background:rgba(0,229,192,0.12); color:var(--accent); cursor:default; }
+
+        /* Rules */
+        .rules-box {
+            background:rgba(255,92,108,0.06); border:1px solid rgba(255,92,108,0.2);
+            border-radius:14px; padding:16px; font-size:13px; line-height:1.9;
+        }
+        .rules-box strong { color:var(--danger); }
+
+        /* Roadmap */
+        .roadmap { list-style:none; display:flex; flex-direction:column; gap:0; }
+        .roadmap li {
+            position:relative; padding:14px 0 14px 24px;
+            border-right:2px solid rgba(0,152,234,0.25); margin-right:8px;
+            font-size:14px; line-height:1.7;
+        }
+        .roadmap li::before {
+            content:''; position:absolute; right:-6px; top:18px;
+            width:10px; height:10px; border-radius:50%;
+            background:var(--primary); box-shadow:0 0 10px var(--primary-glow);
+        }
+        .roadmap li strong { color:var(--primary); }
+
+        /* Transparency */
+        .contract-row {
+            display:flex; flex-direction:column; gap:6px;
+            background:rgba(255,255,255,0.025); border-radius:10px;
+            padding:12px 16px; font-size:13px;
+        }
+        .contract-row .cr-label { color:var(--muted); font-size:12px; }
+        .contract-row code {
+            font-family:monospace; color:var(--accent); word-break:break-all;
+            font-size:12px; direction:ltr; text-align:left;
         }
 
-        /* ============================================================
-           REFERRAL
-           ============================================================ */
-        .referral-input {
-            display: flex;
-            gap: 6px;
-        }
-        .referral-input input {
-            flex: 1;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 60px;
-            padding: 8px 14px;
-            color: var(--text-primary);
-            font-size: 12px;
-            outline: none;
-            min-width: 0;
-        }
-
-        /* ============================================================
-           BOTTOM NAV
-           ============================================================ */
-        .bottom-nav {
-            position: fixed;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 0;
-            width: 100%;
-            max-width: 430px;
-            height: 68px;
-            background: rgba(20, 24, 33, 0.96);
-            backdrop-filter: blur(16px);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 500;
-            padding-bottom: 5px;
-        }
-        .nav-item {
-            border: 0;
-            background: none;
-            color: var(--text-muted);
-            font-size: 9px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            padding: 6px 8px;
-            min-width: 52px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .nav-item.active {
-            color: var(--gold);
-        }
-        .nav-icon {
-            font-size: 22px;
-            line-height: 1;
-        }
-
-        /* ============================================================
-           TOAST
-           ============================================================ */
-        #toast-container {
-            position: fixed;
-            left: 50%;
-            bottom: 85px;
-            transform: translateX(-50%);
-            z-index: 10000;
-            width: calc(100% - 40px);
-            max-width: 390px;
-            pointer-events: none;
-        }
-        .toast {
-            background: #202633;
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 11px 16px;
-            border-radius: 14px;
-            text-align: center;
-            font-size: 13px;
-            margin-top: 6px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            animation: toastIn 0.25s ease, toastOut 0.25s ease 2.5s forwards;
-        }
-        @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        @keyframes toastOut {
-            to {
-                opacity: 0;
-                transform: translateY(-8px);
-            }
-        }
-
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
-        @media (max-width: 380px) {
-            .mining-stats .power {
-                font-size: 24px;
-            }
-            .countdown {
-                font-size: 20px;
-            }
-            .stat-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .nav-item {
-                min-width: 44px;
-                font-size: 8px;
-            }
-            .nav-icon {
-                font-size: 18px;
-            }
-        }
-        @media (min-width: 768px) {
-            .bottom-nav {
-                border-radius: 24px 24px 0 0;
-            }
-        }
-
-        /* ============================================================
-           SCROLLBAR
-           ============================================================ */
-        ::-webkit-scrollbar {
-            width: 3px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 10px;
-        }
-
-        /* ============================================================
-           MISC
-           ============================================================ */
-        .hidden {
-            display: none !important;
-        }
-        .mt-2 {
-            margin-top: 16px;
-        }
-        .gap-1 {
-            gap: 6px;
-        }
-        hr {
-            border: 0;
-            border-top: 1px solid var(--border-color);
-            margin: 12px 0;
+        @media (max-width:520px) {
+            .stat-grid { grid-template-columns:1fr; }
+            .header h1 { font-size:22px; }
         }
     </style>
 </head>
-
 <body>
+<div class="app">
 
-    <!-- ============================================================
-    LOADING SCREEN
-    ============================================================ -->
-    <div id="loading-screen">
-        <h1>✦ FAHWA</h1>
-        <div class="spinner"></div>
-        <div style="color: #8892a8; font-size: 13px; margin-top: 15px;">Loading game...</div>
-    </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <img src="logo-ifc.png" alt="IFC" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>'">
+        </div>
+        <h1>IFC Mining Game</h1>
+        <p>استخراج روزانه توکن IFC روی شبکه TON</p>
+        <span class="net-badge">TON Mainnet</span>
+    </header>
 
-    <!-- ============================================================
-    LOGIN PAGE
-    ============================================================ -->
-    <div id="login-page">
-        <h1>✦ FAHWA</h1>
-        <p>Join the community and start mining FAHWA Points</p>
-        <button class="login-btn google" id="loginGoogle">
-            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-            Continue with Google
-        </button>
-        <button class="login-btn telegram" id="loginTelegram">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-            Continue with Telegram
-        </button>
-        <div class="small muted" style="margin-top: 12px;">No account? Just sign in and start mining</div>
-    </div>
+    <!-- Wallet -->
+    <section class="card">
+        <div class="card-title"><span class="icon">🔗</span> اتصال ولت</div>
+        <div id="ton-connect-button"></div>
+        <div class="wallet-status" id="walletStatus">ولت متصل نیست</div>
+        <div class="warning-box" id="blockWarning">
+            ⛔ این ولت به دلیل عدم انجام وظایف اجتماعی مسدود شده است. پاداش‌ها غیرفعال می‌باشد.
+        </div>
+    </section>
 
-    <!-- ============================================================
-    APP (GAME)
-    ============================================================ -->
-    <div id="app">
-
-        <!-- HEADER -->
-        <div class="header">
-            <div class="brand">✦ FAHWA</div>
-            <div class="status">
-                <span class="dot" id="statusDot"></span>
-                <span id="statusText">Online</span>
+    <!-- Miner -->
+    <section class="card" id="minerSection">
+        <div class="card-title"><span class="icon">⛏️</span> ماینر روزانه</div>
+        <div class="stat-grid">
+            <div class="stat-box">
+                <div class="label">موجودی IFC (ولت)</div>
+                <div class="value" id="onchainBalance">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">امتیاز بازی (قابل برداشت)</div>
+                <div class="value gold" id="gamePoints">0</div>
             </div>
         </div>
-
-        <!-- ==========================================================
-        PAGE: MINING (HOME)
-        ========================================================== -->
-        <section class="page active" id="page-mining">
-            <div class="card">
-                <div class="mining-stats">
-                    <div class="level">LEVEL <span id="miningLevel">1</span></div>
-                    <div class="power">
-                        <span id="miningRate">100</span>
-                        <small>POINT / 24H</small>
-                    </div>
-                </div>
-                <div class="mining-progress">
-                    <div class="mining-progress-fill" id="miningProgressFill"></div>
-                </div>
-                <div class="mining-info">
-                    <span>Mined: <span id="minedAmount">0</span> / <span id="maxMined">100</span></span>
-                    <span>Balance: <span id="balanceDisplay">0</span></span>
-                </div>
-                <div class="countdown" id="countdownDisplay">--:--:--</div>
-                <button class="btn btn-primary btn-block" id="claimBtn">⛏ CLAIM MINING</button>
-            </div>
-
-            <div class="card">
-                <div class="card-title">⚡ Upgrade Mining</div>
-                <div class="row between">
-                    <span>Level <span id="upgradeCurrentLevel">1</span> → <span id="upgradeNextLevel">2</span></span>
-                    <span class="gold" id="upgradeCost">500 POINTS</span>
-                </div>
-                <button class="btn btn-block mt-1" id="upgradeBtn">Upgrade</button>
-            </div>
-
-            <div class="card">
-                <div class="card-title">📊 Community</div>
-                <div class="row between small">
-                    <span>Players <b class="gold">1,247</b></span>
-                    <span>Active <b class="gold">342</b></span>
-                    <span>Total Mined <b class="gold">45.2K</b></span>
-                </div>
-            </div>
-        </section>
-
-        <!-- ==========================================================
-        PAGE: TASKS
-        ========================================================== -->
-        <section class="page" id="page-tasks">
-            <div class="card">
-                <div class="card-title">🎯 Tasks</div>
-                <div class="small muted mb-1">Complete tasks to earn FAHWA Points.</div>
-                <div id="tasksContainer"></div>
-                <div class="small muted mt-1">* Verification is manual. Real verification requires official API/OAuth.</div>
-            </div>
-        </section>
-
-        <!-- ==========================================================
-        PAGE: LEADERBOARD
-        ========================================================== -->
-        <section class="page" id="page-leaderboard">
-            <div class="card">
-                <div class="card-title">🏆 Leaderboard</div>
-                <div id="leaderboardContainer"></div>
-            </div>
-        </section>
-
-        <!-- ==========================================================
-        PAGE: REWARDS
-        ========================================================== -->
-        <section class="page" id="page-rewards">
-            <div class="card">
-                <div class="card-title">🎁 Rewards</div>
-                <div class="gold small">FAHWA POINTS</div>
-                <div class="small muted">Points are in-game points and have no monetary value.</div>
-                <hr>
-                <div class="card-title">🏆 Community Rewards</div>
-                <div class="small muted">Future community rewards may be announced officially.</div>
-                <div class="gold small mt-1">Coming Soon</div>
-                <hr>
-                <div class="card-title">🔮 Future Token</div>
-                <div class="gold small">FAHWA TOKEN</div>
-                <div class="small muted">Status: PLANNED</div>
-                <div class="small muted mt-1">Points are not a cryptocurrency or transferable asset.</div>
-            </div>
-        </section>
-
-        <!-- ==========================================================
-        PAGE: PROFILE
-        ========================================================== -->
-        <section class="page" id="page-profile">
-            <div class="card">
-                <div class="profile-header">
-                    <div class="avatar">👤</div>
-                    <div>
-                        <div class="profile-name" id="profileName">Player</div>
-                        <div class="small muted" id="profileId">ID: loading...</div>
-                        <div class="small muted">Level: <span class="gold" id="profileLevel">1</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="stat-grid">
-                    <div class="stat-box">
-                        <div class="value" id="profilePoints">0</div>
-                        <div class="label">Points</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="value" id="profileMined">0</div>
-                        <div class="label">Mined</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="value" id="profileReferrals">0</div>
-                        <div class="label">Referrals</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">🔗 Referral</div>
-                <div class="referral-input">
-                    <input type="text" id="referralLink" readonly>
-                    <button class="btn btn-primary btn-sm" id="copyReferralBtn">Copy</button>
-                </div>
-                <button class="btn btn-block mt-1" id="shareReferralBtn">📤 Share</button>
-            </div>
-
-            <div class="card">
-                <div class="card-title">📋 Stats</div>
-                <div class="row between small"><span class="muted">Total Clicks</span><span id="statClicks">0</span></div>
-                <div class="row between small"><span class="muted">Missions Done</span><span id="statMissions">0</span></div>
-                <div class="row between small"><span class="muted">Supporter Score</span><span id="statSupporter">0</span></div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">💳 Wallet (Coming Soon)</div>
-                <div class="small muted">TON and Solana wallet integration planned.</div>
-                <button class="btn btn-block mt-1" disabled>Connect Wallet</button>
-            </div>
-        </section>
-
-    </div>
-
-    <!-- ============================================================
-    BOTTOM NAV
-    ============================================================ -->
-    <nav class="bottom-nav" id="bottomNav">
-        <button class="nav-item active" data-page="mining">
-            <span class="nav-icon">⛏</span> Mining
+        <div class="level-track"><div class="level-fill" id="levelBar"></div></div>
+        <p class="hint">
+            لول شما: <strong id="levelDisplay" style="color:var(--gold);">0</strong> / 20
+            | شرط برداشت: حداقل ۵۰۰,۰۰۰ IFC در ولت متصل
+        </p>
+        <button class="btn btn-gold" id="checkInBtn" onclick="dailyCheckIn()" disabled>
+            ⏳ در حال بارگذاری...
         </button>
-        <button class="nav-item" data-page="tasks">
-            <span class="nav-icon">🎯</span> Tasks
-        </button>
-        <button class="nav-item" data-page="leaderboard">
-            <span class="nav-icon">🏆</span> Ranking
-        </button>
-        <button class="nav-item" data-page="rewards">
-            <span class="nav-icon">🎁</span> Rewards
-        </button>
-        <button class="nav-item" data-page="profile">
-            <span class="nav-icon">👤</span> Profile
-        </button>
-    </nav>
+        <p id="claimMsg"></p>
+    </section>
 
-    <div id="toast-container"></div>
+    <!-- Tasks -->
+    <section class="card">
+        <div class="card-title"><span class="icon">📋</span> وظایف روزانه (الزامی)</div>
+        <div class="task-list">
+            <div class="task">
+                <span class="t-label">سابسکرایب کانال یوتیوب</span>
+                <button class="t-link" onclick="verifyTask('youtube', 'https://youtube.com/channel/UCqLJehqjOYOh9NVv5Ducj_Q')">تایید (۰.۰۵ TON) ↗</button>
+            </div>
+            <div class="task">
+                <span class="t-label">کامنت زیر ویدیوهای جدید</span>
+                <button class="t-link" onclick="verifyTask('comment', 'https://youtube.com/channel/UCqLJehqjOYOh9NVv5Ducj_Q')">تایید (۰.۰۵ TON) ↗</button>
+            </div>
+            <div class="task">
+                <span class="t-label">فالو توییتر @fahwaofficial</span>
+                <button class="t-link" onclick="verifyTask('twitter', 'https://twitter.com/fahwaofficial')">تایید (۰.۰۵ TON) ↗</button>
+            </div>
+            <div class="task">
+                <span class="t-label">عضویت در تلگرام @fahwaofficial</span>
+                <button class="t-link" onclick="verifyTask('telegram', 'https://t.me/fahwaofficial')">تایید (۰.۰۵ TON) ↗</button>
+            </div>
+        </div>
+        <p class="hint" style="margin-top:14px;">
+            پس از کلیک روی هر وظیفه، ابتدا به لینک پلتفرم می‌روید. سپس تراکنش ۰.۰۵ TON را برای تایید امضا می‌کنید.
+            <strong style="color:var(--danger);">بدون انجام وظایف، ولت شما مسدود خواهد شد.</strong>
+        </p>
+    </section>
 
-    <!-- ============================================================
-    JAVASCRIPT — COMPLETE GAME ENGINE
-    ============================================================ -->
-    <script>
-        (function() {
-            'use strict';
+    <!-- Rules -->
+    <section class="card">
+        <div class="card-title"><span class="icon">📜</span> قوانین بازی</div>
+        <div class="rules-box">
+            <strong>۱.</strong> برای دریافت پاداش روزانه، باید <strong>همه وظایف اجتماعی</strong> (سابسکرایب یوتیوب، کامنت، فالو توییتر، عضویت تلگرام) را انجام داده باشید.<br>
+            <strong>۲.</strong> برای برداشت توکن IFC، باید حداقل <strong>۵۰۰,۰۰۰ توکن IFC</strong> در ولت متصل خود داشته باشید.<br>
+            <strong>۳.</strong> اگر پس از بررسی، مشخص شود که وظایف را انجام نداده‌اید، ولت شما <strong>مسدود</strong> شده و هیچ پاداشی دریافت نخواهید کرد.<br>
+            <strong>۴.</strong> هر تراکنش تایید وظیفه، مبلغ <strong>۰.۰۵ TON</strong> هزینه دارد که به ولت پروژه واریز می‌شود.<br>
+            <strong>۵.</strong> برداشت‌ها به صورت دستی و پس از بررسی توسط تیم پشتیبانی انجام می‌شود.
+        </div>
+    </section>
 
-            // ============================================================
-            // CONFIG
-            // ============================================================
-            const CONFIG = {
-                SUPABASE_URL: 'YOUR_SUPABASE_URL', // جایگزین کنید
-                SUPABASE_ANON_KEY: 'YOUR_SUPABASE_ANON_KEY', // جایگزین کنید
-                TELEGRAM_BOT_USERNAME: 'fahwabot',
-                LINKS: {
-                    youtube: 'https://youtube.com/@fahwaofficial',
-                    twitter: 'https://x.com/fahwaofficial',
-                    instagram: 'https://instagram.com/fahwaofficial',
-                    telegram: 'https://t.me/fahwaofficial',
-                    spotify: 'https://open.spotify.com/artist/6qOw3MNO2ngGLW17HquCQK'
-                }
-            };
+    <!-- Roadmap -->
+    <section class="card">
+        <div class="card-title"><span class="icon">🗺️</span> نقشه راه ۲ ساله IFC</div>
+        <ul class="roadmap">
+            <li><strong>فاز ۱ (ماه ۱–۳):</strong> راه‌اندازی بازی ماینینگ روی TON، اتصال TON Connect، توزیع پاداش اولیه.</li>
+            <li><strong>فاز ۲ (ماه ۴–۶):</strong> ایجاد استخر نقدینگی IFC/TON در STON.fi و DeDust، شفاف‌سازی قرارداد.</li>
+            <li><strong>فاز ۳ (ماه ۷–۱۲):</strong> رشد جامعه به ۱۰,۰۰۰ کاربر فعال، کمپین اینفلوئنسری، لیست DEXهای بیشتر.</li>
+            <li><strong>فاز ۴ (سال ۲):</strong> استیکینگ، NFT، مأموریت‌های ویژه، پاداش به برترین‌ها.</li>
+            <li><strong>فاز ۵ (سال ۲):</strong> هدف‌گذاری لیست شدن در CEX، تثبیت جامعه ۵۰,۰۰۰ نفری.</li>
+        </ul>
+    </section>
 
-            // ============================================================
-            // STATE
-            // ============================================================
-            let state = {
-                user: null,
-                session: null,
-                profile: null,
-                mining: null,
-                balance: 0,
-                tasks: [],
-                leaderboard: [],
-                miningStatus: {
-                    level: 1,
-                    rate: 100,
-                    claimable: 0,
-                    maxClaimable: 100,
-                    nextClaimIn: 0,
-                    lastClaimAt: null
-                },
-                isTelegram: false,
-                isAuthenticated: false,
-                isDemo: false
-            };
+    <!-- Transparency -->
+    <section class="card">
+        <div class="card-title"><span class="icon">🔍</span> شفافیت و استخر نقدینگی</div>
+        <div class="contract-row">
+            <span class="cr-label">آدرس کانترکت توکن IFC (Jetton Master)</span>
+            <code>EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0</code>
+        </div>
+        <p class="hint" style="margin-top:14px; text-align:right;">
+            تمام تراکنش‌های تایید وظایف روی زنجیره TON قابل مشاهده است. برای مشارکت در استخر نقدینگی به STON.fi یا DeDust مراجعه کنید.
+        </p>
+    </section>
 
-            // ============================================================
-            // DOM REFS
-            // ============================================================
-            const $ = (id) => document.getElementById(id);
-            const loadingScreen = $('loading-screen');
-            const loginPage = $('login-page');
-            const app = $('app');
-            const bottomNav = $('bottomNav');
+</div>
 
-            // ============================================================
-            // TOAST
-            // ============================================================
-            function showToast(message) {
-                const container = $('toast-container');
-                if (!container) return;
-                const toast = document.createElement('div');
-                toast.className = 'toast';
-                toast.textContent = message;
-                container.appendChild(toast);
-                setTimeout(() => { if (toast.parentNode) toast.remove(); }, 2800);
-            }
+<script>
+    // ================================================================
+    //  ⚠️⚠️⚠️  این بخش را حتماً تغییر دهید  ⚠️⚠️⚠️
+    // ================================================================
+    const CONFIG = {
+        // آدرس Jetton Master توکن IFC (همان آدرسی که دادی)
+        IFC_MASTER: "EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0",
 
-            // ============================================================
-            // SUPABASE CLIENT
-            // ============================================================
-            let supabase = null;
-            try {
-                if (window.supabase && typeof window.supabase.createClient === 'function') {
-                    supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
-                    console.log('Supabase initialized.');
+        // ⚠️ این را به آدرس ولت خودت تغییر بده — ۰.۰۵ TON به این آدرس می‌رود
+        VERIFY_WALLET: "UQ...YOUR_VERIFY_WALLET_ADDRESS_HERE",
+
+        // آدرس قرارداد بازی (فعلاً خالی بگذار — در نسخه بعدی پر می‌شود)
+        GAME_CONTRACT: "",
+
+        MIN_HOLD: 500_000,
+        DECIMALS: 9,
+        DAILY_POINTS: 10,          // امتیاز هر بار چک‌این
+        VERIFY_COST: "50000000",   // 0.05 TON = 50,000,000 nanoTON
+        COOLDOWN_MS: 24 * 60 * 60 * 1000
+    };
+
+    // ================================================================
+    //  State
+    // ================================================================
+    let tonConnectUI = null;
+    let userAddress = null;
+    let onchainBalance = 0;
+    let gamePoints = 0;
+    let lastCheckIn = 0;
+    let completedTasks = {}; // { youtube: true, twitter: true, ... }
+    let isBlocked = false;
+
+    // ================================================================
+    //  Helpers
+    // ================================================================
+    function shortAddr(a) { return a ? a.slice(0,6) + '...' + a.slice(-4) : ''; }
+    function fmt(n) { return Math.floor(n).toLocaleString('fa-IR'); }
+    function now() { return Date.now(); }
+
+    function getStorageKey(suffix) {
+        return 'ifc_game_' + (userAddress || 'anon') + '_' + suffix;
+    }
+
+    function loadState() {
+        if (!userAddress) return;
+        gamePoints = parseInt(localStorage.getItem(getStorageKey('points')) || '0');
+        lastCheckIn = parseInt(localStorage.getItem(getStorageKey('lastCheckIn')) || '0');
+        completedTasks = JSON.parse(localStorage.getItem(getStorageKey('tasks')) || '{}');
+        isBlocked = localStorage.getItem(getStorageKey('blocked')) === 'true';
+    }
+
+    function saveState() {
+        if (!userAddress) return;
+        localStorage.setItem(getStorageKey('points'), String(gamePoints));
+        localStorage.setItem(getStorageKey('lastCheckIn'), String(lastCheckIn));
+        localStorage.setItem(getStorageKey('tasks'), JSON.stringify(completedTasks));
+        localStorage.setItem(getStorageKey('blocked'), String(isBlocked));
+    }
+
+    function calculateLevel(balance) {
+        if (balance < CONFIG.MIN_HOLD) return 0;
+        const t = [20e6,15e6,10e6,7.5e6,5e6,3.5e6,2.5e6,1.8e6,1.3e6,1e6,800e3,650e3,550e3,500e3];
+        for (let i=0;i<t.length;i++) if (balance >= t[i]) return 20 - i;
+        return 1;
+    }
+
+    // ================================================================
+    //  TON Connect
+    // ================================================================
+    function initTonConnect() {
+        try {
+            tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+                manifestUrl: 'https://fahwaofficial.github.io/Game/tonconnect-manifest.json',
+                buttonRootId: 'ton-connect-button'
+            });
+            tonConnectUI.onStatusChange(async (wallet) => {
+                if (wallet) {
+                    userAddress = wallet.account.address;
+                    document.getElementById('walletStatus').textContent = 'متصل: ' + shortAddr(userAddress);
+                    document.getElementById('walletStatus').classList.add('connected');
+                    document.getElementById('minerSection').style.display = 'block';
+                    loadState();
+                    await refreshAll();
                 } else {
-                    console.warn('Supabase library not loaded. Running in demo mode.');
-                    state.isDemo = true;
+                    userAddress = null;
+                    document.getElementById('walletStatus').textContent = 'ولت متصل نیست';
+                    document.getElementById('walletStatus').classList.remove('connected');
+                    document.getElementById('minerSection').style.display = 'none';
                 }
-            } catch (e) {
-                console.warn('Supabase init error:', e);
-                state.isDemo = true;
-            }
+            });
+        } catch(e) {
+            console.error(e);
+            document.getElementById('walletStatus').textContent = 'خطا در بارگذاری TON Connect';
+        }
+    }
 
-            // ============================================================
-            // TELEGRAM DETECTION
-            // ============================================================
-            function detectTelegram() {
-                try {
-                    if (window.Telegram && window.Telegram.WebApp) {
-                        const tg = window.Telegram.WebApp;
-                        tg.ready();
-                        tg.expand();
-                        state.isTelegram = true;
-                        const user = tg.initDataUnsafe?.user;
-                        if (user) {
-                            return {
-                                id: String(user.id),
-                                username: user.username || user.first_name || 'Player',
-                                firstName: user.first_name || '',
-                                lastName: user.last_name || '',
-                                avatar: user.photo_url || null
-                            };
-                        }
-                    }
-                } catch (e) {
-                    console.warn('Telegram detection error:', e);
-                }
-                return null;
+    // ================================================================
+    //  On-chain balance via TON Center v3
+    // ================================================================
+    async function fetchOnchainBalance(owner) {
+        try {
+            const url = `https://toncenter.com/api/v3/jetton/wallets?owner_address=${encodeURIComponent(owner)}&jetton_address=${encodeURIComponent(CONFIG.IFC_MASTER)}`;
+            const r = await fetch(url);
+            if (!r.ok) return 0;
+            const d = await r.json();
+            if (d.jetton_wallets && d.jetton_wallets.length > 0) {
+                return parseInt(d.jetton_wallets[0].balance, 10) / Math.pow(10, CONFIG.DECIMALS);
             }
+            return 0;
+        } catch { return 0; }
+    }
 
-            // ============================================================
-            // AUTHENTICATION
-            // ============================================================
-            async function loginWithGoogle() {
-                if (!supabase) {
-                    showToast('Supabase not available. Demo mode active.');
-                    enterDemoMode();
-                    return;
-                }
-                try {
-                    const { data, error } = await supabase.auth.signInWithOAuth({
-                        provider: 'google',
-                        options: {
-                            redirectTo: window.location.origin + window.location.pathname
-                        }
-                    });
-                    if (error) throw error;
-                } catch (e) {
-                    showToast('Login failed: ' + e.message);
-                    console.error(e);
-                }
-            }
+    // ================================================================
+    //  Refresh UI
+    // ================================================================
+    async function refreshAll() {
+        if (!userAddress) return;
 
-            async function loginWithTelegram() {
-                // در حالت Web، کاربر را به ربات هدایت می‌کنیم
-                const botUrl = `https://t.me/${CONFIG.TELEGRAM_BOT_USERNAME}?start=web`;
-                window.open(botUrl, '_blank');
-                showToast('Open Telegram and start the bot');
-            }
+        onchainBalance = await fetchOnchainBalance(userAddress);
+        document.getElementById('onchainBalance').textContent = fmt(onchainBalance);
 
-            async function handleTelegramAuth(initData) {
-                if (!supabase) {
-                    enterDemoMode();
-                    return;
+        document.getElementById('gamePoints').textContent = fmt(gamePoints);
+
+        const level = calculateLevel(onchainBalance);
+        document.getElementById('levelDisplay').textContent = level;
+        document.getElementById('levelBar').style.width = Math.min((level/20)*100,100) + '%';
+
+        document.getElementById('blockWarning').classList.toggle('show', isBlocked);
+
+        const btn = document.getElementById('checkInBtn');
+        const msg = document.getElementById('claimMsg');
+
+        if (isBlocked) {
+            btn.disabled = true;
+            btn.textContent = '⛔ ولت مسدود است';
+            msg.textContent = 'به دلیل عدم انجام وظایف، ولت شما مسدود شده است.';
+            msg.className = 'err';
+            return;
+        }
+
+        if (onchainBalance < CONFIG.MIN_HOLD) {
+            btn.disabled = true;
+            btn.textContent = '🔒 حداقل ۵۰۰,۰۰۰ IFC لازم است';
+            msg.textContent = 'برای فعال شدن چک‌این روزانه، ابتدا ۵۰۰,۰۰۰ توکن IFC در ولت خود داشته باشید.';
+            msg.className = 'err';
+            return;
+        }
+
+        const elapsed = now() - lastCheckIn;
+        if (elapsed < CONFIG.COOLDOWN_MS) {
+            const remain = CONFIG.COOLDOWN_MS - elapsed;
+            const h = Math.floor(remain/3600000);
+            const m = Math.floor((remain%3600000)/60000);
+            btn.disabled = true;
+            btn.textContent = `⏳ ${h} ساعت و ${m} دقیقه تا چک‌این بعدی`;
+            msg.textContent = '';
+        } else {
+            btn.disabled = false;
+            btn.textContent = '✅ دریافت پاداش روزانه (+' + CONFIG.DAILY_POINTS + ' امتیاز)';
+            msg.textContent = '';
+        }
+    }
+
+    // ================================================================
+    //  Daily Check-in
+    // ================================================================
+    function dailyCheckIn() {
+        if (!userAddress || isBlocked || onchainBalance < CONFIG.MIN_HOLD) return;
+
+        const elapsed = now() - lastCheckIn;
+        if (elapsed < CONFIG.COOLDOWN_MS) return;
+
+        // چک کردن انجام وظایف (حداقل یک بار تایید شده باشند)
+        const taskKeys = ['youtube','comment','twitter','telegram'];
+        const allDone = taskKeys.every(k => completedTasks[k] === true);
+        if (!allDone) {
+            document.getElementById('claimMsg').textContent = '❌ ابتدا همه وظایف اجتماعی را تایید کنید.';
+            document.getElementById('claimMsg').className = 'err';
+            return;
+        }
+
+        gamePoints += CONFIG.DAILY_POINTS;
+        lastCheckIn = now();
+        saveState();
+        refreshAll();
+
+        document.getElementById('claimMsg').textContent = '✅ ' + CONFIG.DAILY_POINTS + ' امتیاز دریافت شد!';
+        document.getElementById('claimMsg').className = 'ok';
+    }
+
+    // ================================================================
+    //  Verify Task — باز کردن لینک + درخواست تراکنش ۰.۰۵ TON
+    // ================================================================
+    async function verifyTask(taskId, url) {
+        if (!tonConnectUI || !userAddress) {
+            alert('ابتدا ولت را متصل کنید.');
+            return;
+        }
+
+        if (completedTasks[taskId]) {
+            alert('این وظیفه قبلاً تایید شده است.');
+            return;
+        }
+
+        // ۱. باز کردن لینک پلتفرم
+        window.open(url, '_blank');
+
+        // ۲. درخواست تراکنش ۰.۰۵ TON برای تایید
+        const confirmed = confirm(
+            'برای تایید این وظیفه، باید تراکنش ۰.۰۵ TON را امضا کنید.\n\n' +
+            'این مبلغ به ولت پروژه واریز می‌شود و غیرقابل بازگشت است.\n\n' +
+            'آیا موافق هستید؟'
+        );
+        if (!confirmed) return;
+
+        try {
+            const tx = {
+                validUntil: Math.floor(Date.now()/1000) + 600,
+                network: '-239', // mainnet
+                messages: [{
+                    address: CONFIG.VERIFY_WALLET,
+                    amount: CONFIG.VERIFY_COST, // 0.05 TON
+                    payload: '' // بدون payload — انتقال ساده TON
+                }]
+            };
+
+            const result = await tonConnectUI.sendTransaction(tx);
+            console.log('TX sent:', result);
+
+            // ۳. ذخیره تایید (در نسخه واقعی، باید تراکنش را روی زنجیره بررسی کنی)
+            completedTasks[taskId] = true;
+            saveState();
+
+            // تغییر ظاهر دکمه
+            const btns = document.querySelectorAll('.t-link');
+            btns.forEach(b => {
+                if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + taskId + "'")) {
+                    b.textContent = '✅ تایید شد';
+                    b.classList.add('verified');
+                    b.disabled = true;
                 }
-                try {
-                    const { data, error } = await supabase.functions.invoke('auth-telegram', {
-                        body: { initData }
-                    });
-                    if (error) throw error;
-                    if (data.user) {
-                        state.profile = data.user;
-                        state.isAuthenticated = true;
-                        await loadGameData();
-                        showApp();
-                    } else {
-                        throw new Error('
+            });
+
+            alert('✅ وظیفه تایید شد!');
+        } catch(e) {
+            console.error(e);
+            alert('❌ تراکنش لغو شد یا خطا رخ داد: ' + (e.message || ''));
+        }
+    }
+
+    // ================================================================
+    //  Start
+    // ================================================================
+    window.addEventListener('load', () => {
+        initTonConnect();
+        // هر ۳۰ ثانیه موجودی on-chain را به‌روز کن
+        setInterval(() => { if (userAddress) refreshAll(); }, 30000);
+    });
+</script>
+</body>
+        </html>
