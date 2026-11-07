@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ========== PRIMARY SEO ========== -->
+  <title>IFZI Token — Community-Driven TON Coin | Ston.fi Pool & Airdrop</title>
+  <meta name="description" content="IFZI is a community-powered token on TON. Join the airdrop, earn rewards, stake in our Ston.fi liquidity pool, and get valuable NFTs. 84M supply, 42M minted for early supporters.">
+  <meta name="keywords" content="IFZI token, IFZI coin, TON token, Ston.fi pool, TON airdrop, community crypto, buy IFZI, IFZI price, NFT rewards, crypto staking, liquidity pool, TON blockchain, IFZI contract, توکن IFZI, ارز دیجیتال IFZI, ایردراپ تون کوین, استخر نقدینگی IFZI, خرید IFZI, قیمت IFZI">
+
+  <!-- ========== OPEN GRAPH ========== -->
+  <meta property="og:title" content="IFZI Token — The Community-First TON Coin">
+  <meta property="og:description" content="84M supply. 42M minted for early buyers. Airdrop, NFT rewards, and Ston.fi pool participation. Built on TON.">
+  <meta property="og:image" content="https://Fahwaofficial.github.io/images/logo_ifc.jpg">
+  <meta property="og:url" content="https://Fahwaofficial.github.io/IFZI.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="IFZI Token — Community-Driven TON Coin">
+  <meta name="twitter:description" content="Join the IFZI community. Airdrop, NFT rewards, Ston.fi liquidity pool.">
+  <meta name="twitter:image" content="https://Fahwaofficial.github.io/images/logo_ifc.jpg">
+
+  <!-- ========== FAVICON ========== -->
+  <link rel="icon" type="image/jpeg" href="https://Fahwaofficial.github.io/images/logo_ifc.jpg">
+
+  <!-- ========== FONTS ========== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- ========== STRUCTURED DATA ========== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "IFZI Token",
+    "url": "https://Fahwaofficial.github.io/IFZI.html",
+    "logo": "https://Fahwaofficial.github.io/images/logo_ifc.jpg",
+    "description": "IFZI is a community-driven cryptocurrency token built on the TON blockchain.",
+    "sameAs": [
+      "https://twitter.com/IFZI",
+      "https://t.me/IFZI",
+      "https://youtube.com/@IFZI"
+    ]
+  }
+  </script>
+
+  <style>
+    /* ========== RESET & VARIABLES ========== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07090f;
+      --bg-2: #0d111c;
+      --bg-3: #121828;
+      --surface: #161d30;
+      --surface-2: #1c243a;
+      --border: rgba(255, 255, 255, 0.07);
+      --border-hover: rgba(108, 140, 255, 0.35);
+      --text: #e8ecf4;
+      --text-2: #8b95ad;
+      --text-3: #5c6780;
+      --accent: #6c8cff;
+      --accent-2: #3ee5b0;
+      --accent-glow: rgba(108, 140, 255, 0.18);
+      --gold: #f0b90b;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --max-w: 1160px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ========== BACKGROUND EFFECTS ========== */
+    .bg-glow {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+    .bg-glow-1 { width: 600px; height: 600px; background: #1a2a6c; top: -180px; left: -120px; }
+    .bg-glow-2 { width: 500px; height: 500px; background: #0d4f4a; bottom: -100px; right: -100px; }
+    .bg-glow-3 { width: 400px; height: 400px; background: #3a1c6b; top: 40%; left: 50%; transform: translateX(-50%); opacity: 0.15; }
+
+    /* ========== CONTAINER ========== */
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ========== NAVIGATION ========== */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7, 9, 15, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .nav-brand img {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+    .nav-brand span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-2);
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 11px 22px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: 0.25s;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #4a6cf7);
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(108, 140, 255, 0.25);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 32px rgba(108, 140, 255, 0.4); }
+    .btn-secondary {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--border-hover); background: var(--surface); }
+    .btn-sm { padding: 8px 16px; font-size: 0.82rem; }
+    .btn-gold {
+      background: linear-gradient(135deg, #f0b90b, #d4a008);
+      color: #0a0a0a;
+      font-weight: 700;
+    }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(240, 185, 11, 0.35); }
+
+    .nav-toggle { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+
+    /* ========== HERO ========== */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+      position: relative;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      border-radius: 100px;
+      background: rgba(62, 229, 176, 0.08);
+      border: 1px solid rgba(62, 229, 176, 0.2);
+      color: var(--accent-2);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .hero-badge .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent-2);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+    .hero-logo {
+      width: 130px;
+      height: 130px;
+      border-radius: 28px;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      box-shadow: 0 0 80px rgba(108, 140, 255, 0.2);
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, #6c8cff 0%, #3ee5b0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      max-width: 640px;
+      margin: 0 auto 36px;
+      color: var(--text-2);
+      font-size: 1.08rem;
+      line-height: 1.75;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 48px;
+    }
+
+    /* ========== CONTRACT BAR ========== */
+    .contract-bar {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .contract-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-2);
+      flex-shrink: 0;
+    }
+    .contract-value {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 0.82rem;
+      color: var(--text-2);
+      word-break: break-all;
+      flex: 1;
+      min-width: 200px;
+      text-align: left;
+    }
+    .copy-btn {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ========== STATS ========== */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 50px auto 0;
+      max-width: 800px;
+    }
+    .stat {
+      background: var(--bg-2);
+      padding: 28px 16px;
+      text-align: center;
+    }
+    .stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-3);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 4px;
+    }
+
+    /* ========== SECTIONS ========== */
+    section { padding: 70px 0; }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .section-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .section-header p {
+      color: var(--text-2);
+      max-width: 560px;
+      margin: 0 auto;
+      font-size: 0.98rem;
+    }
+
+    /* ========== TOKENOMICS ========== */
+    .tokenomics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .token-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      transition: 0.25s;
+    }
+    .token-card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+    .token-card .icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+    }
+    .icon-blue { background: rgba(108, 140, 255, 0.12); }
+    .icon-green { background: rgba(62, 229, 176, 0.12); }
+    .icon-gold { background: rgba(240, 185, 11, 0.12); }
+    .icon-purple { background: rgba(168, 85, 247, 0.12); }
+    .token-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .token-card p { color: var(--text-2); font-size: 0.88rem; line-height: 1.6; }
+    .token-card .big-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent-2);
+      margin-bottom: 4px;
+    }
+
+    /* ========== ROADMAP ========== */
+    .roadmap {
+      position: relative;
+      max-width: 760px;
+      margin: 0 auto;
+      padding-left: 32px;
+    }
+    .roadmap::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), var(--accent-2), transparent);
+    }
+    .roadmap-item {
+      position: relative;
+      padding: 0 0 36px 24px;
+    }
+    .roadmap-item:last-child { padding-bottom: 0; }
+    .roadmap-item::before {
+      content: '';
+      position: absolute;
+      left: -28px;
+      top: 6px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 12px rgba(108, 140, 255, 0.4);
+    }
+    .roadmap-item.done::before { border-color: var(--accent-2); background: var(--accent-2); }
+    .roadmap-phase {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .roadmap-item.done .roadmap-phase { color: var(--accent-2); }
+    .roadmap-item h3 { font-size: 1.08rem; font-weight: 700; margin-bottom: 8px; }
+    .roadmap-item ul { list-style: none; }
+    .roadmap-item ul li {
+      color: var(--text-2);
+      font-size: 0.88rem;
+      padding: 3px 0 3px 18px;
+      position: relative;
+    }
+    .roadmap-item ul li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--text-3);
+      font-weight: 700;
+    }
+
+    /* ========== POOL / STAKING ========== */
+    .pool-card {
+      background: linear-gradient(145deg, var(--bg-2), var(--bg-3));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .pool-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
+    .pool-card p { color: var(--text-2); font-size: 0.92rem; max-width: 480px; }
+
+    /* ========== COMMUNITY / SOCIAL ========== */
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+    .social-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 18px 20px;
+      text-decoration: none;
+      color: var(--text);
+      transition: 0.25s;
+    }
+    .social-card:hover { border-color: var(--border-hover); background: var(--surface); transform: translateY(-2px); }
+    .social-card .social-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .social-card .social-info { min-width: 0; }
+    .social-card .social-name { font-weight: 600; font-size: 0.9rem; }
+    .social-card .social-handle { font-size: 0.75rem; color: var(--text-3); }
+
+    .si-twitter { background: rgba(29, 161, 242, 0.12); color: #1da1f2; }
+    .si-telegram { background: rgba(0, 136, 204, 0.12); color: #0088cc; }
+    .si-youtube { background: rgba(255, 0, 0, 0.12); color: #ff0000; }
+    .si-instagram { background: rgba(225, 48, 108, 0.12); color: #e1306c; }
+    .si-tiktok { background: rgba(255, 255, 255, 0.08); color: #fff; }
+    .si-discord { background: rgba(88, 101, 242, 0.12); color: #5865f2; }
+    .si-github { background: rgba(255, 255, 255, 0.08); color: #fff; }
+    .si-website { background: rgba(108, 140, 255, 0.12); color: var(--accent); }
+
+    /* ========== AIRDROP BOX ========== */
+    .airdrop-box {
+      background: linear-gradient(135deg, rgba(108, 140, 255, 0.08), rgba(62, 229, 176, 0.06));
+      border: 1px solid rgba(108, 140, 255, 0.2);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+    }
+    .airdrop-box h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 12px; }
+    .airdrop-box p { color: var(--text-2); font-size: 0.92rem; margin-bottom: 20px; }
+    .airdrop-list { list-style: none; display: grid; gap: 10px; }
+    .airdrop-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: var(--text-2);
+    }
+    .airdrop-list li .check {
+      color: var(--accent-2);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ========== FAQ ========== */
+    .faq-list { max-width: 720px; margin: 0 auto; display: grid; gap: 10px; }
+    .faq-item {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 18px 22px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .faq-q .arrow { transition: 0.25s; color: var(--text-3); font-size: 0.8rem; }
+    .faq-item.open .faq-q .arrow { transform: rotate(180deg); }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      padding: 0 22px;
+      color: var(--text-2);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+    .faq-item.open .faq-a { max-height: 300px; padding: 0 22px 18px; }
+
+    /* ========== CTA ========== */
+    .cta-section {
+      text-align: center;
+      padding: 80px 0;
+      background: radial-gradient(ellipse at center, rgba(108, 140, 255, 0.08), transparent 70%);
+    }
+    .cta-section h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+    .cta-section p { color: var(--text-2); max-width: 500px; margin: 0 auto 28px; font-size: 0.98rem; }
+
+    /* ========== FOOTER ========== */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      text-align: center;
+    }
+    footer .footer-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    footer .footer-brand img { width: 28px; height: 28px; border-radius: 7px; }
+    footer .footer-brand span { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+    footer p { color: var(--text-3); font-size: 0.8rem; line-height: 1.7; }
+    footer .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; margin: 16px 0; }
+    footer .footer-links a { color: var(--text-2); text-decoration: none; font-size: 0.82rem; }
+    footer .footer-links a:hover { color: var(--text); }
+    footer .disclaimer {
+      max-width: 640px;
+      margin: 20px auto 0;
+      font-size: 0.72rem;
+      color: var(--text-3);
+      line-height: 1.6;
+      padding: 0 24px;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-toggle { display: block; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 68px;
+        left: 0;
+        right: 0;
+        background: var(--bg-2);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 24px 20px;
+        gap: 4px;
+      }
+      .nav-links.open a { display: block; padding: 10px 12px; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .hero { padding: 50px 0 40px; }
+      .hero-logo { width: 100px; height: 100px; border-radius: 22px; }
+      .pool-card { padding: 28px 22px; }
+      .airdrop-box { padding: 26px 22px; }
+    }
+
+    @media (max-width: 480px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat { padding: 20px 10px; }
+      .stat-value { font-size: 1.4rem; }
+      .contract-bar { flex-direction: column; text-align: center; }
+      .contract-value { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BACKGROUND GLOWS -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <!-- ========== NAV ========== -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="#" class="nav-brand">
+        <img src="https://Fahwaofficial.github.io/images/logo_ifc.jpg" alt="IFZI Logo">
+        <span>IFZI</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about">About</a></li>
+        <li><a href="#tokenomics">Tokenomics</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#pool">Liquidity Pool</a></li>
+        <li><a href="#airdrop">Airdrop</a></li>
+        <li><a href="#community">Community</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <a href="https://app.ston.fi/pools/EQBjAe1hG6qi7AqSEXR7B6tueAvY5uONHDAIa8fJuX_B64f8" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Buy on Ston.fi</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Community-Driven · Built on TON
+      </div>
+
+      <img src="https://Fahwaofficial.github.io/images/logo_ifc.jpg" alt="IFZI Token Logo" class="hero-logo">
+
+      <h1>
+        The People's Token.<br>
+        <span class="gradient">IFZI on TON.</span>
+      </h1>
+
+      <p class="hero-sub">
+        IFZI is a community-first cryptocurrency built on the TON blockchain. 84 million total supply. 42 million minted for early supporters. Airdrops, NFT rewards, and a live Ston.fi liquidity pool — all driven by the community.
+      </p>
+
+      <div class="hero-actions">
+        <a href="https://app.ston.fi/pools/EQBjAe1hG6qi7AqSEXR7B6tueAvY5uONHDAIa8fJuX_B64f8" target="_blank" rel="noopener" class="btn btn-primary">🚀 Buy / Add Liquidity</a>
+        <a href="#airdrop" class="btn btn-secondary">🎁 Airdrop Details</a>
+        <a href="#community" class="btn btn-secondary">💬 Join Community</a>
+      </div>
+
+      <!-- CONTRACT -->
+      <div class="contract-bar">
+        <span class="contract-label">Contract</span>
+        <span class="contract-value" id="contractText">EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0</span>
+        <button class="copy-btn" onclick="copyContract()">Copy</button>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value">84M</div>
+          <div class="stat-label">Total Supply</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">42M</div>
+          <div class="stat-label">Minted for Early Buyers</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">10%</div>
+          <div class="stat-label">Airdrop Allocation</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">2 Yrs</div>
+          <div class="stat-label">Roadmap Horizon</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== ABOUT ========== -->
+  <section id="about">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">About IFZI</span>
+        <h2>Built by the Community, for the Community</h2>
+        <p>No VC whales. No silent team dumps. IFZI is designed so that the people who show up, support, and build the community are the ones who get rewarded.</p>
+      </div>
+
+      <div class="tokenomics-grid">
+        <div class="token-card">
+          <div class="icon icon-blue">⛓️</div>
+          <h3>Native TON Token</h3>
+          <p>IFZI lives on the TON blockchain — fast, low-fee, and Telegram-native. Trade it on Ston.fi and hold it in any TON wallet.</p>
+        </div>
+        <div class="token-card">
+          <div class="icon icon-green">🤝</div>
+          <h3>Community Governance</h3>
+          <p>Active community members can become admins, moderators, and ambassadors. Top contributors receive token salaries and rewards.</p>
+        </div>
+        <div class="token-card">
+          <div class="icon icon-gold">🏆</div>
+          <h3>Early Buyer Rewards</h3>
+          <p>The first 42 million IFZI tokens are minted specifically for early buyers. Buy early, hold, and receive automatic bonus allocations.</p>
+        </div>
+        <div class="token-card">
+          <div class="icon icon-purple">🖼️</div>
+          <h3>Valuable NFT Drops</h3>
+          <p>The first supporters and top buyers will receive exclusive, valuable NFTs from the upcoming IFZI NFT collection — before anyone else.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TOKENOMICS ========== -->
+  <section id="tokenomics" style="background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Tokenomics</span>
+        <h2>Transparent by Design</h2>
+        <p>Every allocation has a purpose. Every reward has a rule. Here is exactly how the 84 million IFZI supply is structured.</p>
+      </div>
+
+      <div class="tokenomics-grid">
+        <div class="token-card">
+          <div class="big-num">84,000,000</div>
+          <h3>Total Supply</h3>
+          <p>Fixed supply. No infinite minting. No hidden inflation.</p>
+        </div>
+        <div class="token-card">
+          <div class="big-num">42,000,000</div>
+          <h3>Early Buyer Mint</h3>
+          <p>50% of supply is reserved for early buyers and top supporters. Automatic bonus rewards for qualifying purchases.</p>
+        </div>
+        <div class="token-card">
+          <div class="big-num">8,400,000</div>
+          <h3>Airdrop Pool (10%)</h3>
+          <p>Only for active community members: commenters, supporters, social media followers, and YouTube advocates.</p>
+        </div>
+        <div class="token-card">
+          <div class="big-num">2 Years</div>
+          <h3>Community Incentives</h3>
+          <p>Admin salaries, moderator rewards, and long-term community programs distributed over the roadmap period.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ROADMAP ========== -->
+  <section id="roadmap">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Roadmap</span>
+        <h2>Two-Year Vision</h2>
+        <p>From launch to ecosystem expansion — here is where IFZI is going.</p>
+      </div>
+
+      <div class="roadmap">
+        <div class="roadmap-item done">
+          <div class="roadmap-phase">Phase 1 · Complete</div>
+          <h3>Launch & Foundation</h3>
+          <ul>
+            <li>IFZI token deployed on TON</li>
+            <li>Ston.fi liquidity pool live</li>
+            <li>Community channels opened</li>
+            <li>Early buyer mint program started</li>
+          </ul>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-phase">Phase 2 · Q1–Q2</div>
+          <h3>Community Growth & Airdrop</h3>
+          <ul>
+            <li>First airdrop wave for active supporters</li>
+            <li>Admin & moderator election program</li>
+            <li>YouTube and social media ambassador campaign</li>
+            <li>Community contests and giveaways</li>
+          </ul>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-phase">Phase 3 · Q3–Q4</div>
+          <h3>NFT Collection Launch</h3>
+          <ul>
+            <li>Valuable IFZI NFT collection released</li>
+            <li>Early buyers and top supporters receive NFTs first</li>
+            <li>NFT holder perks and exclusive access</li>
+            <li>Community-driven NFT mint events</li>
+          </ul>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-phase">Phase 4 · Year 2</div>
+          <h3>Ecosystem Expansion</h3>
+          <ul>
+            <li>Staking and yield programs for long-term holders</li>
+            <li>Cross-community partnerships on TON</li>
+            <li>Community treasury and governance experiments</li>
+            <li>Continued airdrops and supporter rewards</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== POOL ========== -->
+  <section id="pool" style="background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Liquidity Pool</span>
+        <h2>Earn From the Pool & From Price Growth</h2>
+        <p>Provide liquidity on Ston.fi and participate in the IFZI ecosystem from two directions: pool fees and token appreciation.</p>
+      </div>
+
+      <div class="pool-card">
+        <div>
+          <h3>IFZI / TON Pool on Ston.fi</h3>
+          <p>Add liquidity to the official IFZI pool. Liquidity providers earn trading fees while also gaining exposure to IFZI's long-term price potential. The pool is live and open to everyone.</p>
+        </div>
+        <a href="https://app.ston.fi/pools/EQBjAe1hG6qi7AqSEXR7B6tueAvY5uONHDAIa8fJuX_B64f8" target="_blank" rel="noopener" class="btn btn-gold">Open Pool on Ston.fi ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== AIRDROP ========== -->
+  <section id="airdrop">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Airdrop</span>
+        <h2>10% Reserved for Real Supporters</h2>
+        <p>This is not a click-farm airdrop. IFZI rewards people who actually show up, comment, support, and help the community grow.</p>
+      </div>
+
+      <div class="airdrop-box">
+        <h3>🎁 Who Qualifies for the IFZI Airdrop?</h3>
+        <p>The airdrop pool is strictly for active community members. Passive wallets and bots are excluded.</p>
+        <ul class="airdrop-list">
+          <li><span class="check">✓</span> Active commenters and community participants</li>
+          <li><span class="check">✓</span> Supporters who defend and promote IFZI in public communities</li>
+          <li><span class="check">✓</span> Followers and engagers on social media — especially YouTube</li>
+          <li><span class="check">✓</span> Telegram community members who contribute to discussions</li>
+          <li><span class="check">✓</span> Users who help grow the IFZI ecosystem organically</li>
+        </ul>
+      </div>
+
+      <div style="margin-top: 20px;" class="airdrop-box">
+        <h3>🛡️ Community Admin & Moderator Program</h3>
+        <p>IFZI is selecting community admins from active Telegram members. Selected admins receive token salaries and performance rewards. This is a real role with real compensation — not a vanity badge.</p>
+        <p style="margin-bottom:0;"><strong style="color:var(--accent-2);">How to get noticed:</strong> Be consistent, help others, keep discussions constructive, and support the project across platforms. The team watches who actually cares.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== COMMUNITY ========== -->
+  <section id="community" style="background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Community</span>
+        <h2>All Official IFZI Platforms</h2>
+        <p>Follow only the official channels. These are the only places where IFZI announcements, airdrops, and rewards are published.</p>
+      </div>
+
+      <div class="social-grid">
+        <a href="https://twitter.com/IFZI" target="_blank" rel="noopener" class="social-card">
+          <div class="social-icon si-twitter">𝕏</div>
+          <div class="social-info">
+            <div class="social-name">X / Twitter</div>
+            <div class="social-handle">@IFZI</div>
+          </div>
+        </a>
+
+        <a href="https://t.me/IFZI" target="_blank" rel="noopener" class="social-card">
+          <div class="social-icon si-telegram">✈️</div>
+          <div class="social-info">
+            <div class="social-name">Telegram</div>
+            <div class="social-handle">t.me/IFZI</div>
+          </div>
+        </a>
+
+        <a href="https://youtube.com/@IFZI" target="_blank" rel="noopener" class="social-card">
+          <div class="social-icon si-youtube">▶</div>
+          <div class="social-info">
+            <div class="social-name">YouTube</div>
+            <div class="social-handle">@IFZI</div>
+          </div>
+        </a>
+
+        <a href="https://instagram.com/IFZI" target="_blank" rel="noopener" class="social-card">
+          <div class="social-icon si-instagram">◎</div>
+          <div class="social-info">
+            <div class="social-name">Instagram</div>
+            <div class="social-handle">@IFZI</div>
+          </div>
+        </a>
+
+        <a href="https://tiktok.com/@IFZI" target="_blank" rel="noopener" class="social-card">
+          <div class="social-icon si-tiktok">♪</div>
+          <div class="social-info">
+            <div class="social-name">TikTok</div>
+            <div class="social-handle">@IFZI</div>
+          </div>
+        </a>
+
+        <a href="https://discord.gg/IFZI" target="_blank" rel="noopener" class="social-card">
+          <div class="social-icon si-discord">💬</div>
+          <div class="social-info">
+            <div class="social-name">Discord</div>
+            <div class="social-handle">IFZI Community</div>
+          </div>
+        </a>
+
+        <a href="https://github.com/Fahwaofficial" target="_blank" rel="noopener" class="social-card">
+          <div class="social-icon si-github">⌂</div>
+          <div class="social-info">
+            <div class="social-name">GitHub</div>
+            <div class="social-handle">Fahwaofficial</div>
+          </div>
+        </a>
+
+        <a href="https://Fahwaofficial.github.io" target="_blank" rel="noopener" class="social-card">
+          <div class="social-icon si-website">🌐</div>
+          <div class="social-info">
+            <div class="social-name">Official Website</div>
+            <div class="social-handle">Fahwaofficial.github.io</div>
+          </div>
+        </a>
+      </div>
+
+      <p style="text-align:center;margin-top:24px;font-size:0.78rem;color:var(--text-3);">
+        ⚠️ Always verify links through this page. IFZI will never DM you first asking for funds or seed phrases.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== FAQ ========== -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">FAQ</span>
+        <h2>Common Questions</h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            What is IFZI?
+            <span class="arrow">▼</span>
+          </button>
+          <div class="faq-a">IFZI is a community-driven cryptocurrency token built on the TON blockchain. It focuses on rewarding active supporters, early buyers, and community members through airdrops, NFTs, and liquidity pool participation.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            How do I buy IFZI?
+            <span class="arrow">▼</span>
+          </button>
+          <div class="faq-a">You can buy IFZI through the official Ston.fi liquidity pool. Click the "Buy on Ston.fi" button on this page. You will need a TON wallet with TON tokens to swap.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            How does the airdrop work?
+            <span class="arrow">▼</span>
+          </button>
+          <div class="faq-a">10% of the total supply is reserved for airdrops. Only active community members qualify — people who comment, engage, support the project on social media, and follow official channels (especially YouTube and Telegram). Passive wallets and bots are excluded.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            How do I become a community admin?
+            <span class="arrow">▼</span>
+          </button>
+          <div class="faq-a">Admins are selected from active Telegram community members. Consistent, constructive participation is noticed. Selected admins receive token salaries and performance-based rewards.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            What is the contract address?
+            <span class="arrow">▼</span>
+          </button>
+          <div class="faq-a">The official IFZI contract address is <strong style="color:var(--accent-2);">EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0</strong>. Always verify this address before trading. IFZI will never change its contract.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Is the liquidity pool safe to use?
+            <span class="arrow">▼</span>
+          </button>
+          <div class="faq-a">The IFZI pool is hosted on Ston.fi, a leading decentralized exchange on TON. As with any DeFi pool, there are risks including impermanent loss. Only provide liquidity if you understand these risks.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA ========== -->
+  <div class="cta-section">
+    <div class="container">
+      <h2>Ready to Join the IFZI Community?</h2>
+      <p>Buy on Ston.fi, add liquidity, follow the official channels, and position yourself for the airdrop and NFT rewards.</p>
+      <div class="hero-actions">
+        <a href="https://app.ston.fi/pools/EQBjAe1hG6qi7AqSEXR7B6tueAvY5uONHDAIa8fJuX_B64f8" target="_blank" rel="noopener" class="btn btn-primary">Open Ston.fi Pool</a>
+        <a href="https://t.me/IFZI" target="_blank" rel="noopener" class="btn btn-secondary">Join Telegram</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <div class="container">
+      <div class="footer-brand">
+        <img src="https://Fahwaofficial.github.io/images/logo_ifc.jpg" alt="IFZI">
+        <span>IFZI</span>
+      </div>
+
+      <div class="footer-links">
+        <a href="#about">About</a>
+        <a href="#tokenomics">Tokenomics</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#pool">Pool</a>
+        <a href="#airdrop">Airdrop</a>
+        <a href="#community">Community</a>
+        <a href="#faq">FAQ</a>
+      </div>
+
+      <p>© 2026 IFZI. Community-driven on TON.</p>
+
+      <p class="disclaimer">
+        <strong>Disclaimer:</strong> Cryptocurrency investments carry risk. IFZI is a community token and nothing on this page constitutes financial advice. Always do your own research. Only use official links listed on this page. Never share your seed phrase.
+      </p>
+    </div>
+  </footer>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script>
+    // Mobile nav toggle
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // Close mobile nav on link click
+    document.querySelectorAll('#navLinks a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('navLinks').classList.remove('open');
+      });
+    });
+
+    // Copy contract
+    function copyContract() {
+      const text = 'EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0';
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = event.target;
+        btn.textContent = 'Copied!';
+        btn.style.color = 'var(--accent-2)';
+        btn.style.borderColor = 'var(--accent-2)';
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.style.color = '';
+          btn.style.borderColor = '';
+        }, 2000);
+      });
+    }
+
+    // FAQ toggle
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+  </script>
+
+</body>
+</html>
