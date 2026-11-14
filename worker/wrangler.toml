@@ -1,3 +1,4 @@
+
 name = "ifzi-mining-api"
 main = "src/index.ts"
 compatibility_date = "2026-11-01"
@@ -15,4 +16,4 @@ TONAPI_BASE = "https://tonapi.io"
 [[d1_databases]]
 binding = "DB"
 database_name = "ifzi-mining-db"
-database_id = "REPLACE_WITH_D1_DATABASE_ID
+database_id = "ce781e3e-90f2-4f9a-aa67-6f0e1cd8eeac"
