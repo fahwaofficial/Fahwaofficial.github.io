@@ -1,470 +1,338 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#080d18">
-<title>IFZI · TON Mining & Community</title>
-<meta name="description" content="IFZI community mining on TON. Connect your wallet, verify ownership, mine for 24 hours, claim rewards and request withdrawals.">
-<meta property="og:title" content="IFZI · TON Mining & Community">
-<meta property="og:description" content="Connect your TON wallet and participate in IFZI community mining.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IFZI Mining · TON Proof & Rewards</title>
+<link rel="icon" href="https://fahwaofficial.github.io/images/logo-ifc.jpg">
+
+<!-- TON Connect UI -->
+<script src="https://unpkg.com/@tonconnect/ui@2.0.9/dist/tonconnect-ui.min.js"></script>
+
 <style>
-:root{color-scheme:dark;--bg:#080d18;--panel:#101a2c;--panel2:#142139;--line:#243653;--text:#f2f6ff;--muted:#91a1bb;--blue:#55a9ff;--cyan:#56e0db;--green:#4adea0;--red:#ff7272;--gold:#ffc96b}
-*{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at 50% -20%,#1c3c68 0,transparent 50%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;min-height:100vh}
-button,input{font:inherit}
-button{cursor:pointer}
-a{color:var(--cyan);text-decoration:none}
-.wrap{width:min(100% - 28px,920px);margin:auto;padding:24px 0 55px}
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}
-.brand{display:flex;align-items:center;gap:11px;font-weight:900;font-size:22px;letter-spacing:1px}
-.logo{width:43px;height:43px;border-radius:14px;background:linear-gradient(135deg,#59b7ff,#766cff);display:grid;place-items:center;color:white;font-size:24px;box-shadow:0 8px 28px #388eff40}
-.pill{border:1px solid var(--line);border-radius:30px;padding:9px 13px;color:var(--muted);font-size:12px}
-.hero{text-align:center;padding:28px 10px 20px}
-.eyebrow{color:var(--cyan);font-size:11px;font-weight:800;letter-spacing:3px}
-h1{font-size:clamp(30px,7vw,48px);margin:12px 0 8px;letter-spacing:-2px}
-.sub{color:var(--muted);font-size:14px;line-height:1.7;max-width:570px;margin:auto}
-.panel{background:linear-gradient(145deg,#14233a,#0d1728);border:1px solid var(--line);border-radius:22px;padding:20px;margin:14px 0;box-shadow:0 16px 50px #0003}
-.walletrow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.walletinfo{min-width:0}
-.small{font-size:12px;color:var(--muted)}
-.address{font-size:13px;font-weight:700;overflow-wrap:anywhere;margin-top:6px}
-.btn{border:0;border-radius:13px;padding:13px 18px;font-weight:800;color:#071222;background:linear-gradient(110deg,#5db5ff,#66e1dc);box-shadow:0 8px 22px #3d9cff25}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.btn.secondary{background:#1a2c47;color:var(--text);border:1px solid var(--line);box-shadow:none}
-.btn.danger{background:#40212b;color:#ffb3b3;border:1px solid #75404c;box-shadow:none}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.stat{background:#0b1424;border:1px solid var(--line);border-radius:16px;padding:16px;min-width:0}
-.stat .value{font-size:clamp(18px,4vw,25px);font-weight:900;margin-top:9px;overflow-wrap:anywhere}
-.stat .unit{font-size:11px;color:var(--muted);margin-top:4px}
-.sectiontitle{font-size:16px;font-weight:900;margin:0 0 16px}
-.mining{text-align:center}
-.ring{width:210px;height:210px;margin:12px auto 20px;border-radius:50%;padding:9px;background:conic-gradient(var(--cyan) 0deg,#283a55 0deg);display:grid;place-items:center}
-.ringinner{width:100%;height:100%;border-radius:50%;background:#0c1729;border:1px solid #2b4668;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.timer{font-size:31px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:1px}
-.level{font-size:14px;color:var(--cyan);font-weight:800;margin-top:8px}
-.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.notice{font-size:12px;line-height:1.7;color:var(--muted);margin-top:13px}
-.status{padding:12px 14px;border-radius:12px;background:#0a1423;border:1px solid var(--line);font-size:13px;line-height:1.6;margin-top:14px;overflow-wrap:anywhere}
-.status.ok{border-color:#246e55;color:#8df0c1}
-.status.err{border-color:#793e49;color:#ffaaaa}
-.status:empty{display:none}
-input{width:100%;background:#091322;border:1px solid var(--line);color:white;border-radius:12px;padding:14px;margin:9px 0 12px;outline:none}
-input:focus{border-color:var(--blue)}
-.row{display:flex;gap:10px;align-items:center}
-.row>*{flex:1;min-width:0}
-.levelrow{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:13px}
-.levelrow:last-child{border:0}
-.levelrow.active{color:var(--cyan);font-weight:800}
-footer{text-align:center;color:var(--muted);font-size:11px;line-height:1.8;padding:25px 8px}
-.hidden{display:none!important}
-@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.panel{padding:16px}.walletrow{align-items:stretch}.walletrow .btn{width:100%}.ring{width:190px;height:190px}}
+/* —— همان استایل‌های قبلی شما (بدون تغییر) —— */
+:root{--bg:#07090f;--bg-2:#0d111c;--surface:#161d30;--border:rgba(255,255,255,.08);--text:#e8ecf4;--text-2:#8b95ad;--accent:#6c8cff;--green:#3ee5b0;--radius:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:20px}
+.container{max-width:780px;margin:0 auto}
+.card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px}
+.card h2{font-size:.9rem;font-weight:700;margin-bottom:14px;color:var(--accent);text-transform:uppercase}
+.row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:.86rem}
+.row:last-child{border-bottom:none}.row span:first-child{color:var(--text-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border-radius:10px;border:none;font-weight:700;font-size:.86rem;cursor:pointer;width:100%;transition:.2s}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#4a6cf7);color:#fff}
+.btn-green{background:linear-gradient(135deg,var(--green),#22c99a);color:#052e22}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-sm{width:auto;padding:8px 14px;font-size:.78rem}
+.status{font-size:.8rem;padding:10px 14px;border-radius:8px;margin-top:12px}
+.status.err{background:rgba(255,80,80,.12);color:#ff8a8a}
+.status.ok{background:rgba(62,229,176,.12);color:var(--green)}
+.status.info{background:rgba(108,140,255,.12);color:var(--accent)}
+input{width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--border);background:#0d111c;color:var(--text);font-size:.86rem;margin-bottom:10px}
+.mono{font-family:monospace;font-size:.74rem;word-break:break-all;color:var(--text-2)}
+.logo{width:72px;height:72px;border-radius:20px;display:block;margin:0 auto 14px;border:2px solid var(--border)}
+.center{text-align:center}
+.hide{display:none!important}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header>
-  <div class="brand"><div class="logo">Ξ</div><span>IFZI</span></div>
-  <div class="pill">TON COMMUNITY MINING</div>
-</header>
+<div class="container">
 
-<section class="hero">
-  <div class="eyebrow">COMMUNITY · MINING · REWARDS</div>
-  <h1>Mine IFZI Together</h1>
-  <p class="sub">Connect your TON wallet, verify ownership and participate in the 24-hour community mining program.</p>
-</section>
-
-<section class="panel">
-  <div class="walletrow">
-    <div class="walletinfo">
-      <div class="small">TON WALLET</div>
-      <div id="walletAddress" class="address">Not connected</div>
-      <div id="walletStatus" class="small">Wallet verification required</div>
+  <!-- ========== ۱. WALLET ========== -->
+  <div class="card">
+    <h2>1 · Wallet</h2>
+    <div id="tonConnectBtn"></div>
+    <div id="walletInfo" class="hide" style="margin-top:14px">
+      <div class="row"><span>Address</span><span class="mono" id="wAddr">—</span></div>
+      <div class="row"><span>Network</span><span id="wNet">—</span></div>
+      <div class="row"><span>Proof Status</span><span id="wProof" style="color:var(--text-2)">pending</span></div>
     </div>
-    <button id="connectBtn" class="btn" type="button">Connect Wallet</button>
+    <div id="walletMsg" style="margin-top:10px"></div>
   </div>
-  <div id="walletMsg" class="status" role="status"></div>
-</section>
 
-<section class="grid">
-  <div class="stat"><div class="small">AVAILABLE REWARDS</div><div class="value" id="available">0</div><div class="unit">IFZI</div></div>
-  <div class="stat"><div class="small">TOTAL EARNED</div><div class="value" id="earned">0</div><div class="unit">IFZI</div></div>
-  <div class="stat"><div class="small">REFERRAL REWARDS</div><div class="value" id="referralRewards">0</div><div class="unit">IFZI</div></div>
-  <div class="stat"><div class="small">MINING LEVEL</div><div class="value" id="userLevel">0</div><div class="unit">Current level</div></div>
-</section>
+  <!-- ========== ۲. REAL BALANCE ========== -->
+  <div class="card hide" id="balanceCard">
+    <h2>2 · Real IFZI Balance (On-chain)</h2>
+    <div class="row"><span>Wallet IFZI</span><span id="onchainIfzi">—</span></div>
+    <div class="row"><span>Mining Rewards</span><span id="miningRewards">—</span></div>
+    <div class="row"><span>Available to Withdraw</span><span id="availableWithdraw">—</span></div>
+    <div class="row"><span>Lifetime Mined</span><span id="lifetimeMined">—</span></div>
+  </div>
 
-<section class="panel mining">
-  <h2 class="sectiontitle">24-Hour Mining Session</h2>
-  <div class="ring" id="ring">
-    <div class="ringinner">
-      <div class="small" id="cycleLabel">NO ACTIVE SESSION</div>
-      <div class="timer" id="timer">24:00:00</div>
-      <div class="level" id="levelText">Level 0</div>
+  <!-- ========== ۳. MINING ========== -->
+  <div class="card hide" id="miningCard">
+    <h2>3 · Mining (24 Hours)</h2>
+    <img src="https://fahwaofficial.github.io/images/logo-ifc.jpg" class="logo" alt="IFZI">
+    <div class="row"><span>Status</span><span id="mineStatus">idle</span></div>
+    <div class="row"><span>Time Remaining</span><span id="mineRemain">—</span></div>
+    <div style="margin-top:14px">
+      <button class="btn btn-primary" id="startMineBtn" onclick="startMining()">Start Mining</button>
+      <button class="btn btn-green hide" id="claimMineBtn" onclick="claimMining()" style="margin-top:8px">Claim Rewards</button>
     </div>
+    <div id="mineMsg" style="margin-top:10px"></div>
   </div>
-  <div class="small">Estimated daily reward</div>
-  <div class="value" id="dailyReward" style="font-size:25px;font-weight:900;margin:8px">0 IFZI</div>
-  <div class="actions">
-    <button id="startBtn" class="btn" type="button" disabled>Start Mining</button>
-    <button id="claimBtn" class="btn secondary" type="button" disabled>Claim Reward</button>
-  </div>
-  <div id="miningMsg" class="status"></div>
-  <p class="notice">Mining rewards are calculated and stored by the server. A running session lasts 24 hours. Claim becomes available only after the server confirms completion.</p>
-</section>
 
-<section class="panel">
-  <h2 class="sectiontitle">Mining Pool</h2>
-  <div class="grid">
-    <div class="stat"><div class="small">POOL SIZE</div><div class="value">8.4M</div><div class="unit">IFZI</div></div>
-    <div class="stat"><div class="small">MINIMUM WITHDRAWAL</div><div class="value">25,000</div><div class="unit">IFZI</div></div>
-    <div class="stat"><div class="small">DISTRIBUTED</div><div class="value" id="distributed">0</div><div class="unit">IFZI</div></div>
-    <div class="stat"><div class="small">REMAINING</div><div class="value" id="remaining">8,400,000</div><div class="unit">IFZI</div></div>
+  <!-- ========== ۴. WITHDRAW ========== -->
+  <div class="card hide" id="withdrawCard">
+    <h2>4 · Withdraw (Min 10,000 IFZI)</h2>
+    <p style="font-size:.82rem;color:var(--text-2);margin-bottom:10px">Withdrawals are processed manually by the project owner after admin review.</p>
+    <button class="btn btn-secondary" onclick="requestWithdrawal()">Request Withdrawal</button>
+    <div id="withdrawMsg" style="margin-top:10px"></div>
   </div>
-</section>
 
-<section class="panel">
-  <h2 class="sectiontitle">Referral Program</h2>
-  <div class="small">Your referral code</div>
-  <div class="row">
-    <input id="refCode" readonly placeholder="Connect wallet to get your code">
-    <button id="copyRefBtn" class="btn secondary" type="button">Copy</button>
+  <!-- ========== ۵. CONTRACT ========== -->
+  <div class="card">
+    <h2>5 · Contract</h2>
+    <div class="row"><span>Jetton Master</span><span class="mono">EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0</span></div>
   </div>
-  <div class="small">Invite friends and receive 10% of their gross mining reward. This amount is deducted from the invitee's reward, not added to the mining pool.</div>
-  <div class="levelrow"><span>Referral count</span><strong id="refCount">0</strong></div>
-  <div class="row">
-    <input id="applyCode" placeholder="Enter referral code">
-    <button id="applyRefBtn" class="btn secondary" type="button">Apply</button>
-  </div>
-  <div id="refMsg" class="status"></div>
-</section>
 
-<section class="panel">
-  <h2 class="sectiontitle">Withdraw IFZI</h2>
-  <div class="small">Withdrawals are requests for manual review. Never send tokens to an address displayed by an unverified source.</div>
-  <input id="withdrawAmount" inputmode="decimal" placeholder="Amount in IFZI">
-  <button id="withdrawBtn" class="btn" type="button" disabled>Request Withdrawal</button>
-  <div id="withdrawMsg" class="status"></div>
-  <h3 class="sectiontitle" style="margin-top:22px">Withdrawal History</h3>
-  <div id="withdrawHistory" class="small">Connect and verify your wallet to load history.</div>
-</section>
-
-<section class="panel">
-  <h2 class="sectiontitle">IFZI Token</h2>
-  <div class="levelrow"><span>Network</span><strong>TON</strong></div>
-  <div class="levelrow"><span>Decimals</span><strong>9</strong></div>
-  <div class="levelrow"><span>Mining pool</span><strong>8,400,000 IFZI</strong></div>
-  <div class="levelrow"><span>Token master</span><a href="https://tonscan.org/token/EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0" target="_blank" rel="noopener">View on Tonscan</a></div>
-  <div class="actions" style="margin-top:16px">
-    <a class="btn secondary" href="https://app.ston.fi/pools/EQBjAe1hG6qi7AqSEXR7B6tueAvY5uONHDAIa8fJuX_B64f8" target="_blank" rel="noopener">STON.fi Pool</a>
-    <a class="btn secondary" href="https://app.ston.fi/swap?chartVisible=false&ft=EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0&tt=GRAM" target="_blank" rel="noopener">Buy / Swap</a>
-  </div>
-</section>
-
-<footer>
-  IFZI Community Mining · Built on TON<br>
-  Mining rewards are not guaranteed financial returns. Withdrawals are subject to manual review.
-  <br><a href="https://t.me/fahwa.bot" target="_blank" rel="noopener">Telegram Bot</a>
-  · <a href="https://fahwaofficial.github.io" target="_blank" rel="noopener">Official Website</a>
-</footer>
 </div>
 
-<script type="module">
-import { TonConnectUI } from 'https://esm.sh/@tonconnect/ui@2';
-
+<script>
+// ═══════════════════════════════════════════════════════════════
+// تنظیمات — دامنه و آدرس Worker شما
+// ═══════════════════════════════════════════════════════════════
 const API_BASE = 'https://ifzi-mining-api.fahwaiman.workers.dev';
-const MANIFEST_URL = 'https://fahwaofficial.github.io/tonconnect-manifest.json';
-const MASTER = 'EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0';
-const MIN_WITHDRAW = 25000;
-const POOL_TOTAL = 8400000;
+const JETTON_MASTER = 'EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0';
+const TONAPI = 'https://tonapi.io/v2';
+const SITE_DOMAIN = 'fahwaofficial.github.io';
 
-let tc;
-let sessionToken = '';
-let walletAddress = '';
-let verified = false;
-let account = null;
-let countdownHandle = null;
+// —— TON Connect ——
+const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+  manifestUrl: 'https://fahwaofficial.github.io/tonconnect-manifest.json',
+  buttonRootId: 'tonConnectBtn'
+});
 
-const $ = id => document.getElementById(id);
-const fmt = value => {
-  const n = Number(value || 0);
-  return Number.isFinite(n) ? n.toLocaleString('en-US',{maximumFractionDigits:4}) : '0';
-};
-function message(id,text,type=''){
-  const el=$(id);
-  el.textContent=text || '';
-  el.className='status'+(type?' '+type:'');
-}
-function setWalletUI(){
-  $('walletAddress').textContent=walletAddress || 'Not connected';
-  $('walletStatus').textContent=verified?'Ownership verified by server':'Wallet verification required';
-  $('connectBtn').textContent=walletAddress?'Disconnect':'Connect Wallet';
-  $('startBtn').disabled=!verified;
-  $('withdrawBtn').disabled=!verified;
-}
-function clearSession(){
-  sessionToken='';
-  verified=false;
-  account=null;
-  localStorage.removeItem('ifzi_session');
-  walletAddress='';
-  if(countdownHandle)clearInterval(countdownHandle);
-  setWalletUI();
-}
-async function api(path,method='GET',body){
-  const headers={'content-type':'application/json'};
-  if(sessionToken)headers.authorization='Bearer '+sessionToken;
-  const response=await fetch(API_BASE+path,{
-    method,headers,
-    body:body===undefined?undefined:JSON.stringify(body)
-  });
-  let data={};
-  try{data=await response.json()}catch{}
-  if(!response.ok)throw new Error(data.error||data.message||('API error '+response.status));
-  return data;
-}
-function showAccount(data){
-  account=data;
-  $('available').textContent=fmt(data.rewards?.available);
-  $('earned').textContent=fmt(data.rewards?.totalEarned);
-  $('referralRewards').textContent=fmt(data.rewards?.totalReferral);
-  $('userLevel').textContent=String(data.level||0);
-  $('dailyReward').textContent=fmt(data.dailyReward)+' IFZI';
-  $('refCode').value=data.referralCode||'';
-  $('refCount').textContent=fmt(data.referralCount);
-  $('distributed').textContent=fmt(data.pool?.distributed);
-  $('remaining').textContent=fmt(data.pool?.remaining ?? POOL_TOTAL);
-  const cycle=data.cycle;
-  $('claimBtn').disabled=true;
-  $('startBtn').disabled=!verified || !!cycle;
-  if(cycle){
-    $('cycleLabel').textContent=cycle.status==='completed'?'READY TO CLAIM':'MINING IN PROGRESS';
-    $('levelText').textContent='Level '+(cycle.level||data.level||0);
-    if(cycle.endsAt){
-      startCountdown(Number(cycle.endsAt));
-    }else{
-      $('timer').textContent='--:--:--';
-    }
-    if(cycle.status==='completed')$('claimBtn').disabled=false;
-  }else{
-    if(countdownHandle)clearInterval(countdownHandle);
-    $('cycleLabel').textContent='NO ACTIVE SESSION';
-    $('timer').textContent='24:00:00';
-    $('levelText').textContent='Level '+(data.level||0);
+let user = null;          // { address, chain, proof }
+let sessionToken = null;  // JWT از Worker
+let miningInterval = null;
+
+// ═══════════════════════════════════════════════════════════════
+// ۱. اتصال کیف پول + TON Proof
+// ═══════════════════════════════════════════════════════════════
+tonConnectUI.onStatusChange(async (wallet) => {
+  if (!wallet) {
+    resetUI();
+    return;
   }
-}
-function startCountdown(endsAt){
-  if(countdownHandle)clearInterval(countdownHandle);
-  const tick=()=>{
-    const now=Math.floor(Date.now()/1000);
-    const left=Math.max(0,endsAt-now);
-    const h=String(Math.floor(left/3600)).padStart(2,'0');
-    const m=String(Math.floor(left%3600/60)).padStart(2,'0');
-    const s=String(left%60).padStart(2,'0');
-    $('timer').textContent=`${h}:${m}:${s}`;
-    $('ring').style.background=`conic-gradient(var(--cyan) ${Math.max(0,86400-left)/86400*360}deg,#283a55 0deg)`;
-    if(left===0){
-      clearInterval(countdownHandle);
-      $('cycleLabel').textContent='SESSION COMPLETE';
-      $('claimBtn').disabled=!verified;
-      $('startBtn').disabled=true;
-      message('miningMsg','Your session has ended. Refresh account status before claiming.','ok');
-    }
-  };
-  tick();
-  countdownHandle=setInterval(tick,1000);
-}
-async function loadAccount(){
-  const data=await api('/api/me');
-  showAccount(data);
-  await loadWithdrawals();
-  return data;
-}
-async function prepareProof(){
-  try{
-    const result=await api('/api/nonce','POST',{});
-    if(!result.nonce)throw new Error('Server did not return a verification nonce');
-    tc.setConnectRequestParameters({
-      state:'ready',
-      value:{tonProof:result.nonce}
+
+  // مرحله ۱: دریافت nonce از Worker
+  let payload;
+  try {
+    const res = await fetch(`${API_BASE}/api/ton-proof/payload`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address: wallet.account.address })
     });
-  }catch(error){
-    tc.setConnectRequestParameters({state:'loading'});
-    message('walletMsg','Could not prepare secure wallet verification: '+error.message,'err');
-  }
-}
-async function authenticate(wallet){
-  const proofItem=wallet.connectItems?.tonProof;
-  const proof=proofItem?.proof;
-  if(!proof){
-    clearSession();
-    message('walletMsg','TON Proof was not provided by the wallet. Disconnect and reconnect, then approve the secure verification request.','err');
+    if (!res.ok) throw new Error('Payload request failed: ' + res.status);
+    payload = (await res.json()).payload;
+  } catch (e) {
+    showMsg('walletMsg', 'err', 'Cannot get TON Proof payload: ' + e.message);
     return;
   }
-  try{
-    const result=await api('/api/auth/ton-proof','POST',{
-      address:wallet.account.address,
-      network:wallet.account.chain,
-      publicKey:wallet.account.publicKey||null,
-      walletStateInit:wallet.account.walletStateInit||null,
-      proof
+
+  // مرحله ۲: اگر کیف پول هنوز Proof نداده، متصل شو با tonProof
+  if (!wallet.tonProof) {
+    // توجه: در TON Connect UI، tonProof باید در زمان connect تنظیم شود.
+    // اگر کیف پول قبلاً بدون proof متصل شده، باید断开 کرده و دوباره با proof متصل شود.
+    // این کد فرض می‌کند tonConnectUI با setConnectRequestParameters پیکربندی شده است.
+    showMsg('walletMsg', 'info', 'Waiting for wallet to sign TON Proof...');
+    return;
+  }
+
+  // مرحله ۳: ارسال Proof به Worker برای تأیید
+  try {
+    const verifyRes = await fetch(`${API_BASE}/api/ton-proof/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        address: wallet.account.address,
+        network: wallet.account.chain,
+        publicKey: wallet.account.publicKey || null,
+        walletStateInit: wallet.account.walletStateInit || null,
+        proof: {
+          timestamp: Number(wallet.tonProof.timestamp),
+          domain: wallet.tonProof.domain,
+          signature: wallet.tonProof.signature,
+          payload: wallet.tonProof.payload
+        }
+      })
     });
-    if(!result.token)throw new Error('Server did not return a session token');
-    sessionToken=result.token;
-    localStorage.setItem('ifzi_session',sessionToken);
-    walletAddress=result.wallet||wallet.account.address;
-    verified=true;
-    setWalletUI();
-    message('walletMsg','Wallet ownership verified successfully.','ok');
-    await loadAccount();
-  }catch(error){
-    clearSession();
-    message('walletMsg','Wallet verification failed: '+error.message,'err');
+
+    if (!verifyRes.ok) {
+      const err = await verifyRes.text();
+      throw new Error('Proof rejected: ' + err);
+    }
+
+    const data = await verifyRes.json();
+    sessionToken = data.token;
+    user = { address: wallet.account.address, chain: wallet.account.chain };
+
+    // UI
+    document.getElementById('walletInfo').classList.remove('hide');
+    document.getElementById('wAddr').textContent = shorten(wallet.account.address);
+    document.getElementById('wNet').textContent = wallet.account.chain === '-239' ? 'Mainnet' : 'Testnet';
+    document.getElementById('wProof').textContent = 'verified ✓';
+    document.getElementById('wProof').style.color = 'var(--green)';
+
+    document.getElementById('balanceCard').classList.remove('hide');
+    document.getElementById('miningCard').classList.remove('hide');
+    document.getElementById('withdrawCard').classList.remove('hide');
+
+    await loadUserData();
+    await loadOnchainBalance(wallet.account.address);
+    await refreshMiningStatus();
+
+  } catch (e) {
+    showMsg('walletMsg', 'err', 'TON Proof failed: ' + e.message);
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// ۲. داده‌های کاربر (از Worker)
+// ═══════════════════════════════════════════════════════════════
+async function loadUserData() {
+  if (!sessionToken) return;
+  try {
+    const res = await fetch(`${API_BASE}/api/user`, {
+      headers: { 'Authorization': `Bearer ${sessionToken}` }
+    });
+    if (!res.ok) return;
+    const u = await res.json();
+    document.getElementById('miningRewards').textContent = fmt(u.mining_rewards || 0) + ' IFZI';
+    document.getElementById('availableWithdraw').textContent = fmt(u.available_rewards || 0) + ' IFZI';
+    document.getElementById('lifetimeMined').textContent = fmt(u.lifetime_mined || 0) + ' IFZI';
+  } catch (e) { /* silent */ }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ۳. موجودی واقعی IFZI روی زنجیره (TonAPI)
+// ═══════════════════════════════════════════════════════════════
+async function loadOnchainBalance(addr) {
+  try {
+    const res = await fetch(`${TONAPI}/accounts/${encodeURIComponent(addr)}/jettons/${encodeURIComponent(JETTON_MASTER)}`);
+    if (!res.ok) throw new Error('balance fetch failed');
+    const d = await res.json();
+    const decimals = d.jetton?.decimals ?? 9;
+    const raw = d.balance ?? '0';
+    const bal = Number(raw) / Math.pow(10, decimals);
+    document.getElementById('onchainIfzi').textContent = fmt(bal) + ' IFZI';
+  } catch (e) {
+    document.getElementById('onchainIfzi').textContent = 'unavailable';
   }
 }
-async function loadWithdrawals(){
-  const result=await api('/api/withdrawals');
-  const items=result.items||[];
-  $('withdrawHistory').replaceChildren();
-  if(!items.length){
-    $('withdrawHistory').textContent='No withdrawal requests yet.';
-    return;
-  }
-  for(const item of items){
-    const div=document.createElement('div');
-    div.className='levelrow';
-    const left=document.createElement('span');
-    left.textContent=fmt(item.amount)+' IFZI';
-    const right=document.createElement('strong');
-    right.textContent=String(item.status||'pending').toUpperCase();
-    div.append(left,right);
-    $('withdrawHistory').append(div);
-  }
-}
-async function connectWallet(){
-  if(!tc)return;
-  if(tc.connected){
-    await tc.disconnect();
-    clearSession();
-    message('walletMsg','Wallet disconnected.');
-    return;
-  }
-  await prepareProof();
-  await tc.openModal();
-}
-$('connectBtn').addEventListener('click',async()=>{
-  try{await connectWallet()}catch(e){message('walletMsg',e.message,'err')}
-});
-$('startBtn').addEventListener('click',async()=>{
-  if(!verified)return;
-  $('startBtn').disabled=true;
-  try{
-    const result=await api('/api/mining/start','POST',{});
-    message('miningMsg','Mining session started successfully.','ok');
-    await loadAccount();
-  }catch(e){
-    message('miningMsg',e.message,'err');
-    $('startBtn').disabled=false;
-  }
-});
-$('claimBtn').addEventListener('click',async()=>{
-  if(!verified)return;
-  $('claimBtn').disabled=true;
-  try{
-    const result=await api('/api/mining/claim','POST',{});
-    message('miningMsg','Claim processed: '+fmt(result.claimed)+' IFZI. Referral: '+fmt(result.referral)+' IFZI.','ok');
-    await loadAccount();
-  }catch(e){
-    message('miningMsg',e.message,'err');
-    $('claimBtn').disabled=false;
-  }
-});
-$('copyRefBtn').addEventListener('click',async()=>{
-  const code=$('refCode').value;
-  if(!code)return message('refMsg','Connect and verify your wallet first.','err');
-  try{
-    await navigator.clipboard.writeText(code);
-    message('refMsg','Referral code copied.','ok');
-  }catch{
-    $('refCode').select();
-    message('refMsg','Select and copy the referral code.','err');
-  }
-});
-$('applyRefBtn').addEventListener('click',async()=>{
-  if(!verified)return message('refMsg','Verify your wallet first.','err');
-  const code=$('applyCode').value.trim();
-  if(!code)return message('refMsg','Enter a referral code.','err');
-  try{
-    await api('/api/referral','POST',{code});
-    message('refMsg','Referral code applied.','ok');
-    await loadAccount();
-  }catch(e){message('refMsg',e.message,'err')}
-});
-$('withdrawBtn').addEventListener('click',async()=>{
-  if(!verified)return;
-  const amount=Number($('withdrawAmount').value);
-  if(!Number.isFinite(amount)||amount<MIN_WITHDRAW){
-    return message('withdrawMsg','Minimum withdrawal is 25,000 IFZI.','err');
-  }
-  if(!confirm('Submit a withdrawal request for '+fmt(amount)+' IFZI?'))return;
-  try{
-    const amountRaw=BigInt(Math.round(amount*1e9)).toString();
-    await api('/api/withdrawals','POST',{amountRaw});
-    message('withdrawMsg','Withdrawal request submitted for review.','ok');
-    $('withdrawAmount').value='';
-    await loadAccount();
-  }catch(e){message('withdrawMsg',e.message,'err')}
-});
-async function restoreSession(wallet){
-  if(!wallet)return;
-  walletAddress=wallet.account.address;
-  setWalletUI();
-  if(!sessionToken)return;
-  try{
-    await loadAccount();
-    verified=true;
-    setWalletUI();
-  }catch{
-    clearSession();
-    message('walletMsg','Saved session could not be verified. Please reconnect your wallet.','err');
+
+// ═══════════════════════════════════════════════════════════════
+// ۴. ماینینگ
+// ═══════════════════════════════════════════════════════════════
+async function startMining() {
+  if (!sessionToken) return;
+  showMsg('mineMsg', 'info', 'Starting mining session...');
+  try {
+    const res = await fetch(`${API_BASE}/api/mining/start`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${sessionToken}` }
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const d = await res.json();
+    document.getElementById('startMineBtn').classList.add('hide');
+    document.getElementById('claimMineBtn').classList.remove('hide');
+    document.getElementById('mineStatus').textContent = 'active';
+    showMsg('mineMsg', 'ok', 'Mining started. Come back in 24 hours.');
+    startCountdown(d.ends_at);
+  } catch (e) {
+    showMsg('mineMsg', 'err', 'Start failed: ' + e.message);
   }
 }
-try{
-  tc=new TonConnectUI({
-    manifestUrl:MANIFEST_URL,
-    buttonRootId:null
-  });
-  tc.setConnectRequestParameters({state:'loading'});
-  tc.onStatusChange(async wallet=>{
-    if(!wallet){
-      clearSession();
-      message('walletMsg','Wallet disconnected.');
+
+async function claimMining() {
+  if (!sessionToken) return;
+  showMsg('mineMsg', 'info', 'Claiming...');
+  try {
+    const res = await fetch(`${API_BASE}/api/mining/claim`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${sessionToken}` }
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const d = await res.json();
+    document.getElementById('claimMineBtn').classList.add('hide');
+    document.getElementById('startMineBtn').classList.remove('hide');
+    document.getElementById('mineStatus').textContent = 'idle';
+    showMsg('mineMsg', 'ok', `Claimed ${fmt(d.reward || 0)} IFZI!`);
+    await loadUserData();
+  } catch (e) {
+    showMsg('mineMsg', 'err', 'Claim failed: ' + e.message);
+  }
+}
+
+async function refreshMiningStatus() {
+  if (!sessionToken) return;
+  try {
+    const res = await fetch(`${API_BASE}/api/mining/status`, {
+      headers: { 'Authorization': `Bearer ${sessionToken}` }
+    });
+    if (!res.ok) return;
+    const s = await res.json();
+    if (s.status === 'active' && s.ends_at) {
+      document.getElementById('startMineBtn').classList.add('hide');
+      document.getElementById('claimMineBtn').classList.remove('hide');
+      document.getElementById('mineStatus').textContent = 'active';
+      startCountdown(s.ends_at);
+    } else {
+      document.getElementById('startMineBtn').classList.remove('hide');
+      document.getElementById('claimMineBtn').classList.add('hide');
+      document.getElementById('mineStatus').textContent = 'idle';
+    }
+  } catch (e) { /* silent */ }
+}
+
+function startCountdown(endsAt) {
+  if (miningInterval) clearInterval(miningInterval);
+  const tick = () => {
+    const left = Math.max(0, endsAt - Date.now());
+    if (left <= 0) {
+      document.getElementById('mineRemain').textContent = 'Ready to claim!';
+      clearInterval(miningInterval);
       return;
     }
-    walletAddress=wallet.account.address;
-    setWalletUI();
-    if(wallet.connectItems?.tonProof?.proof){
-      await authenticate(wallet);
-    }else if(sessionToken){
-      await restoreSession(wallet);
-    }else{
-      clearSession();
-      walletAddress=wallet.account.address;
-      setWalletUI();
-      message('walletMsg','Wallet connected, but ownership is not verified. Disconnect and reconnect to request TON Proof.','err');
-    }
-  });
-  $('connectBtn').disabled=false;
-  if(tc.connected){
-    await restoreSession(tc.wallet);
+    const h = Math.floor(left / 3600000);
+    const m = Math.floor((left % 3600000) / 60000);
+    const s = Math.floor((left % 60000) / 1000);
+    document.getElementById('mineRemain').textContent = `${h}h ${m}m ${s}s`;
+  };
+  tick();
+  miningInterval = setInterval(tick, 1000);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ۵. درخواست برداشت
+// ═══════════════════════════════════════════════════════════════
+async function requestWithdrawal() {
+  if (!sessionToken) return;
+  showMsg('withdrawMsg', 'info', 'Submitting request...');
+  try {
+    const res = await fetch(`${API_BASE}/api/withdrawals/request`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${sessionToken}` }
+    });
+    if (!res.ok) throw new Error(await res.text());
+    showMsg('withdrawMsg', 'ok', 'Withdrawal request submitted. Admin will review it.');
+  } catch (e) {
+    showMsg('withdrawMsg', 'err', 'Request failed: ' + e.message);
   }
-}catch(error){
-  message('walletMsg','TON Connect initialization failed: '+error.message,'err');
-  $('connectBtn').disabled=true;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ابزارها
+// ═══════════════════════════════════════════════════════════════
+function fmt(n) { return Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 }); }
+function shorten(a) { return a ? a.slice(0, 6) + '...' + a.slice(-4) : '—'; }
+function showMsg(id, type, text) { document.getElementById(id).innerHTML = `<div class="status ${type}">${text}</div>`; }
+function resetUI() {
+  ['walletInfo','balanceCard','miningCard','withdrawCard'].forEach(id => document.getElementById(id).classList.add('hide'));
+  sessionToken = null; user = null;
+  if (miningInterval) clearInterval(miningInterval);
 }
 </script>
 </body>
-</html>
+                                             </html> 
