@@ -4,13 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IFZI Mining · TON Proof & Rewards</title>
-<link rel="icon" href="https://fahwaofficial.github.io/images/logo-ifc.jpg">
+<link rel="icon" href="https://Fahwaofficial.github.io/images/logo-ifc.jpg">
 
 <!-- TON Connect UI -->
 <script src="https://unpkg.com/@tonconnect/ui@2.0.9/dist/tonconnect-ui.min.js"></script>
 
 <style>
-/* —— همان استایل‌های قبلی شما (بدون تغییر) —— */
 :root{--bg:#07090f;--bg-2:#0d111c;--surface:#161d30;--border:rgba(255,255,255,.08);--text:#e8ecf4;--text-2:#8b95ad;--accent:#6c8cff;--green:#3ee5b0;--radius:16px}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:20px}
@@ -19,7 +18,7 @@ body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);line-he
 .card h2{font-size:.9rem;font-weight:700;margin-bottom:14px;color:var(--accent);text-transform:uppercase}
 .row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:.86rem}
 .row:last-child{border-bottom:none}.row span:first-child{color:var(--text-2)}
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border-radius:10px;border:none;font-weight:700;font-size:.86rem;cursor:pointer;width:100%;transition:.2s}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border-radius:10px;border:none;font-weight:700;font-size:.86rem;cursor:pointer;width:100%;transition:.2s;text-decoration:none}
 .btn-primary{background:linear-gradient(135deg,var(--accent),#4a6cf7);color:#fff}
 .btn-green{background:linear-gradient(135deg,var(--green),#22c99a);color:#052e22}
 .btn:disabled{opacity:.4;cursor:not-allowed}
@@ -33,6 +32,8 @@ input{width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--bord
 .logo{width:72px;height:72px;border-radius:20px;display:block;margin:0 auto 14px;border:2px solid var(--border)}
 .center{text-align:center}
 .hide{display:none!important}
+.exchange-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.exchange-links .btn{flex:1;min-width:140px}
 </style>
 </head>
 <body>
@@ -62,7 +63,7 @@ input{width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--bord
   <!-- ========== ۳. MINING ========== -->
   <div class="card hide" id="miningCard">
     <h2>3 · Mining (24 Hours)</h2>
-    <img src="https://fahwaofficial.github.io/images/logo-ifc.jpg" class="logo" alt="IFZI">
+    <img src="https://Fahwaofficial.github.io/images/logo-ifc.jpg" class="logo" alt="IFZI">
     <div class="row"><span>Status</span><span id="mineStatus">idle</span></div>
     <div class="row"><span>Time Remaining</span><span id="mineRemain">—</span></div>
     <div style="margin-top:14px">
@@ -80,9 +81,19 @@ input{width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--bord
     <div id="withdrawMsg" style="margin-top:10px"></div>
   </div>
 
-  <!-- ========== ۵. CONTRACT ========== -->
+  <!-- ========== ۵. BUY IFZI ========== -->
   <div class="card">
-    <h2>5 · Contract</h2>
+    <h2>5 · Buy IFZI</h2>
+    <p style="font-size:.82rem;color:var(--text-2);margin-bottom:10px">Purchase IFZI on decentralized exchanges:</p>
+    <div class="exchange-links">
+      <a href="https://dedust.io/swap/TON/EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0" target="_blank" class="btn btn-primary btn-sm">Buy on DeDust</a>
+      <a href="https://app.ston.fi/swap?chartVisible=false&ft=EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0&tt=GRAM" target="_blank" class="btn btn-green btn-sm">Buy on STON.fi</a>
+    </div>
+  </div>
+
+  <!-- ========== ۶. CONTRACT ========== -->
+  <div class="card">
+    <h2>6 · Contract</h2>
     <div class="row"><span>Jetton Master</span><span class="mono">EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0</span></div>
   </div>
 
@@ -95,16 +106,16 @@ input{width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--bord
 const API_BASE = 'https://ifzi-mining-api.fahwaiman.workers.dev';
 const JETTON_MASTER = 'EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0';
 const TONAPI = 'https://tonapi.io/v2';
-const SITE_DOMAIN = 'fahwaofficial.github.io';
+const VERIFY_WALLET = 'UQAzPsvm5wnLdBiVqNV07mJvDEDZEfT1fQb08tw0oE4Lb40D'; // آدرس استخر برداشت
 
 // —— TON Connect ——
 const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-  manifestUrl: 'https://fahwaofficial.github.io/tonconnect-manifest.json',
+  manifestUrl: 'https://Fahwaofficial.github.io/tonconnect-manifest.json',
   buttonRootId: 'tonConnectBtn'
 });
 
-let user = null;          // { address, chain, proof }
-let sessionToken = null;  // JWT از Worker
+let user = null;
+let sessionToken = null;
 let miningInterval = null;
 
 // ═══════════════════════════════════════════════════════════════
@@ -131,11 +142,8 @@ tonConnectUI.onStatusChange(async (wallet) => {
     return;
   }
 
-  // مرحله ۲: اگر کیف پول هنوز Proof نداده، متصل شو با tonProof
+  // مرحله ۲: اگر کیف پول هنوز Proof نداده
   if (!wallet.tonProof) {
-    // توجه: در TON Connect UI، tonProof باید در زمان connect تنظیم شود.
-    // اگر کیف پول قبلاً بدون proof متصل شده، باید断开 کرده و دوباره با proof متصل شود.
-    // این کد فرض می‌کند tonConnectUI با setConnectRequestParameters پیکربندی شده است.
     showMsg('walletMsg', 'info', 'Waiting for wallet to sign TON Proof...');
     return;
   }
@@ -335,4 +343,4 @@ function resetUI() {
 }
 </script>
 </body>
-                                             </html> 
+</html>
