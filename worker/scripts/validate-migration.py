@@ -73,4 +73,6 @@ actual = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='t
 assert expected <= actual
 columns = {r[1] for r in db.execute("PRAGMA table_info(users)")}
 assert {"network", "wallet_status", "wallet_verified_at", "referral_code"} <= columns
+challenge_columns = {r[1] for r in db.execute("PRAGMA table_info(auth_challenges)")}
+assert "referral_code" in challenge_columns
 print("PASS: migration applies to production schema snapshot; seeded user, balance, withdrawal and pool data preserved.")
