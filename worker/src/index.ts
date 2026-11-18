@@ -146,13 +146,14 @@ function verifyTonProof(address:string,network:string,stateInitB64:string,proof:
 app.post('/api/ton-proof/payload',async c=>{
   const body=await c.req.json().catch(()=>({}));
   const nonce=crypto.randomUUID();
-  await c.env.DB.prepare('INSERT INTO auth_challenges(nonce,wallet_raw,expires_at,used) VALUES(?,NULL,?,0)').bind(nonce,Date.now()+5*60*1000).run();
+  const referralCode=typeof body.referralCode==='string'&&/^[A-Z0-9]{6,20}$/.test(body.referralCode.toUpperCase())?body.referralCode.toUpperCase():null;
+  await c.env.DB.prepare('INSERT INTO auth_challenges(nonce,wallet_raw,expires_at,used,referral_code) VALUES(?,NULL,?,0,?)').bind(nonce,Date.now()+5*60*1000,referralCode).run();
   return c.json({payload:nonce});
 });
 app.post('/api/ton-proof/verify',async c=>{
   const body=await c.req.json().catch(()=>({}));
   let wallet:string;try{wallet=rawAddress(body.address)}catch{return jsonError(c,'Invalid wallet address');}
-  const challenge=await c.env.DB.prepare('SELECT nonce FROM auth_challenges WHERE nonce=? AND (wallet_raw IS NULL OR wallet_raw=?) AND used=0 AND expires_at>?').bind(body.proof?.payload,wallet,Date.now()).first();
+  const challenge=await c.env.DB.prepare('SELECT nonce,referral_code FROM auth_challenges WHERE nonce=? AND (wallet_raw IS NULL OR wallet_raw=?) AND used=0 AND expires_at>?').bind(body.proof?.payload,wallet,Date.now()).first();
   if(!challenge)return jsonError(c,'Challenge invalid, expired, or already used',401);
   try{verifyTonProof(wallet,String(body.network),body.walletStateInit||body.proof?.state_init,body.proof,c.env.SITE_DOMAIN,challenge.nonce,body.publicKey||body.public_key);}
   catch(e){return jsonError(c,e instanceof Error?e.message:'Proof verification failed',401);}
@@ -161,7 +162,9 @@ app.post('/api/ton-proof/verify',async c=>{
   let user=await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE wallet_raw=?').bind(wallet).first() as User|null;
   if(!user){
     const id=crypto.randomUUID();
-    await c.env.DB.prepare("INSERT INTO users(id,wallet_raw,created_at,network,wallet_status,updated_at) VALUES(?,?,?,'-239','pending',?)").bind(id,wallet,nowSec(),nowSec()).run();
+    const referral=challenge.referral_code?await c.env.DB.prepare('SELECT id FROM users WHERE referral_code=?').bind(challenge.referral_code).first() as any:null;
+    const newCode=crypto.randomUUID().replace(/-/g,'').slice(0,12).toUpperCase();
+    await c.env.DB.prepare("INSERT INTO users(id,wallet_raw,referred_by,created_at,network,wallet_status,updated_at,referral_code) VALUES(?,?,?,?,'-239','pending',?,?)").bind(id,wallet,referral?.id||null,nowSec(),nowSec(),newCode).run();
     await c.env.DB.prepare("INSERT OR IGNORE INTO reward_balances(user_id,available_raw,total_earned_raw,total_referral_raw) VALUES(?,'0','0','0')").bind(id).run();
     user={id,wallet_raw:wallet,wallet_status:'pending',network:'-239',referred_by:null};
   }else{
@@ -173,7 +176,8 @@ app.get('/api/user',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   const bal=await c.env.DB.prepare('SELECT available_raw,total_earned_raw,total_referral_raw FROM reward_balances WHERE user_id=?').bind(user.id).first() as any;
   const totals=await c.env.DB.prepare("SELECT COALESCE(SUM(CAST(gross_raw AS INTEGER)),0) AS gross FROM claims WHERE user_id=?").bind(user.id).first() as any;
-  return c.json({address:user.wallet_raw,wallet_status:user.wallet_status,mining_rewards:fmt(totals?.gross||'0'),available_rewards:fmt(bal?.available_raw||'0'),available_raw:bal?.available_raw||'0',lifetime_mined:fmt(bal?.total_earned_raw||'0'),referral_rewards:fmt(bal?.total_referral_raw||'0')});
+  const profile=await c.env.DB.prepare('SELECT referral_code FROM users WHERE id=?').bind(user.id).first() as any;
+  return c.json({address:user.wallet_raw,wallet_status:user.wallet_status,referral_code:profile?.referral_code||null,mining_rewards:fmt(totals?.gross||'0'),available_rewards:fmt(bal?.available_raw||'0'),available_raw:bal?.available_raw||'0',lifetime_mined:fmt(bal?.total_earned_raw||'0'),referral_rewards:fmt(bal?.total_referral_raw||'0')});
 });
 app.get('/api/mining/status',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
