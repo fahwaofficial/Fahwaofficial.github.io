@@ -218,6 +218,8 @@ app.post('/api/mining/claim',async c=>{
 app.post('/api/withdrawals/request',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   if(user.wallet_status!=='approved')return jsonError(c,'Wallet is not approved.',403);
+  const completedTask=await c.env.DB.prepare("SELECT id FROM task_submissions WHERE user_id=? AND status='approved' LIMIT 1").bind(user.id).first();
+  if(!completedTask)return jsonError(c,'Complete at least one approved social task before requesting a withdrawal.',403);
   const body=await c.req.json().catch(()=>({}));
   let amount:bigint;try{amount=parseAmount(body.amount)}catch(e){return jsonError(c,e instanceof Error?e.message:'Invalid amount');}
   const min=BigInt(c.env.MIN_WITHDRAW_IFZI||'1000')*UNIT;
