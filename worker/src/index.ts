@@ -260,10 +260,12 @@ app.post('/api/admin/withdrawals/:id/:action',async c=>{
     await c.env.DB.prepare("UPDATE withdrawals SET status='approved',updated_at=? WHERE id=? AND status='pending'").bind(now,id).run();
   }else if(action==='reject'){
     if(!['pending','approved'].includes(w.status))return jsonError(c,'Request cannot be rejected',409);
-    await c.env.DB.batch([
+    const results=await c.env.DB.batch([
       c.env.DB.prepare("UPDATE withdrawals SET status='rejected',updated_at=? WHERE id=? AND status IN ('pending','approved')").bind(now,id),
-      c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+? WHERE user_id=?").bind(w.amount_raw,w.user_id),
+      c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) SELECT ?,'withdrawal_refund',?,?,?,? WHERE changes()=1").bind(crypto.randomUUID(),w.user_id,w.amount_raw,id,now),
+      c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+? WHERE user_id=? AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='withdrawal_refund' AND reference_id=?)").bind(w.amount_raw,w.user_id,id)
     ]);
+    if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1)return jsonError(c,'Withdrawal was already reviewed',409);
   }else if(action==='paid'){
     const body=await c.req.json().catch(()=>({}));
     if(w.status!=='approved')return jsonError(c,'Only approved requests can be marked paid',409);
