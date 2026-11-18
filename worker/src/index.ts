@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { Address, Cell, contractAddress, loadStateInit } from '@ton/core';
+import { Buffer } from 'buffer';
 import {
   WalletContractV1R1, WalletContractV1R2, WalletContractV1R3,
   WalletContractV2R1, WalletContractV2R2, WalletContractV3R1,
