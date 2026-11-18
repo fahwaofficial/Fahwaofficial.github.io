@@ -9,6 +9,7 @@ ALTER TABLE users ADD COLUMN wallet_verified_at INTEGER;
 ALTER TABLE users ADD COLUMN suspended_reason TEXT;
 ALTER TABLE users ADD COLUMN updated_at INTEGER;
 ALTER TABLE users ADD COLUMN referral_code TEXT;
+ALTER TABLE users ADD COLUMN task_boost_multiplier INTEGER NOT NULL DEFAULT 1 CHECK(task_boost_multiplier IN (1,3));
 
 CREATE UNIQUE INDEX idx_users_referral_code ON users(referral_code)
   WHERE referral_code IS NOT NULL;
@@ -57,7 +58,7 @@ CREATE INDEX idx_ton_boost_user_status
 CREATE TABLE pool_ledger (
   id TEXT PRIMARY KEY,
   event_type TEXT NOT NULL
-    CHECK(event_type IN ('mining_claim','referral','withdrawal_paid','manual_bonus','boost_task')),
+    CHECK(event_type IN ('mining_claim','referral','withdrawal_paid','manual_bonus','boost_task','task_reward','daily_checkin')),
   user_id TEXT REFERENCES users(id),
   amount_raw TEXT NOT NULL,
   reference_id TEXT,
@@ -74,3 +75,11 @@ CREATE TABLE admin_audit (
   details TEXT,
   created_at INTEGER NOT NULL
 );
+
+CREATE TABLE daily_emissions (
+  emission_date TEXT PRIMARY KEY,
+  emitted_raw TEXT NOT NULL DEFAULT '0',
+  updated_at INTEGER NOT NULL
+);
+INSERT OR IGNORE INTO pool_state(id,total_raw,distributed_raw,reserved_raw)
+VALUES(1,'8400000000000000','0','0');
