@@ -357,7 +357,9 @@ app.post('/api/admin/tasks/:id/:action',async c=>{
     await c.env.DB.prepare("INSERT INTO admin_audit(id,action,target_type,target_id,created_at) VALUES(?,'task_rejected','task',?,?)").bind(crypto.randomUUID(),id,now).run();
     return c.json({ok:true});
   }
-  const amount=BigInt(c.env.TASK_REWARD_IFZI||'50')*BigInt(task.task_boost_multiplier||1)*UNIT;
+  // The database value 3 is a legacy boost-enabled flag (CHECK constraint: 1 or 3); the actual reward multiplier is 4x.
+  const multiplier=Number(task.task_boost_multiplier)===3?4:1;
+  const amount=BigInt(c.env.TASK_REWARD_IFZI||'50')*BigInt(multiplier)*UNIT;
   const results=await c.env.DB.batch([
     c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND EXISTS(SELECT 1 FROM task_submissions WHERE id=? AND status='pending')").bind(amount.toString(),amount.toString(),id),
     c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) SELECT ?,'task_reward',?,?,?,? WHERE changes()=1").bind(crypto.randomUUID(),task.user_id,amount.toString(),id,now),
@@ -367,7 +369,7 @@ app.post('/api/admin/tasks/:id/:action',async c=>{
   ]);
   if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1||results[2]?.meta?.changes!==1)return jsonError(c,'Task already reviewed or community reward allocation exhausted',409);
   await c.env.DB.prepare('INSERT INTO admin_audit(id,action,target_type,target_id,details,created_at) VALUES(?,?,?,?,?,?)').bind(crypto.randomUUID(),'task_approved','task',id,'reward_raw='+amount.toString(),now).run();
-  return c.json({ok:true,reward:fmt(amount)});
+  return c.json({ok:true,reward:fmt(amount),multiplier});
 });
 app.post('/api/admin/bonus',async c=>{
   if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
