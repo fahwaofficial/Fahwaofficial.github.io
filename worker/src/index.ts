@@ -304,17 +304,14 @@ app.post('/api/tasks/daily-checkin',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   if(user.wallet_status!=='approved')return jsonError(c,'Wallet approval is required before task rewards.',403);
   const date=new Date().toISOString().slice(0,10);
-  const amount=BigInt(c.env.DAILY_CHECKIN_REWARD_IFZI||'10')*UNIT;
-  const pool=await c.env.DB.prepare('SELECT total_raw,distributed_raw,reserved_raw FROM pool_state WHERE id=1').first() as any;
-  if(!pool||amount>BigInt(pool.total_raw)-BigInt(pool.distributed_raw)-BigInt(pool.reserved_raw))return jsonError(c,'Community reward allocation exhausted',409);
-  try{
-    await c.env.DB.batch([
-      c.env.DB.prepare('INSERT INTO daily_checkins(user_id,checkin_date,created_at) VALUES(?,?,?)').bind(user.id,date,nowSec()),
-      c.env.DB.prepare('UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=?').bind(amount.toString(),amount.toString(),user.id),
-      c.env.DB.prepare('UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1').bind(amount.toString()),
-      c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) VALUES(?,'daily_checkin',?,?,?,?)").bind(crypto.randomUUID(),user.id,amount.toString(),user.id+':'+date,nowSec())
-    ]);
-  }catch{return jsonError(c,'Daily check-in already claimed today',409);}
+  const amount=BigInt(c.env.DAILY_CHECKIN_REWARD_IFZI||'10')*UNIT,now=nowSec(),ref=user.id+':'+date;
+  const results=await c.env.DB.batch([
+    c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND NOT EXISTS(SELECT 1 FROM daily_checkins WHERE user_id=? AND checkin_date=?)").bind(amount.toString(),amount.toString(),user.id,date),
+    c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) SELECT ?,'daily_checkin',?,?,?,? WHERE changes()=1").bind(crypto.randomUUID(),user.id,amount.toString(),ref,now),
+    c.env.DB.prepare("INSERT INTO daily_checkins(user_id,checkin_date,created_at) SELECT ?,?,? WHERE EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(user.id,date,now,ref),
+    c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=? AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(amount.toString(),amount.toString(),user.id,ref)
+  ]);
+  if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1)return jsonError(c,'Daily check-in already claimed or community reward allocation exhausted',409);
   return c.json({ok:true,reward:fmt(amount),date});
 });
 app.post('/api/boost/verify',async c=>{
@@ -357,37 +354,35 @@ app.post('/api/admin/tasks/:id/:action',async c=>{
   if(action==='reject'){
     const r=await c.env.DB.prepare("UPDATE task_submissions SET status='rejected',reviewed_at=?,reviewed_by='admin' WHERE id=? AND status='pending'").bind(now,id).run();
     if(r.meta.changes!==1)return jsonError(c,'Task was already reviewed',409);
+    await c.env.DB.prepare("INSERT INTO admin_audit(id,action,target_type,target_id,created_at) VALUES(?,'task_rejected','task',?,?)").bind(crypto.randomUUID(),id,now).run();
     return c.json({ok:true});
   }
   const amount=BigInt(c.env.TASK_REWARD_IFZI||'50')*BigInt(task.task_boost_multiplier||1)*UNIT;
-  const pool=await c.env.DB.prepare('SELECT total_raw,distributed_raw,reserved_raw FROM pool_state WHERE id=1').first() as any;
-  if(!pool||amount>BigInt(pool.total_raw)-BigInt(pool.distributed_raw)-BigInt(pool.reserved_raw))return jsonError(c,'Community reward allocation exhausted',409);
-  try{
-    const result=await c.env.DB.batch([
-      c.env.DB.prepare("UPDATE task_submissions SET status='approved',reviewed_at=?,reviewed_by='admin' WHERE id=? AND status='pending'").bind(now,id),
-      c.env.DB.prepare('UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=?').bind(amount.toString(),amount.toString(),task.user_id),
-      c.env.DB.prepare('UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1').bind(amount.toString()),
-      c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) VALUES(?,'task_reward',?,?,?,?)").bind(crypto.randomUUID(),task.user_id,amount.toString(),id,now)
-    ]);
-    if(result[0]?.meta?.changes!==1)return jsonError(c,'Task was already reviewed',409);
-    await c.env.DB.prepare('INSERT INTO admin_audit(id,action,target_type,target_id,details,created_at) VALUES(?,?,?,?,?,?)').bind(crypto.randomUUID(),'task_approved','task',id,'reward_raw='+amount.toString(),now).run();
-  }catch{return jsonError(c,'Could not issue task reward',409);}
+  const results=await c.env.DB.batch([
+    c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND EXISTS(SELECT 1 FROM task_submissions WHERE id=? AND status='pending')").bind(amount.toString(),amount.toString(),id),
+    c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) SELECT ?,'task_reward',?,?,?,? WHERE changes()=1").bind(crypto.randomUUID(),task.user_id,amount.toString(),id,now),
+    c.env.DB.prepare("UPDATE task_submissions SET status='approved',reviewed_at=?,reviewed_by='admin' WHERE id=? AND status='pending' AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='task_reward' AND reference_id=?)").bind(now,id,id),
+    c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=? AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='task_reward' AND reference_id=?)").bind(amount.toString(),amount.toString(),task.user_id,id)
+  ]);
+  if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1||results[2]?.meta?.changes!==1)return jsonError(c,'Task already reviewed or community reward allocation exhausted',409);
+  await c.env.DB.prepare('INSERT INTO admin_audit(id,action,target_type,target_id,details,created_at) VALUES(?,?,?,?,?,?)').bind(crypto.randomUUID(),'task_approved','task',id,'reward_raw='+amount.toString(),now).run();
   return c.json({ok:true,reward:fmt(amount)});
 });
-
 app.post('/api/admin/bonus',async c=>{
   if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
   const body=await c.req.json().catch(()=>({}));
   let amount:bigint;try{amount=parseAmount(body.amount)}catch(e){return jsonError(c,e instanceof Error?e.message:'Invalid amount');}
-  const user=await c.env.DB.prepare('SELECT id FROM users WHERE wallet_raw=? AND wallet_status=?').bind(rawAddress(body.wallet),'approved').first() as any;
+  let wallet:string;try{wallet=rawAddress(body.wallet)}catch{return jsonError(c,'Invalid wallet address');}
+  const user=await c.env.DB.prepare('SELECT id FROM users WHERE wallet_raw=? AND wallet_status=?').bind(wallet,'approved').first() as any;
   if(!user)return jsonError(c,'Approved wallet not found',404);
-  const pool=await c.env.DB.prepare('SELECT total_raw,distributed_raw,reserved_raw FROM pool_state WHERE id=1').first() as any;
-  if(!pool||amount>BigInt(pool.total_raw)-BigInt(pool.distributed_raw)-BigInt(pool.reserved_raw))return jsonError(c,'Mining allocation limit exceeded',409);
-  await c.env.DB.batch([
-    c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=?").bind(amount.toString(),amount.toString(),user.id),
-    c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1").bind(amount.toString()),
-    c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) VALUES(?,'manual_bonus',?,?,?,?)").bind(crypto.randomUUID(),user.id,amount.toString(),crypto.randomUUID(),nowSec())
+  const ref=crypto.randomUUID(),now=nowSec();
+  const results=await c.env.DB.batch([
+    c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND EXISTS(SELECT 1 FROM users WHERE id=? AND wallet_status='approved')").bind(amount.toString(),amount.toString(),user.id),
+    c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) SELECT ?,'manual_bonus',?,?,?,? WHERE changes()=1").bind(crypto.randomUUID(),user.id,amount.toString(),ref,now),
+    c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=? AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='manual_bonus' AND reference_id=?)").bind(amount.toString(),amount.toString(),user.id,ref)
   ]);
+  if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1)return jsonError(c,'Mining allocation limit exceeded',409);
+  await c.env.DB.prepare("INSERT INTO admin_audit(id,action,target_type,target_id,details,created_at) VALUES(?,'manual_bonus','user',?,?,?)").bind(crypto.randomUUID(),user.id,'reward_raw='+amount.toString(),now).run();
   return c.json({ok:true});
 });
 export default app;
