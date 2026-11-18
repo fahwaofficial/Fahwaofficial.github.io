@@ -153,7 +153,7 @@ app.post('/api/ton-proof/payload',async c=>{
 app.post('/api/ton-proof/verify',async c=>{
   const body=await c.req.json().catch(()=>({}));
   let wallet:string;try{wallet=rawAddress(body.address)}catch{return jsonError(c,'Invalid wallet address');}
-  const challenge=await c.env.DB.prepare('SELECT nonce,referral_code FROM auth_challenges WHERE nonce=? AND (wallet_raw IS NULL OR wallet_raw=?) AND used=0 AND expires_at>?').bind(body.proof?.payload,wallet,Date.now()).first();
+  const challenge=await c.env.DB.prepare('SELECT nonce,referral_code FROM auth_challenges WHERE nonce=? AND (wallet_raw IS NULL OR wallet_raw=?) AND used=0 AND expires_at>?').bind(body.proof?.payload,wallet,Date.now()).first() as {nonce:string;referral_code:string|null}|null;
   if(!challenge)return jsonError(c,'Challenge invalid, expired, or already used',401);
   try{verifyTonProof(wallet,String(body.network),body.walletStateInit||body.proof?.state_init,body.proof,c.env.SITE_DOMAIN,challenge.nonce,body.publicKey||body.public_key);}
   catch(e){return jsonError(c,e instanceof Error?e.message:'Proof verification failed',401);}
