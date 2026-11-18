@@ -69,6 +69,7 @@ async function getUser(c:any):Promise<User|null>{
   return await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE id=?').bind(p.sub).first() as User|null;
 }
 async function issueJWT(env:Bindings,user:User){
+  if(!env.JWT_SECRET || env.JWT_SECRET.length < 32) throw new Error('JWT_SECRET must be configured as a strong Cloudflare secret (at least 32 characters)');
   const head=b64url(JSON.stringify({alg:'HS256',typ:'JWT'}));
   const body=b64url(JSON.stringify({sub:user.id,wallet:user.wallet_raw,iat:nowSec(),exp:nowSec()+86400}));
   const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(env.JWT_SECRET),{name:'HMAC',hash:'SHA-256'},false,['sign']);
@@ -86,6 +87,16 @@ async function verifyJWT(env:Bindings,token:string):Promise<{sub:string;wallet:s
     if(!p.sub||!p.wallet||p.exp<nowSec())return null;
     return {sub:p.sub,wallet:p.wallet};
   }catch{return null;}
+}
+async function getVerifiedIfziBalanceRaw(env:Bindings,walletRaw:string):Promise<bigint>{
+  const master=Address.parse(env.JETTON_MASTER).toString({urlSafe:true,bounceable:true,testOnly:false});
+  const wallet=Address.parse(walletRaw).toString({urlSafe:true,bounceable:true,testOnly:false});
+  const base=(env.TONAPI_BASE||'https://tonapi.io').replace(/\\/$/,'');
+  const response=await fetch(base+'/v2/accounts/'+encodeURIComponent(wallet)+'/jettons/'+encodeURIComponent(master));
+  if(!response.ok)throw new Error('Unable to verify IFZI balance from TON mainnet');
+  const data=await response.json() as any;
+  if(!data||data.jetton?.address===undefined)throw new Error('IFZI jetton balance response is incomplete');
+  return BigInt(data.balance||'0');
 }
 function extractWalletKey(stateInit:any):Uint8Array|null {
   if(!stateInit.code||!stateInit.data)return null;
@@ -173,10 +184,13 @@ app.post('/api/mining/start',async c=>{
   if(user.wallet_status!=='approved')return jsonError(c,'Wallet is awaiting manual admin approval.',403);
   const existing=await c.env.DB.prepare("SELECT id FROM mining_cycles WHERE user_id=? AND status IN ('running','completed') LIMIT 1").bind(user.id).first();
   if(existing)return jsonError(c,'You already have an unclaimed mining cycle.',409);
-  const level=1,rate=100n*UNIT,reward=rate,started=nowSec(),ends=started+DAY,id=crypto.randomUUID();
+  let balanceRaw:bigint;try{balanceRaw=await getVerifiedIfziBalanceRaw(c.env,user.wallet_raw)}catch(e){return jsonError(c,e instanceof Error?e.message:'Could not verify IFZI balance',503);}
+  const wholeBalance=balanceRaw/UNIT;
+  let level=1,rateTokens=100n;for(let i=0;i<levels.length;i++){if(wholeBalance>=levels[i][0]){level=i+1;rateTokens=levels[i][1]}}
+  const rate=rateTokens*UNIT,reward=rate,started=nowSec(),ends=started+DAY,id=crypto.randomUUID();
   const insert=await c.env.DB.prepare("INSERT INTO mining_cycles(id,user_id,level,daily_rate_raw,gross_reward_raw,started_at,ends_at,status) VALUES(?,?,?,?,?,?,?,'running')").bind(id,user.id,level,rate.toString(),reward.toString(),started,ends).run();
   if(insert.meta.changes!==1)return jsonError(c,'Could not start mining cycle',500);
-  return c.json({ok:true,cycle_id:id,ends_at:ends*1000,reward:fmt(reward)});
+  return c.json({ok:true,cycle_id:id,ends_at:ends*1000,reward:fmt(reward),level,daily_rate:fmt(rate),verified_balance:fmt(balanceRaw)});
 });
 app.post('/api/mining/claim',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
