@@ -238,7 +238,7 @@ app.post('/api/withdrawals/request',async c=>{
   if(!balance||BigInt(balance.available_raw)<amount)return jsonError(c,'Insufficient available IFZI balance',409);
   const results=await c.env.DB.batch([
     c.env.DB.prepare("INSERT INTO withdrawals(id,user_id,wallet_raw,amount_raw,status,created_at,updated_at) SELECT ?,?,?,?,'pending',?,? WHERE EXISTS (SELECT 1 FROM reward_balances WHERE user_id=? AND CAST(available_raw AS INTEGER)>=?) AND NOT EXISTS (SELECT 1 FROM withdrawals WHERE user_id=? AND status IN ('pending','approved'))").bind(id,user.id,user.wallet_raw,amount.toString(),now,now,user.id,amount.toString(),user.id),
-    c.env.DB.prepare('UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)-? WHERE user_id=? AND CAST(available_raw AS INTEGER)>=?').bind(amount.toString(),user.id,amount.toString())
+    c.env.DB.prepare('UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)-? WHERE user_id=? AND CAST(available_raw AS INTEGER)>=? AND EXISTS(SELECT 1 FROM withdrawals WHERE id=?)').bind(amount.toString(),user.id,amount.toString(),id)
   ]);
   if(results[0]?.meta?.changes!==1 || results[1]?.meta?.changes!==1)return jsonError(c,'Insufficient balance or balance changed; refresh and try again',409);
   return c.json({ok:true,id,amount:fmt(amount),status:'pending'});
