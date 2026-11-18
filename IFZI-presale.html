@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080b14">
+<title>IFZI | Private Sale & Development Allocation</title>
+<meta name="description" content="Discuss a manually negotiated IFZI token allocation to support project development. No automatic sale or payment is processed on this page.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080b14;--panel:#101727;--line:#26334b;--muted:#9aa9c1;--white:#edf4ff;--cyan:#49e6ed;--violet:#9874ff;--green:#51e0a5;--amber:#ffd27a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#1c2b50,#080b14 58%);color:var(--white);font:15px/1.65 Inter,system-ui,sans-serif}.wrap{max-width:920px;margin:auto;padding:22px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0 28px}.brand{font-weight:900;letter-spacing:.14em}.btn{display:inline-flex;justify-content:center;align-items:center;padding:12px 17px;border-radius:12px;border:1px solid var(--line);background:#182238;color:var(--white);font-weight:800;text-decoration:none;cursor:pointer}.primary{border:0;background:linear-gradient(110deg,#36cbd8,#7564f4);color:#07121e}.hero{text-align:center;padding:30px 12px}.eyebrow{color:var(--cyan);font-size:11px;letter-spacing:.2em;font-weight:900}.hero h1{font-size:clamp(34px,7vw,58px);line-height:1.08;letter-spacing:-.05em;margin:14px 0;background:linear-gradient(100deg,#fff,#65e8ef,#a58bff);background-clip:text;color:transparent}.hero p{max-width:680px;margin:0 auto;color:var(--muted)}.panel{background:linear-gradient(145deg,#121d31ed,#0c1322f2);border:1px solid var(--line);border-radius:20px;padding:24px;margin:14px 0;box-shadow:0 16px 50px #0003}.panel h2{font-size:13px;letter-spacing:.14em;color:#aebcff;text-transform:uppercase;margin:0 0 16px}.notice{padding:14px 16px;border:1px solid #d6a64a55;background:#d6a64a12;border-radius:14px;color:#ffe0a4;font-size:13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{margin:14px 0}.field label{display:block;color:#c5d1e5;font-size:12px;font-weight:700;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;padding:14px;background:#080e1b;color:white;border:1px solid var(--line);border-radius:11px;font:inherit}.field textarea{min-height:90px;resize:vertical}.hint{font-size:11px;color:var(--muted)}.summary{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #ffffff12;font-size:13px}.summary span{color:var(--muted)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions .btn{flex:1}.fine{font-size:12px;color:var(--muted)}a{color:var(--cyan)}footer{text-align:center;color:#74839c;font-size:11px;padding:24px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.wrap{padding:14px}.panel{padding:18px}.top{align-items:flex-start;flex-wrap:wrap}}
+</style>
+</head>
+<body><div class="wrap">
+<header class="top"><div class="brand">◈ IFZI PROTOCOL</div><a class="btn" href="https://fahwaofficial.github.io/IFZI.html">← Mining homepage</a></header>
+<section class="hero"><div class="eyebrow">DIRECT DISCUSSION · MANUAL ALLOCATION</div><h1>IFZI Private Sale</h1><p>Discuss a token allocation directly with the project owner. Each proposal is individually negotiated to support IFZI development, infrastructure, security and community growth.</p></section>
+<div class="notice"><strong>Important — this is an unofficial, manually negotiated sale channel.</strong> This page does not execute swaps, collect funds, reserve tokens, or verify transactions automatically. No fixed token price or investment return is promised. Do not send TON, USDT or any other asset until you have received and independently confirmed the written terms and the official receiving wallet from the project owner.</div>
+<section class="panel"><h2>01 / Request an allocation</h2>
+<div class="grid">
+<div class="field"><label for="amount">IFZI amount requested</label><input id="amount" type="number" min="1" max="10000000" step="1" placeholder="e.g. 250000" required><div class="hint">Minimum 1 IFZI · Maximum 10,000,000 IFZI per inquiry</div></div>
+<div class="field"><label for="currency">Preferred settlement asset</label><select id="currency"><option value="TON">TON</option><option value="USDT on TON">USDT on TON</option><option value="Other / discuss">Other / discuss</option></select></div>
+<div class="field"><label for="price">Agreed price / offer (optional)</label><input id="price" type="text" maxlength="100" placeholder="Leave blank if you want to negotiate"></div>
+<div class="field"><label for="wallet">Your receiving TON wallet address</label><input id="wallet" type="text" maxlength="120" placeholder="Your TON wallet address"></div>
+</div>
+<div class="field"><label for="note">Message / proposed terms (optional)</label><textarea id="note" maxlength="1000" placeholder="Tell us about your proposed allocation and development support. Do not enter passwords or recovery phrases."></textarea></div>
+<div class="summary"><span>Requested allocation</span><strong id="preview">— IFZI</strong></div>
+<div class="actions"><button class="btn primary" id="send">Send inquiry to project owner ↗</button><a class="btn" href="https://t.me/fahwaofficial" target="_blank" rel="noopener">Open Telegram</a></div>
+<p class="fine" id="status" aria-live="polite">Your inquiry will open Telegram with a prepared message. Nothing is submitted or paid until you send that message yourself.</p>
+</section>
+<section class="panel"><h2>02 / How settlement works</h2>
+<div class="summary"><span>1. Inquiry</span><strong>Submit requested amount and wallet</strong></div>
+<div class="summary"><span>2. Negotiation</span><strong>Owner confirms price, availability and terms in writing</strong></div>
+<div class="summary"><span>3. Payment</span><strong>Buyer sends payment only to the confirmed official wallet</strong></div>
+<div class="summary"><span>4. Verification</span><strong>Owner checks the transaction on TON Mainnet</strong></div>
+<div class="summary"><span>5. Token delivery</span><strong>Owner manually transfers the agreed IFZI amount to the buyer</strong></div>
+<p class="fine">A payment screenshot alone is not proof of settlement. The transaction must be independently checked on-chain. Token delivery is not automatic and takes place only after payment verification and manual approval.</p>
+</section>
+<section class="panel"><h2>03 / Token information</h2>
+<div class="summary"><span>Token</span><strong>IFZI</strong></div>
+<div class="summary"><span>Former project names</span><strong>IFC / IFCoin</strong></div>
+<div class="summary"><span>Network</span><strong>TON Mainnet</strong></div>
+<div class="summary"><span>Jetton master</span><strong style="overflow-wrap:anywhere">EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0</strong></div>
+<div class="summary"><span>Decimals</span><strong>9</strong></div>
+<div class="summary"><span>Total supply</span><strong>84,000,000 IFZI</strong></div>
+<div class="summary"><span>Mining allocation</span><strong>8,400,000 IFZI</strong></div>
+<div class="actions"><a class="btn" href="https://tonviewer.com/EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0" target="_blank" rel="noopener">View token on TON Viewer ↗</a><a class="btn" href="https://app.ston.fi/pools/EQBjAe1hG6qi7AqSEXR7B6tueAvY5uONHDAIa8fJuX_B64f8" target="_blank" rel="noopener">View STON.fi pool ↗</a></div>
+</section>
+<section class="panel"><h2>04 / Risk & transparency</h2><p class="fine">IFZI is a crypto asset and may be highly volatile or lose some or all of its value. A private allocation is not a guaranteed investment, fixed-return product, or promise of future listing or liquidity. The project makes no guarantee of profit, appreciation, delivery time, or future utility. Buyers are responsible for checking local laws, wallet addresses, network and transaction details. Only proceed after reviewing the written agreement and risks.</p></section>
+<footer>IFZI · TON ecosystem · Manual allocation inquiries</footer>
+</div>
+<script>
+const amount=document.getElementById('amount'),preview=document.getElementById('preview'),status=document.getElementById('status');
+amount.addEventListener('input',()=>{const n=Number(amount.value);preview.textContent=Number.isFinite(n)&&n>0&&n<=10000000?new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(n)+' IFZI':'— IFZI'});
+document.getElementById('send').addEventListener('click',()=>{const n=Number(amount.value);if(!Number.isInteger(n)||n<1||n>10000000){status.textContent='Enter a whole-token amount from 1 to 10,000,000 IFZI.';return}const wallet=document.getElementById('wallet').value.trim();if(!wallet){status.textContent='Enter the TON wallet address where you want to receive IFZI.';return}const currency=document.getElementById('currency').value;const price=document.getElementById('price').value.trim()||'To be negotiated';const note=document.getElementById('note').value.trim()||'—';const message=['IFZI MANUAL ALLOCATION INQUIRY','Requested amount: '+n.toLocaleString('en-US')+' IFZI','Preferred settlement: '+currency,'Price / offer: '+price,'Buyer TON wallet: '+wallet,'Message: '+note,'Please confirm written terms and the official receiving wallet before I send any payment.'].join('\n');window.open('https://t.me/fahwaofficial?text='+encodeURIComponent(message),'_blank','noopener');status.textContent='Telegram opened with your inquiry. Review it and send it yourself; no payment has been made.'});
+</script>
+</body></html>
