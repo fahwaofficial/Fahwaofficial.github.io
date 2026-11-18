@@ -59,7 +59,7 @@ CREATE INDEX idx_ton_boost_user_status
 CREATE TABLE pool_ledger (
   id TEXT PRIMARY KEY,
   event_type TEXT NOT NULL
-    CHECK(event_type IN ('mining_claim','referral','withdrawal_paid','manual_bonus','boost_task','task_reward','daily_checkin')),
+    CHECK(event_type IN ('mining_claim','referral','withdrawal_paid','withdrawal_refund','manual_bonus','boost_task','task_reward','daily_checkin')),
   user_id TEXT REFERENCES users(id),
   amount_raw TEXT NOT NULL,
   reference_id TEXT,
