@@ -1,7 +1,6 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { Address, Cell, contractAddress, loadStateInit } from '@ton/core';
-import { Buffer } from 'buffer';
 import { sha256 } from '@noble/hashes/sha256';
 import { ed25519 } from '@noble/curves/ed25519';
 
