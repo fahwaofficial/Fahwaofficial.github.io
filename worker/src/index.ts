@@ -174,7 +174,7 @@ app.get('/api/mining/status',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   const cycle=await c.env.DB.prepare("SELECT id,level,daily_rate_raw,gross_reward_raw,started_at,ends_at,status FROM mining_cycles WHERE user_id=? AND status IN ('running','completed') ORDER BY started_at DESC LIMIT 1").bind(user.id).first() as any;
   if(!cycle)return c.json({status:'idle'});
-  return c.json({status:cycle.ends_at<=nowSec()?'ready':'active',ends_at:cycle.ends_at*1000,level:cycle.level,reward:fmt(cycle.gross_reward_raw)});
+  return c.json({status:cycle.ends_at<=nowSec()?'ready':'active',ends_at:cycle.ends_at*1000,level:cycle.level,reward:fmt(cycle.gross_reward_raw),daily_rate:fmt(cycle.daily_rate_raw)});
 });
 app.post('/api/mining/start',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
