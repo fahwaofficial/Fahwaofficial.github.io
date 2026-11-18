@@ -7,7 +7,7 @@ import sqlite3
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-migration = ROOT / "migrations" / "001_add_ton_proof.sql"
+migration = ROOT / "worker" / "migrations" / "001_add_ton_proof.sql"
 
 db = sqlite3.connect(":memory:")
 db.execute("PRAGMA foreign_keys = ON")
