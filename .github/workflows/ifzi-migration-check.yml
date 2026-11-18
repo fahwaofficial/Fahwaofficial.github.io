@@ -1,0 +1,23 @@
+name: IFZI migration safety check
+
+on:
+  push:
+    branches:
+      - ifzi-safe-repair
+    paths:
+      - "worker/migrations/**"
+      - "worker/scripts/**"
+      - ".github/workflows/ifzi-migration-check.yml"
+  pull_request:
+    paths:
+      - "worker/migrations/**"
+      - "worker/scripts/**"
+      - ".github/workflows/ifzi-migration-check.yml"
+
+jobs:
+  migration-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate additive migration against production schema snapshot
+        run: python3 worker/scripts/validate-migration.py
