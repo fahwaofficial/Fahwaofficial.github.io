@@ -1,0 +1,31 @@
+name: Export IFZI D1 Backup
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  export-d1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Export production D1 database
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: worker
+          command: d1 export ifzi-mining-db --remote --output=./ifzi-backup.sql
+
+      - name: Upload SQL backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: ifzi-d1-backup
+          path: worker/ifzi-backup.sql
+          if-no-files-found: error
+          retention-days: 7
