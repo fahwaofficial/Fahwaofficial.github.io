@@ -402,7 +402,7 @@ app.post('/api/presale/orders',async c=>{
   let wallet:string;try{wallet=rawAddress(String(body.wallet||''));}catch{return jsonError(c,'Enter a valid TON wallet address',400);}
   const asset=String(body.asset||'TON').toUpperCase();
   if(!['TON','USDT','OTHER'].includes(asset))return jsonError(c,'Unsupported settlement asset',400);
-  const offer=safeText(body.offer,160),note=safeText(body.note,700);
+  const offer=safeText(body.offer,900),note=safeText(body.note,700);
   const id=crypto.randomUUID(),now=nowSec();
   const offerText=[offer,note].filter(Boolean).join(' | ').slice(0,900)||null;
   const recent=await c.env.DB.prepare("SELECT COUNT(*) AS n FROM presale_orders WHERE buyer_wallet_raw=? AND created_at>?").bind(wallet,now-86400).first() as any;
