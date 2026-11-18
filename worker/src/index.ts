@@ -289,6 +289,95 @@ app.post('/api/admin/wallets/:id/approve',async c=>{
   await c.env.DB.prepare("INSERT INTO admin_audit(id,action,target_type,target_id,created_at) VALUES(?,'wallet_approved','user',?,?)").bind(crypto.randomUUID(),id,nowSec()).run();
   return c.json({ok:true});
 });
+
+// Community tasks: user submissions are reviewed manually; rewards are server-calculated.
+app.post('/api/tasks/submit',async c=>{
+  const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
+  if(user.wallet_status!=='approved')return jsonError(c,'Wallet approval is required before task rewards.',403);
+  const body=await c.req.json().catch(()=>({}));
+  const key=body.taskKey;
+  if(!['telegram','youtube','x'].includes(key))return jsonError(c,'Unsupported task');
+  let proofUrl:string;try{const u=new URL(String(body.proofUrl||''));if(u.protocol!=='https:')throw 0;proofUrl=u.toString()}catch{return jsonError(c,'A valid HTTPS proof link is required');}
+  const exists=await c.env.DB.prepare("SELECT id FROM task_submissions WHERE user_id=? AND task_key=? AND status IN ('pending','approved') LIMIT 1").bind(user.id,key).first();
+  if(exists)return jsonError(c,'This task has already been submitted or approved.',409);
+  const id=crypto.randomUUID();
+  await c.env.DB.prepare("INSERT INTO task_submissions(id,user_id,task_key,proof_url,status,created_at) VALUES(?,?,?,?,'pending',?)").bind(id,user.id,key,proofUrl,nowSec()).run();
+  return c.json({ok:true,id,status:'pending'});
+});
+app.post('/api/tasks/daily-checkin',async c=>{
+  const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
+  if(user.wallet_status!=='approved')return jsonError(c,'Wallet approval is required before task rewards.',403);
+  const date=new Date().toISOString().slice(0,10);
+  const amount=BigInt(c.env.DAILY_CHECKIN_REWARD_IFZI||'10')*UNIT;
+  const pool=await c.env.DB.prepare('SELECT total_raw,distributed_raw,reserved_raw FROM pool_state WHERE id=1').first() as any;
+  if(!pool||amount>BigInt(pool.total_raw)-BigInt(pool.distributed_raw)-BigInt(pool.reserved_raw))return jsonError(c,'Community reward allocation exhausted',409);
+  try{
+    await c.env.DB.batch([
+      c.env.DB.prepare('INSERT INTO daily_checkins(user_id,checkin_date,created_at) VALUES(?,?,?)').bind(user.id,date,nowSec()),
+      c.env.DB.prepare('UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=?').bind(amount.toString(),amount.toString(),user.id),
+      c.env.DB.prepare('UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1').bind(amount.toString()),
+      c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) VALUES(?,'daily_checkin',?,?,?,?)").bind(crypto.randomUUID(),user.id,amount.toString(),user.id+':'+date,nowSec())
+    ]);
+  }catch{return jsonError(c,'Daily check-in already claimed today',409);}
+  return c.json({ok:true,reward:fmt(amount),date});
+});
+app.post('/api/boost/verify',async c=>{
+  const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
+  if(user.wallet_status!=='approved')return jsonError(c,'Wallet approval is required.',403);
+  const body=await c.req.json().catch(()=>({}));
+  const hash=String(body.txHash||'').trim().toLowerCase();
+  if(!/^[0-9a-f]{64}$/.test(hash))return jsonError(c,'Transaction hash must be 64 hexadecimal characters');
+  const base=(c.env.TONAPI_BASE||'https://tonapi.io').replace(/\\/$/,'');
+  let tx:any;
+  try{const r=await fetch(base+'/v2/blockchain/transactions/'+hash);if(!r.ok)return jsonError(c,'Transaction not found on TON mainnet',404);tx=await r.json()}catch{return jsonError(c,'TON mainnet transaction lookup failed',503);}
+  const msg=tx?.in_msg;
+  if(tx?.success!==true||!msg?.source||!msg?.destination)return jsonError(c,'Transaction is not a successful incoming payment',400);
+  let sender:string,destination:string,expected:string;
+  try{sender=rawAddress(msg.source);destination=rawAddress(msg.destination);expected=rawAddress(c.env.TON_BOOST_RECEIVER)}catch{return jsonError(c,'Transaction address data is invalid',400);}
+  if(sender!==user.wallet_raw)return jsonError(c,'Payment sender does not match your verified wallet',403);
+  if(destination!==expected)return jsonError(c,'Payment destination mismatch',400);
+  if(BigInt(msg.value||'0')!==BigInt(c.env.TON_BOOST_AMOUNT_NANO||'50000000'))return jsonError(c,'Payment must be exactly 0.05 TON',400);
+  if(Number(tx.utime||0)<Number((await c.env.DB.prepare('SELECT created_at FROM users WHERE id=?').bind(user.id).first() as any)?.created_at||0))return jsonError(c,'Payment must be made after wallet registration',400);
+  try{
+    await c.env.DB.batch([
+      c.env.DB.prepare("INSERT INTO ton_boost_payments(id,user_id,tx_hash,sender_raw,destination_raw,amount_nano,network,status,verified_at,created_at) VALUES(?,?,?,?,?,?, '-239','verified',?,?)").bind(crypto.randomUUID(),user.id,hash,sender,destination,String(msg.value),nowSec(),nowSec()),
+      c.env.DB.prepare('UPDATE users SET task_boost_multiplier=3,updated_at=? WHERE id=?').bind(nowSec(),user.id)
+    ]);
+  }catch{return jsonError(c,'This transaction has already been used or boost was already recorded',409);}
+  return c.json({ok:true,multiplier:Number(c.env.TON_BOOST_MULTIPLIER||3),message:'Payment verified on TON mainnet. Task reward multiplier activated.'});
+});
+app.get('/api/admin/tasks',async c=>{
+  if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
+  const rows=await c.env.DB.prepare("SELECT t.id,t.user_id,t.task_key,t.proof_url,t.created_at,u.wallet_raw FROM task_submissions t JOIN users u ON u.id=t.user_id WHERE t.status='pending' ORDER BY t.created_at ASC LIMIT 200").all();
+  return c.json({items:rows.results||[]});
+});
+app.post('/api/admin/tasks/:id/:action',async c=>{
+  if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
+  const id=c.req.param('id'),action=c.req.param('action');
+  if(!['approve','reject'].includes(action))return jsonError(c,'Unknown action');
+  const task=await c.env.DB.prepare("SELECT t.*,u.task_boost_multiplier FROM task_submissions t JOIN users u ON u.id=t.user_id WHERE t.id=? AND t.status='pending'").bind(id).first() as any;
+  if(!task)return jsonError(c,'Pending task not found',404);
+  const now=nowSec();
+  if(action==='reject'){
+    const r=await c.env.DB.prepare("UPDATE task_submissions SET status='rejected',reviewed_at=?,reviewed_by='admin' WHERE id=? AND status='pending'").bind(now,id).run();
+    if(r.meta.changes!==1)return jsonError(c,'Task was already reviewed',409);
+    return c.json({ok:true});
+  }
+  const amount=BigInt(c.env.TASK_REWARD_IFZI||'50')*BigInt(task.task_boost_multiplier||1)*UNIT;
+  const pool=await c.env.DB.prepare('SELECT total_raw,distributed_raw,reserved_raw FROM pool_state WHERE id=1').first() as any;
+  if(!pool||amount>BigInt(pool.total_raw)-BigInt(pool.distributed_raw)-BigInt(pool.reserved_raw))return jsonError(c,'Community reward allocation exhausted',409);
+  try{
+    const result=await c.env.DB.batch([
+      c.env.DB.prepare("UPDATE task_submissions SET status='approved',reviewed_at=?,reviewed_by='admin' WHERE id=? AND status='pending'").bind(now,id),
+      c.env.DB.prepare('UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=?').bind(amount.toString(),amount.toString(),task.user_id),
+      c.env.DB.prepare('UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1').bind(amount.toString()),
+      c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) VALUES(?,'task_reward',?,?,?,?)").bind(crypto.randomUUID(),task.user_id,amount.toString(),id,now)
+    ]);
+    if(result[0]?.meta?.changes!==1)return jsonError(c,'Task was already reviewed',409);
+  }catch{return jsonError(c,'Could not issue task reward',409);}
+  return c.json({ok:true,reward:fmt(amount)});
+});
+
 app.post('/api/admin/bonus',async c=>{
   if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
   const body=await c.req.json().catch(()=>({}));
