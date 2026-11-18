@@ -189,22 +189,20 @@ app.post('/api/mining/claim',async c=>{
   if(!pool)return jsonError(c,'Mining pool is not initialized',503);
   const remaining=BigInt(pool.total_raw)-BigInt(pool.distributed_raw)-BigInt(pool.reserved_raw);
   if(gross>remaining)return jsonError(c,'Mining pool allocation exhausted',409);
-  const claim=await c.env.DB.prepare("UPDATE mining_cycles SET status='claimed' WHERE id=? AND status='running' AND ends_at<=?").bind(cycle.id,now).run();
-  if(claim.meta.changes!==1)return jsonError(c,'Cycle already claimed',409);
+  const distributed= user.referred_by ? gross : own;
   const statements=[
+    c.env.DB.prepare("UPDATE mining_cycles SET status='claimed' WHERE id=? AND status='running' AND ends_at<=?").bind(cycle.id,now),
     c.env.DB.prepare("INSERT INTO claims(cycle_id,user_id,gross_raw,user_raw,referral_raw,referral_user_id,created_at) VALUES(?,?,?,?,?,?,?)").bind(cycle.id,user.id,gross.toString(),own.toString(),referral.toString(),user.referred_by,now),
     c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=?").bind(own.toString(),own.toString(),user.id),
-    c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1").bind(gross.toString()),
+    c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1").bind(distributed.toString()),
     c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) VALUES(?,?,?,?,?,?)").bind(crypto.randomUUID(),'mining_claim',user.id,gross.toString(),cycle.id,now)
   ];
   if(user.referred_by){
     statements.push(c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+?,total_referral_raw=CAST(total_referral_raw AS INTEGER)+? WHERE user_id=?").bind(referral.toString(),referral.toString(),referral.toString(),user.referred_by));
     statements.push(c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) VALUES(?,?,?,?,?,?)").bind(crypto.randomUUID(),'referral',user.referred_by,referral.toString(),cycle.id,now));
-  }else{
-    // No referrer: retain the unused referral share in the mining pool.
-    await c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)-? WHERE id=1").bind(referral.toString()).run();
   }
-  await c.env.DB.batch(statements);
+  const results=await c.env.DB.batch(statements);
+  if(results[0]?.meta?.changes!==1)return jsonError(c,'Cycle already claimed',409);
   return c.json({ok:true,reward:fmt(own),gross_reward:fmt(gross),referral_reward:fmt(user.referred_by?referral:0n)});
 });
 app.post('/api/withdrawals/request',async c=>{
