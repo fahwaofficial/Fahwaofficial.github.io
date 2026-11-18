@@ -2,11 +2,6 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { Address, Cell, contractAddress, loadStateInit } from '@ton/core';
 import { Buffer } from 'buffer';
-import {
-  WalletContractV1R1, WalletContractV1R2, WalletContractV1R3,
-  WalletContractV2R1, WalletContractV2R2, WalletContractV3R1,
-  WalletContractV3R2, WalletContractV4, WalletContractV5R1
-} from '@ton/ton';
 import { sha256 } from '@noble/hashes/sha256';
 import { ed25519 } from '@noble/curves/ed25519';
 
@@ -100,26 +95,23 @@ async function getVerifiedIfziBalanceRaw(env:Bindings,walletRaw:string):Promise<
   if(!data||data.jetton?.address===undefined)throw new Error('IFZI jetton balance response is incomplete');
   return BigInt(data.balance||'0');
 }
+// Public-key layouts are enabled only for exact code hashes of standard TON wallets.
+const WALLET_CODE_LAYOUTS:Record<string,(slice:any)=>Uint8Array>={
+  'a0cfc2c48aee16a271f2cfc0b7382d81756cecb1017d077faaab3bb602f6868c':s=>{s.loadUint(32);return s.loadBuffer(32)}, // v1r1
+  'd4902fcc9fad74698fa8e353220a68da0dcf72e32bcb2eb9ee04217c17d3062c':s=>{s.loadUint(32);return s.loadBuffer(32)}, // v1r2
+  '587cc789eff1c84f46ec3797e45fc809a14ff5ae24f1e0c7a6a99cc9dc9061ff':s=>{s.loadUint(32);return s.loadBuffer(32)}, // v1r3
+  '5c9a5e68c108e18721a07c42f9956bfb39ad77ec6d624b60c576ec88eee65329':s=>{s.loadUint(32);return s.loadBuffer(32)}, // v2r1
+  'fe9530d3243853083ef2ef0b4c2908c0abf6fa1c31ea243aacaa5bf8c7d753f1':s=>{s.loadUint(32);return s.loadBuffer(32)}, // v2r2
+  'b61041a58a7980b946e8fb9e198e3c904d24799ffa36574ea4251c41a566f581':s=>{s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}, // v3r1
+  '84dafa449f98a6987789ba232358072bc0f76dc4524002a5d0918b9a75d2d599':s=>{s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}, // v3r2
+  'feb5ff6820e2ff0d9483e7e0d62c817d846789fb4ae580c878866d959dabd5c0':s=>{s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}, // v4r2
+  '20834b7b72b112147e1b2fb457b84e74d1a30f04f737d4f62a668e9552d2b72f':s=>{s.loadBoolean();s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)} // v5r1
+};
 function extractWalletKey(stateInit:any):Uint8Array|null {
   if(!stateInit.code||!stateInit.data)return null;
-  const parsers=[
-    {contract:WalletContractV1R1,load:(s:any)=>{s.loadUint(32);return s.loadBuffer(32)}},
-    {contract:WalletContractV1R2,load:(s:any)=>{s.loadUint(32);return s.loadBuffer(32)}},
-    {contract:WalletContractV1R3,load:(s:any)=>{s.loadUint(32);return s.loadBuffer(32)}},
-    {contract:WalletContractV2R1,load:(s:any)=>{s.loadUint(32);return s.loadBuffer(32)}},
-    {contract:WalletContractV2R2,load:(s:any)=>{s.loadUint(32);return s.loadBuffer(32)}},
-    {contract:WalletContractV3R1,load:(s:any)=>{s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}},
-    {contract:WalletContractV3R2,load:(s:any)=>{s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}},
-    {contract:WalletContractV4,load:(s:any)=>{s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}},
-    {contract:WalletContractV5R1,load:(s:any)=>{s.loadBoolean();s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}}
-  ];
-  for(const item of parsers){
-    try{
-      const code=item.contract.create({workchain:0,publicKey:Buffer.alloc(32)}).init.code;
-      if(code.equals(stateInit.code))return new Uint8Array(item.load(stateInit.data.beginParse()));
-    }catch{/* try next reviewed standard wallet layout */}
-  }
-  return null;
+  const layout=WALLET_CODE_LAYOUTS[stateInit.code.hash().toString('hex')];
+  if(!layout)return null;
+  try{return new Uint8Array(layout(stateInit.data.beginParse()))}catch{return null;}
 }
 function verifyTonProof(address:string,network:string,stateInitB64:string,proof:any,expectedDomain:string,expectedPayload:string,reportedPublicKey?:string){
   if(network!=='-239')throw new Error('Only TON mainnet wallets are accepted');
