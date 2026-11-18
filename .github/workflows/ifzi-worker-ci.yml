@@ -23,7 +23,6 @@ jobs:
         with:
           node-version: 22
       - run: npm install
-      - run: node scripts/dump-wallet-code-hashes.mjs
-      - run: npm audit --omit=dev || echo 'Audit findings require review; build continues temporarily.'
+      - run: npm audit --omit=dev
       - run: npm run typecheck
       - run: npx wrangler deploy --dry-run
