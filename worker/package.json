@@ -5,16 +5,20 @@
   "type": "module",
   "scripts": {
     "deploy": "wrangler deploy",
-    "dev": "wrangler dev"
+    "dev": "wrangler dev",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test"
   },
   "dependencies": {
-    "@ton/core": "^0.60.0",
+    "@ton/core": "^0.62.0",
     "@noble/curves": "^1.8.1",
     "@noble/hashes": "^1.8.0",
     "hono": "^4.7.0"
   },
   "devDependencies": {
     "wrangler": "^4.0.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "@cloudflare/workers-types": "^5.20261118.1",
+    "@types/node": "^22.13.4"
   }
 }

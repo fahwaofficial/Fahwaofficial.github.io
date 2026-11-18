@@ -1,0 +1,28 @@
+name: IFZI Worker CI
+on:
+  push:
+    branches: [ifzi-safe-repair]
+    paths:
+      - "worker/**"
+      - ".github/workflows/ifzi-worker-ci.yml"
+      - ".github/workflows/deploy-worker.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "worker/**"
+      - ".github/workflows/ifzi-worker-ci.yml"
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm audit --omit=dev
+      - run: npm run typecheck
+      - run: npx wrangler deploy --dry-run
