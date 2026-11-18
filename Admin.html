@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IFZI · Withdrawal Admin</title><style>body{margin:0;background:#07090f;color:#e8ecf4;font:14px system-ui;padding:24px}.wrap{max-width:1050px;margin:auto}input{background:#121828;border:1px solid #303b55;border-radius:8px;padding:11px;color:#fff;min-width:240px}button{background:#6c8cff;border:0;border-radius:8px;padding:10px 14px;color:white;font-weight:700;cursor:pointer;margin:3px}button.reject{background:#a94455}button.paid{background:#168a6a}.card{background:#121828;border:1px solid #303b55;border-radius:12px;padding:16px;margin:12px 0;overflow-wrap:anywhere}.muted{color:#98a3ba}.line{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.status{color:#3ee5b0;font-weight:700}</style></head><body><div class="wrap"><h1>IFZI Withdrawal Admin</h1><p class="muted">Private admin tool. Do not publish or share your admin secret.</p><div class="line"><input id="api" placeholder="Worker API URL"><input id="secret" type="password" placeholder="ADMIN_SECRET"><button id="load">Load withdrawals</button><button id="loadWallets">Load wallet approvals</button></div><p id="msg" class="muted"></p><h2>Wallet approval queue</h2><div id="walletItems"></div><h2>Community task review</h2><button id="loadTasks">Load pending tasks</button><div id="taskItems"></div><h2>Withdrawal queue</h2><div id="items"></div></div><script>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IFZI · Withdrawal Admin</title><style>body{margin:0;background:#07090f;color:#e8ecf4;font:14px system-ui;padding:24px}.wrap{max-width:1050px;margin:auto}input{background:#121828;border:1px solid #303b55;border-radius:8px;padding:11px;color:#fff;min-width:240px}button{background:#6c8cff;border:0;border-radius:8px;padding:10px 14px;color:white;font-weight:700;cursor:pointer;margin:3px}button.reject{background:#a94455}button.paid{background:#168a6a}.card{background:#121828;border:1px solid #303b55;border-radius:12px;padding:16px;margin:12px 0;overflow-wrap:anywhere}.muted{color:#98a3ba}.line{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.status{color:#3ee5b0;font-weight:700}</style></head><body><div class="wrap"><h1>IFZI Withdrawal Admin</h1><p class="muted">Private admin tool. Do not publish or share your admin secret.</p><div class="line"><input id="api" placeholder="Worker API URL"><input id="secret" type="password" placeholder="ADMIN_SECRET"><button id="load">Load withdrawals</button><button id="loadWallets">Load wallet approvals</button></div><p id="msg" class="muted"></p><h2>Wallet approval queue</h2><div id="walletItems"></div><h2>Community task review</h2><button id="loadTasks">Load pending tasks</button><div id="taskItems"></div><h2>Withdrawal queue</h2><div id="items"></div><h2>Private allocation orders</h2><button id="loadPresale">Load IFZI private sale orders</button><div id="presaleItems"></div></div><script>
 const $=id=>document.getElementById(id);const saved= sessionStorage.getItem('ifzi_admin_api');if(saved)$('api').value=saved;
 async function call(path,method='GET',body){const base=$('api').value.trim().replace(/\/$/,'');const r=await fetch(base+path,{method,headers:{'content-type':'application/json','x-admin-secret':$('secret').value},body:body?JSON.stringify(body):undefined});const d=await r.json();if(!r.ok)throw new Error(d.error||'Request failed');return d;}
 async function load(){try{sessionStorage.setItem('ifzi_admin_api',$('api').value.trim());$('msg').textContent='Loading…';const d=await call('/api/admin/withdrawals');$('items').innerHTML='';if(!d.items.length){$('msg').textContent='No pending or approved withdrawals.';return;}for(const x of d.items){const card=document.createElement('div');card.className='card';const h=document.createElement('h3');h.textContent=x.amount+' IFZI · '+x.status;const p=document.createElement('p');p.textContent='Wallet: '+x.wallet_raw;const id=document.createElement('p');id.textContent='Request: '+x.id;const date=document.createElement('p');date.textContent='Created: '+new Date(x.created_at*1000).toLocaleString();card.append(h,p,id,date);if(x.status==='pending'){const a=document.createElement('button');a.textContent='Approve';a.onclick=()=>action(x.id,'approve');const b=document.createElement('button');b.textContent='Reject';b.className='reject';b.onclick=()=>action(x.id,'reject');card.append(a,b);}if(x.status==='approved'){const input=document.createElement('input');input.placeholder='Paste TON transaction hash';input.style.width='min(520px,90%)';const b=document.createElement('button');b.textContent='Mark paid';b.className='paid';b.onclick=()=>action(x.id,'paid',{txHash:input.value});card.append(input,b);} $('items').append(card);}$('msg').textContent='Loaded '+d.items.length+' requests.';}catch(e){$('msg').textContent=e.message;}}
@@ -7,4 +7,49 @@ async function loadWallets(){try{$('msg').textContent='Loading wallet approvals�
 $('loadWallets').onclick=loadWallets;
 async function loadTasks(){try{$('msg').textContent='Loading tasks…';const d=await call('/api/admin/tasks');$('taskItems').innerHTML='';if(!d.items.length){$('msg').textContent='No pending tasks.';return;}for(const x of d.items){const card=document.createElement('div');card.className='card';const p=document.createElement('p');p.textContent=x.task_key+' · '+x.wallet_raw;const link=document.createElement('a');link.href=x.proof_url;link.target='_blank';link.rel='noopener';link.textContent='Open submitted proof ↗';const a=document.createElement('button');a.textContent='Approve & reward';a.onclick=()=>taskAction(x.id,'approve');const b=document.createElement('button');b.textContent='Reject';b.className='reject';b.onclick=()=>taskAction(x.id,'reject');card.append(p,link,a,b);$('taskItems').append(card)}$('msg').textContent='Loaded '+d.items.length+' tasks.'}catch(e){$('msg').textContent=e.message}}async function taskAction(id,act){if(!confirm(act==='approve'?'Approve task and issue reward?':'Reject this task?'))return;try{const d=await call('/api/admin/tasks/'+id+'/'+act,'POST',{});$('msg').textContent=act==='approve'?'Task approved. Reward: '+d.reward+' IFZI':'Task rejected.';await loadTasks()}catch(e){$('msg').textContent=e.message}}$('loadTasks').onclick=loadTasks;
 $('load').onclick=load;
+
+async function loadPresale(){
+ try{
+  $('msg').textContent='Loading private allocation orders…';
+  const d=await call('/api/admin/presale/orders');
+  $('presaleItems').innerHTML='';
+  if(!d.items.length){$('msg').textContent='No active private allocation orders.';return;}
+  for(const x of d.items){
+   const card=document.createElement('div');card.className='card';
+   const h=document.createElement('h3');h.textContent=x.amount+' IFZI · '+x.status.toUpperCase();
+   const p=document.createElement('p');p.textContent='Order: '+x.id;
+   const w=document.createElement('p');w.textContent='Buyer wallet: '+x.buyer_wallet_raw;
+   const a=document.createElement('p');a.textContent='Preferred asset: '+x.settlement_asset;
+   const n=document.createElement('p');n.textContent='Offer / contact: '+(x.offer_text||'—');
+   const date=document.createElement('p');date.textContent='Created: '+new Date(x.created_at*1000).toLocaleString();
+   card.append(h,p,w,a,n,date);
+   if(x.agreed_amount_nano){const q=document.createElement('p');q.textContent='Agreed TON: '+(Number(x.agreed_amount_nano)/1e9);card.append(q);}
+   if(x.payment_tx_hash){const t=document.createElement('p');t.textContent='Incoming payment tx: '+x.payment_tx_hash;card.append(t);}
+   if(x.outgoing_tx_hash){const t=document.createElement('p');t.textContent='Outgoing IFZI tx: '+x.outgoing_tx_hash;card.append(t);}
+   if(x.status==='new'&&x.settlement_asset==='TON'){
+    const inp=document.createElement('input');inp.placeholder='Agreed TON amount (e.g. 1.25)';
+    const b=document.createElement('button');b.textContent='Issue TON quote';b.onclick=async()=>{if(!inp.value.trim())return;try{await call('/api/admin/presale/orders/'+x.id+'/quote','POST',{tonAmount:inp.value.trim()});$('msg').textContent='Quote saved. Contact buyer with amount and treasury address.';await loadPresale()}catch(e){$('msg').textContent=e.message}};
+    card.append(inp,b);
+   }
+   if(x.status==='new'&&x.settlement_asset!=='TON'){
+    const inp=document.createElement('input');inp.placeholder='Externally verified payment tx hash';
+    const b=document.createElement('button');b.textContent='Mark payment verified (manual)';b.className='paid';b.onclick=async()=>{if(!inp.value.trim()||!confirm('Confirm you independently verified this non-TON payment on the correct network, asset, sender and amount?'))return;try{await call('/api/admin/presale/orders/'+x.id+'/manual-verify','POST',{txHash:inp.value.trim()});await loadPresale()}catch(e){$('msg').textContent=e.message}};
+    card.append(inp,b);
+   }
+   if(x.status==='payment_verified'){
+    const b=document.createElement('button');b.textContent='Approve token delivery';b.className='paid';b.onclick=async()=>{if(!confirm('Payment is verified. Approve manual IFZI transfer for this order?'))return;try{await call('/api/admin/presale/orders/'+x.id+'/approve','POST',{});await loadPresale()}catch(e){$('msg').textContent=e.message}};card.append(b);
+   }
+   if(x.status==='approved'){
+    const inp=document.createElement('input');inp.placeholder='Outgoing IFZI transaction hash';
+    const b=document.createElement('button');b.textContent='Record delivery';b.className='paid';b.onclick=async()=>{if(!inp.value.trim()||!confirm('Confirm you have sent the agreed IFZI amount to the buyer wallet?'))return;try{await call('/api/admin/presale/orders/'+x.id+'/deliver','POST',{txHash:inp.value.trim()});await loadPresale()}catch(e){$('msg').textContent=e.message}};card.append(inp,b);
+   }
+   if(!['delivered','rejected'].includes(x.status)){
+    const b=document.createElement('button');b.textContent='Reject order';b.className='reject';b.onclick=async()=>{if(!confirm('Reject this order?'))return;try{await call('/api/admin/presale/orders/'+x.id+'/reject','POST',{note:'Rejected by admin'});await loadPresale()}catch(e){$('msg').textContent=e.message}};card.append(b);
+   }
+   $('presaleItems').append(card);
+  }
+  $('msg').textContent='Loaded '+d.items.length+' private allocation orders.';
+ }catch(e){$('msg').textContent=e.message}
+}
+$('loadPresale').onclick=loadPresale;
 </script></body></html>
