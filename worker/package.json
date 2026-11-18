@@ -5,13 +5,16 @@
   "type": "module",
   "scripts": {
     "deploy": "wrangler deploy",
-    "dev": "wrangler dev"
+    "dev": "wrangler dev",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test"
   },
   "dependencies": {
     "@ton/core": "^0.60.0",
     "@noble/curves": "^1.8.1",
     "@noble/hashes": "^1.8.0",
-    "hono": "^4.7.0"
+    "hono": "^4.7.0",
+    "@ton/ton": "^15.1.0"
   },
   "devDependencies": {
     "wrangler": "^4.0.0",
