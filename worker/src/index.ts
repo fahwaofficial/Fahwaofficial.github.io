@@ -93,7 +93,7 @@ async function verifyJWT(env:Bindings,token:string):Promise<{sub:string;wallet:s
 async function getVerifiedIfziBalanceRaw(env:Bindings,walletRaw:string):Promise<bigint>{
   const master=Address.parse(env.JETTON_MASTER).toString({urlSafe:true,bounceable:true,testOnly:false});
   const wallet=Address.parse(walletRaw).toString({urlSafe:true,bounceable:true,testOnly:false});
-  const base=(env.TONAPI_BASE||'https://tonapi.io').replace(/\\/$/,'');
+  const base=(env.TONAPI_BASE||'https://tonapi.io').replace(/\/$/,'');
   const response=await fetch(base+'/v2/accounts/'+encodeURIComponent(wallet)+'/jettons/'+encodeURIComponent(master));
   if(!response.ok)throw new Error('Unable to verify IFZI balance from TON mainnet');
   const data=await response.json() as any;
@@ -326,7 +326,7 @@ app.post('/api/boost/verify',async c=>{
   const body=await c.req.json().catch(()=>({}));
   const hash=String(body.txHash||'').trim().toLowerCase();
   if(!/^[0-9a-f]{64}$/.test(hash))return jsonError(c,'Transaction hash must be 64 hexadecimal characters');
-  const base=(c.env.TONAPI_BASE||'https://tonapi.io').replace(/\\/$/,'');
+  const base=(c.env.TONAPI_BASE||'https://tonapi.io').replace(/\/$/,'');
   let tx:any;
   try{const r=await fetch(base+'/v2/blockchain/transactions/'+hash);if(!r.ok)return jsonError(c,'Transaction not found on TON mainnet',404);tx=await r.json()}catch{return jsonError(c,'TON mainnet transaction lookup failed',503);}
   const msg=tx?.in_msg;
