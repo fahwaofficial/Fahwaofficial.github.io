@@ -16,6 +16,7 @@ CREATE UNIQUE INDEX idx_users_referral_code ON users(referral_code)
 CREATE INDEX idx_users_wallet_status ON users(wallet_status, created_at);
 
 ALTER TABLE withdrawals ADD COLUMN review_note TEXT;
+ALTER TABLE auth_challenges ADD COLUMN referral_code TEXT;
 
 CREATE TABLE task_submissions (
   id TEXT PRIMARY KEY,
