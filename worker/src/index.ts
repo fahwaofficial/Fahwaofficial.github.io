@@ -228,6 +228,8 @@ app.post('/api/withdrawals/request',async c=>{
   let amount:bigint;try{amount=parseAmount(body.amount)}catch(e){return jsonError(c,e instanceof Error?e.message:'Invalid amount');}
   const min=BigInt(c.env.MIN_WITHDRAW_IFZI||'1000')*UNIT;
   if(amount<min)return jsonError(c,'Minimum withdrawal is '+(c.env.MIN_WITHDRAW_IFZI||'1000')+' IFZI');
+  const pending=await c.env.DB.prepare("SELECT id FROM withdrawals WHERE user_id=? AND status IN ('pending','approved') LIMIT 1").bind(user.id).first();
+  if(pending)return jsonError(c,'You already have a withdrawal awaiting admin review.',409);
   const id=crypto.randomUUID(),now=nowSec();
   const balance=await c.env.DB.prepare('SELECT available_raw FROM reward_balances WHERE user_id=?').bind(user.id).first() as any;
   if(!balance||BigInt(balance.available_raw)<amount)return jsonError(c,'Insufficient available IFZI balance',409);
@@ -369,6 +371,7 @@ app.post('/api/admin/tasks/:id/:action',async c=>{
       c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) VALUES(?,'task_reward',?,?,?,?)").bind(crypto.randomUUID(),task.user_id,amount.toString(),id,now)
     ]);
     if(result[0]?.meta?.changes!==1)return jsonError(c,'Task was already reviewed',409);
+    await c.env.DB.prepare('INSERT INTO admin_audit(id,action,target_type,target_id,details,created_at) VALUES(?,?,?,?,?,?)').bind(crypto.randomUUID(),'task_approved','task',id,'reward_raw='+amount.toString(),now).run();
   }catch{return jsonError(c,'Could not issue task reward',409);}
   return c.json({ok:true,reward:fmt(amount)});
 });
