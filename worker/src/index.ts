@@ -132,19 +132,18 @@ function verifyTonProof(address:string,network:string,stateInitB64:string,proof:
 
 app.post('/api/ton-proof/payload',async c=>{
   const body=await c.req.json().catch(()=>({}));
-  let wallet:string;try{wallet=rawAddress(body.address)}catch{return jsonError(c,'Invalid wallet address');}
   const nonce=crypto.randomUUID();
-  await c.env.DB.prepare('INSERT INTO auth_challenges(nonce,wallet_raw,expires_at,used) VALUES(?,?,?,0)').bind(nonce,wallet,Date.now()+5*60*1000).run();
+  await c.env.DB.prepare('INSERT INTO auth_challenges(nonce,wallet_raw,expires_at,used) VALUES(?,NULL,?,0)').bind(nonce,Date.now()+5*60*1000).run();
   return c.json({payload:nonce});
 });
 app.post('/api/ton-proof/verify',async c=>{
   const body=await c.req.json().catch(()=>({}));
   let wallet:string;try{wallet=rawAddress(body.address)}catch{return jsonError(c,'Invalid wallet address');}
-  const challenge=await c.env.DB.prepare('SELECT nonce FROM auth_challenges WHERE nonce=? AND wallet_raw=? AND used=0 AND expires_at>?').bind(body.proof?.payload,wallet,Date.now()).first();
+  const challenge=await c.env.DB.prepare('SELECT nonce FROM auth_challenges WHERE nonce=? AND (wallet_raw IS NULL OR wallet_raw=?) AND used=0 AND expires_at>?').bind(body.proof?.payload,wallet,Date.now()).first();
   if(!challenge)return jsonError(c,'Challenge invalid, expired, or already used',401);
   try{verifyTonProof(wallet,String(body.network),body.walletStateInit||body.proof?.state_init,body.proof,c.env.SITE_DOMAIN,challenge.nonce,body.publicKey||body.public_key);}
   catch(e){return jsonError(c,e instanceof Error?e.message:'Proof verification failed',401);}
-  const used=await c.env.DB.prepare('UPDATE auth_challenges SET used=1 WHERE nonce=? AND wallet_raw=? AND used=0 AND expires_at>?').bind(challenge.nonce,wallet,Date.now()).run();
+  const used=await c.env.DB.prepare('UPDATE auth_challenges SET used=1,wallet_raw=? WHERE nonce=? AND (wallet_raw IS NULL OR wallet_raw=?) AND used=0 AND expires_at>?').bind(wallet,challenge.nonce,wallet,Date.now()).run();
   if(used.meta.changes!==1)return jsonError(c,'Challenge already consumed',409);
   let user=await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE wallet_raw=?').bind(wallet).first() as User|null;
   if(!user){
