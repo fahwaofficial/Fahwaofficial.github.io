@@ -9,7 +9,8 @@ type Bindings = {
   ADMIN_SECRET: string; JETTON_MASTER: string; JETTON_DECIMALS: string;
   MINING_POOL_IFZI: string; MIN_WITHDRAW_IFZI: string; TONAPI_BASE: string;
   TON_BOOST_RECEIVER: string; TON_BOOST_AMOUNT_NANO: string; TON_BOOST_MULTIPLIER: string;
-  TASK_REWARD_IFZI: string; DAILY_CHECKIN_REWARD_IFZI: string;\n  PRESALE_TREASURY: string; RESEND_API_KEY: string; PRESALE_NOTIFY_EMAIL: string; PRESALE_FROM_EMAIL: string;
+  TASK_REWARD_IFZI: string; DAILY_CHECKIN_REWARD_IFZI: string;
+  PRESALE_TREASURY: string; RESEND_API_KEY: string; PRESALE_NOTIFY_EMAIL: string; PRESALE_FROM_EMAIL: string;
 };
 type User = { id:string; wallet_raw:string; wallet_status:string; network:string; referred_by:string|null };
 const app = new Hono<{Bindings:Bindings}>();
