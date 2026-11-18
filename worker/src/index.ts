@@ -9,7 +9,7 @@ type Bindings = {
   ADMIN_SECRET: string; JETTON_MASTER: string; JETTON_DECIMALS: string;
   MINING_POOL_IFZI: string; MIN_WITHDRAW_IFZI: string; TONAPI_BASE: string;
   TON_BOOST_RECEIVER: string; TON_BOOST_AMOUNT_NANO: string; TON_BOOST_MULTIPLIER: string;
-  TASK_REWARD_IFZI: string; DAILY_CHECKIN_REWARD_IFZI: string;
+  TASK_REWARD_IFZI: string; DAILY_CHECKIN_REWARD_IFZI: string;\n  PRESALE_TREASURY: string; RESEND_API_KEY: string; PRESALE_NOTIFY_EMAIL: string; PRESALE_FROM_EMAIL: string;
 };
 type User = { id:string; wallet_raw:string; wallet_status:string; network:string; referred_by:string|null };
 const app = new Hono<{Bindings:Bindings}>();
@@ -385,4 +385,104 @@ app.post('/api/admin/bonus',async c=>{
   await c.env.DB.prepare("INSERT INTO admin_audit(id,action,target_type,target_id,details,created_at) VALUES(?,'manual_bonus','user',?,?,?)").bind(crypto.randomUUID(),user.id,'reward_raw='+amount.toString(),now).run();
   return c.json({ok:true});
 });
+
+async function sendPresaleEmail(env:Bindings,subject:string,html:string){
+  if(!env.RESEND_API_KEY||!env.PRESALE_NOTIFY_EMAIL||!env.PRESALE_FROM_EMAIL)return false;
+  try{
+    const r=await fetch('https://api.resend.com/emails',{method:'POST',headers:{'Authorization':'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({from:env.PRESALE_FROM_EMAIL,to:[env.PRESALE_NOTIFY_EMAIL],subject,html})});
+    return r.ok;
+  }catch{return false;}
+}
+function safeText(v:unknown,max=500){return String(v??'').replace(/[<>]/g,'').slice(0,max);}
+app.post('/api/presale/orders',async c=>{
+  const body=await c.req.json().catch(()=>({}));
+  if(body.website)return jsonError(c,'Invalid request',400);
+  let amount:bigint;try{amount=BigInt(String(body.amount||''));}catch{return jsonError(c,'Enter a whole IFZI amount',400);}
+  if(amount<1n||amount>10000000n)return jsonError(c,'Amount must be between 1 and 10,000,000 IFZI',400);
+  let wallet:string;try{wallet=rawAddress(String(body.wallet||''));}catch{return jsonError(c,'Enter a valid TON wallet address',400);}
+  const asset=String(body.asset||'TON').toUpperCase();
+  if(!['TON','USDT','OTHER'].includes(asset))return jsonError(c,'Unsupported settlement asset',400);
+  const offer=safeText(body.offer,160),note=safeText(body.note,700);
+  const id=crypto.randomUUID(),now=nowSec();
+  const offerText=[offer,note].filter(Boolean).join(' | ').slice(0,900)||null;
+  const recent=await c.env.DB.prepare("SELECT COUNT(*) AS n FROM presale_orders WHERE buyer_wallet_raw=? AND created_at>?").bind(wallet,now-86400).first() as any;
+  if(Number(recent?.n||0)>=3)return jsonError(c,'Order limit reached for this wallet. Contact the project owner directly.',429);
+  await c.env.DB.prepare("INSERT INTO presale_orders(id,amount_raw,buyer_wallet_raw,settlement_asset,offer_text,status,created_at,updated_at) VALUES(?,?,?,?,?,'new',?,?)").bind(id,(amount*UNIT).toString(),wallet,asset,offerText,now,now).run();
+  const html='<h2>New IFZI private allocation inquiry</h2><p><b>Order:</b> '+id+'</p><p><b>Amount:</b> '+amount.toString()+' IFZI</p><p><b>Buyer wallet:</b> '+wallet+'</p><p><b>Preferred asset:</b> '+asset+'</p><p><b>Offer / note:</b> '+(offerText||'—')+'</p><p>Open the IFZI Admin page to review this inquiry. Do not treat this email as payment confirmation.</p>';
+  const notified=await sendPresaleEmail(c.env,'New IFZI private sale inquiry · '+amount.toString()+' IFZI',html);
+  return c.json({ok:true,id,status:'new',email_notified:notified});
+});
+app.post('/api/presale/orders/:id/payment',async c=>{
+  const id=c.req.param('id'),body=await c.req.json().catch(()=>({}));
+  const hash=String(body.txHash||'').trim().toLowerCase();
+  if(!/^[0-9a-f]{64}$/.test(hash))return jsonError(c,'Transaction hash must be 64 hexadecimal characters');
+  const order=await c.env.DB.prepare('SELECT * FROM presale_orders WHERE id=?').bind(id).first() as any;
+  if(!order)return jsonError(c,'Order not found',404);
+  if(order.status!=='awaiting_payment')return jsonError(c,'This order is not awaiting a TON payment',409);
+  if(order.settlement_asset!=='TON')return jsonError(c,'Automatic verification is currently available for TON only. Contact the owner for USDT or other assets.',400);
+  if(!order.agreed_amount_nano)return jsonError(c,'The owner has not issued a payment quote yet',409);
+  const base=(c.env.TONAPI_BASE||'https://tonapi.io').replace(/\/$/,'');
+  let tx:any;try{const r=await fetch(base+'/v2/blockchain/transactions/'+hash);if(!r.ok)return jsonError(c,'Transaction not found on TON Mainnet',404);tx=await r.json();}catch{return jsonError(c,'TON Mainnet lookup failed',503);}
+  const msg=tx?.in_msg;
+  if(tx?.success!==true||!msg?.source||!msg?.destination)return jsonError(c,'Transaction is not a successful incoming TON payment');
+  let sender:string,destination:string,treasury:string;
+  try{sender=rawAddress(msg.source);destination=rawAddress(msg.destination);treasury=rawAddress(c.env.PRESALE_TREASURY);}catch{return jsonError(c,'Transaction address data is invalid');}
+  if(destination!==treasury)return jsonError(c,'Payment destination does not match the official IFZI treasury');
+  if(sender!==order.buyer_wallet_raw)return jsonError(c,'Payment sender does not match the wallet on this order');
+  if(BigInt(msg.value||'0')!==BigInt(order.agreed_amount_nano))return jsonError(c,'Payment amount does not exactly match the agreed TON quote');
+  if(Number(tx.utime||0)<Number(order.created_at||0))return jsonError(c,'Payment must be made after this order was created');
+  try{await c.env.DB.prepare("UPDATE presale_orders SET status='payment_verified',payment_tx_hash=?,payment_amount_nano=?,updated_at=? WHERE id=? AND status='awaiting_payment'").bind(hash,String(msg.value),nowSec(),id).run();
+    const check=await c.env.DB.prepare('SELECT payment_tx_hash FROM presale_orders WHERE id=?').bind(id).first() as any;
+    if(check?.payment_tx_hash!==hash)return jsonError(c,'Order payment was already updated',409);
+  }catch{return jsonError(c,'This transaction may already be linked to another order',409);}
+  await sendPresaleEmail(c.env,'IFZI payment verified · order '+id,'<h2>IFZI TON payment verified</h2><p><b>Order:</b> '+id+'</p><p><b>Amount:</b> '+fmt(order.amount_raw)+' IFZI</p><p><b>TON tx:</b> '+hash+'</p><p>Manual approval and token delivery are still required.</p>');
+  return c.json({ok:true,status:'payment_verified',message:'TON Mainnet payment verified. The project owner must still approve delivery.'});
+});
+app.get('/api/admin/presale/orders',async c=>{
+  if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
+  const rows=await c.env.DB.prepare("SELECT * FROM presale_orders WHERE status!='delivered' ORDER BY created_at ASC LIMIT 200").all();
+  return c.json({items:(rows.results||[]).map((x:any)=>({...x,amount:fmt(x.amount_raw)}))});
+});
+app.post('/api/admin/presale/orders/:id/quote',async c=>{
+  if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
+  const id=c.req.param('id'),body=await c.req.json().catch(()=>({}));
+  const order=await c.env.DB.prepare('SELECT * FROM presale_orders WHERE id=?').bind(id).first() as any;
+  if(!order)return jsonError(c,'Order not found',404);
+  if(order.settlement_asset!=='TON')return jsonError(c,'Automated quote verification is only enabled for TON orders. Handle this asset manually and verify on-chain.',400);
+  const value=String(body.tonAmount||'');
+  if(!/^\d{1,9}(\.\d{1,9})?$/.test(value))return jsonError(c,'Enter a valid TON amount');
+  const [whole,frac='']=value.split('.');
+  const nano=(BigInt(whole)*1000000000n+BigInt((frac+'000000000').slice(0,9))).toString();
+  if(BigInt(nano)<=0n)return jsonError(c,'TON quote must be greater than zero');
+  await c.env.DB.prepare("UPDATE presale_orders SET agreed_amount_nano=?,status='awaiting_payment',updated_at=? WHERE id=? AND status='new'").bind(nano,nowSec(),id).run();
+  await sendPresaleEmail(c.env,'IFZI quote issued · order '+id,'<h2>IFZI order quote issued</h2><p>Order '+id+' is awaiting '+value+' TON. Share the official treasury address and order ID with the buyer directly.</p>');
+  return c.json({ok:true,status:'awaiting_payment',tonAmount:value});
+});
+app.post('/api/admin/presale/orders/:id/:action',async c=>{
+  if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
+  const id=c.req.param('id'),action=c.req.param('action'),body=await c.req.json().catch(()=>({}));
+  const order=await c.env.DB.prepare('SELECT * FROM presale_orders WHERE id=?').bind(id).first() as any;
+  if(!order)return jsonError(c,'Order not found',404);
+  const now=nowSec();
+  if(action==='approve'){
+    if(order.status!=='payment_verified')return jsonError(c,'Only a verified payment can be approved',409);
+    await c.env.DB.prepare("UPDATE presale_orders SET status='approved',updated_at=? WHERE id=? AND status='payment_verified'").bind(now,id).run();
+  }else if(action==='manual-verify'){
+    if(order.settlement_asset==='TON')return jsonError(c,'TON orders must use automatic on-chain verification',400);
+    const hash=safeText(body.txHash,160);
+    if(hash.length<20)return jsonError(c,'Enter the externally verified transaction hash');
+    await c.env.DB.prepare("UPDATE presale_orders SET status='payment_verified',payment_tx_hash=?,updated_at=? WHERE id=? AND status='new'").bind(hash,now,id).run();
+  }else if(action==='deliver'){
+    if(order.status!=='approved')return jsonError(c,'Approve the order before recording delivery',409);
+    const hash=safeText(body.txHash,160);
+    if(hash.length<20)return jsonError(c,'Enter the outgoing IFZI transaction hash');
+    await c.env.DB.prepare("UPDATE presale_orders SET status='delivered',outgoing_tx_hash=?,updated_at=? WHERE id=? AND status='approved'").bind(hash,now,id).run();
+  }else if(action==='reject'){
+    if(['delivered','rejected'].includes(order.status))return jsonError(c,'This order can no longer be rejected',409);
+    await c.env.DB.prepare("UPDATE presale_orders SET status='rejected',admin_note=?,updated_at=? WHERE id=?").bind(safeText(body.note,500),now,id).run();
+  }else return jsonError(c,'Unknown action');
+  await sendPresaleEmail(c.env,'IFZI order status updated · '+id,'<p>Order '+id+' status changed to '+action+'. Check Admin.html for details.</p>');
+  return c.json({ok:true});
+});
+
 export default app;
