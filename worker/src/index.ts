@@ -231,15 +231,11 @@ app.post('/api/withdrawals/request',async c=>{
   const id=crypto.randomUUID(),now=nowSec();
   const balance=await c.env.DB.prepare('SELECT available_raw FROM reward_balances WHERE user_id=?').bind(user.id).first() as any;
   if(!balance||BigInt(balance.available_raw)<amount)return jsonError(c,'Insufficient available IFZI balance',409);
-  const upd=await c.env.DB.prepare('UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)-? WHERE user_id=? AND CAST(available_raw AS INTEGER)>=?').bind(amount.toString(),user.id,amount.toString()).run();
-  if(upd.meta.changes!==1)return jsonError(c,'Balance changed; refresh and try again',409);
-  try{
-    await c.env.DB.prepare("INSERT INTO withdrawals(id,user_id,wallet_raw,amount_raw,status,created_at,updated_at) VALUES(?,?,?,?,'pending',?,?)").bind(id,user.id,user.wallet_raw,amount.toString(),now,now).run();
-    await c.env.DB.prepare("UPDATE pool_state SET reserved_raw=CAST(reserved_raw AS INTEGER)+? WHERE id=1").bind(amount.toString()).run();
-  }catch(e){
-    await c.env.DB.prepare('UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+? WHERE user_id=?').bind(amount.toString(),user.id).run();
-    throw e;
-  }
+  const results=await c.env.DB.batch([
+    c.env.DB.prepare("INSERT INTO withdrawals(id,user_id,wallet_raw,amount_raw,status,created_at,updated_at) SELECT ?,?,?,?,'pending',?,? WHERE EXISTS (SELECT 1 FROM reward_balances WHERE user_id=? AND CAST(available_raw AS INTEGER)>=?)").bind(id,user.id,user.wallet_raw,amount.toString(),now,now,user.id,amount.toString()),
+    c.env.DB.prepare('UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)-? WHERE user_id=? AND CAST(available_raw AS INTEGER)>=?').bind(amount.toString(),user.id,amount.toString())
+  ]);
+  if(results[0]?.meta?.changes!==1 || results[1]?.meta?.changes!==1)return jsonError(c,'Insufficient balance or balance changed; refresh and try again',409);
   return c.json({ok:true,id,amount:fmt(amount),status:'pending'});
 });
 
@@ -262,7 +258,6 @@ app.post('/api/admin/withdrawals/:id/:action',async c=>{
     await c.env.DB.batch([
       c.env.DB.prepare("UPDATE withdrawals SET status='rejected',updated_at=? WHERE id=? AND status IN ('pending','approved')").bind(now,id),
       c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+? WHERE user_id=?").bind(w.amount_raw,w.user_id),
-      c.env.DB.prepare("UPDATE pool_state SET reserved_raw=CAST(reserved_raw AS INTEGER)-? WHERE id=1 AND CAST(reserved_raw AS INTEGER)>=?").bind(w.amount_raw,w.amount_raw)
     ]);
   }else if(action==='paid'){
     const body=await c.req.json().catch(()=>({}));
@@ -270,7 +265,6 @@ app.post('/api/admin/withdrawals/:id/:action',async c=>{
     if(typeof body.txHash!=='string'||body.txHash.length<20||body.txHash.length>160)return jsonError(c,'Valid transaction hash required');
     await c.env.DB.batch([
       c.env.DB.prepare("UPDATE withdrawals SET status='paid',tx_hash=?,updated_at=? WHERE id=? AND status='approved'").bind(body.txHash,now,id),
-      c.env.DB.prepare("UPDATE pool_state SET reserved_raw=CAST(reserved_raw AS INTEGER)-?,distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(reserved_raw AS INTEGER)>=?").bind(w.amount_raw,w.amount_raw,w.amount_raw),
       c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) VALUES(?,?,?,?,?,?)").bind(crypto.randomUUID(),'withdrawal_paid',w.user_id,w.amount_raw,id,now)
     ]);
   }else return jsonError(c,'Unknown action');
