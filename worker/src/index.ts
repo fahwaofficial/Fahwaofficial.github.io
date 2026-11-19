@@ -1,3 +1,4 @@
+// IFZI production API: secure TON Proof sessions, mining rewards, pool accounting and admin registry.
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { Address, Cell, contractAddress, loadStateInit } from '@ton/core';
