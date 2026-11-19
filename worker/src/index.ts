@@ -31,6 +31,16 @@ app.use('*', cors({
   maxAge:86400
 }));
 app.get('/health', c => c.json({ok:true, service:'ifzi-mining-api', ts:Date.now()}));
+app.get('/health/ready',async c=>{
+  try{
+    await c.env.DB.prepare('SELECT total_raw,distributed_raw,reserved_raw FROM pool_state WHERE id=1').first();
+    await c.env.DB.prepare('SELECT referral_code FROM auth_challenges LIMIT 1').all();
+    await c.env.DB.prepare('SELECT wallet_status,network,referral_code FROM users LIMIT 1').all();
+    return c.json({ok:true,service:'ifzi-mining-api',database:true,migrations:'ready',ts:Date.now()});
+  }catch(e){
+    return c.json({ok:false,service:'ifzi-mining-api',database:false,error:e instanceof Error?e.message:'D1 readiness check failed',ts:Date.now()},503);
+  }
+});
 
 function jsonError(c:any, message:string, status=400) { return c.json({error:message},status); }
 function b64url(data:Uint8Array|string) {
@@ -60,6 +70,11 @@ function parseAmount(value:unknown):bigint {
 }
 function fmt(raw:string|bigint){const n=BigInt(raw);return (Number(n)/1e9).toLocaleString('en-US',{maximumFractionDigits:9});}
 function nowSec(){return Math.floor(Date.now()/1000);}
+app.post('/api/session/refresh',async c=>{
+  const user=await getUser(c);if(!user)return jsonError(c,'Session expired; secure wallet login is required',401);
+  if(user.wallet_status!=='approved')return jsonError(c,'Wallet is restricted',403);
+  return c.json({ok:true,token:await issueJWT(c.env,user),expires_in:30*DAY});
+});
 async function getUser(c:any):Promise<User|null>{
   const h=c.req.header('Authorization'); if(!h?.startsWith('Bearer '))return null;
   const p=await verifyJWT(c.env,h.slice(7)); if(!p)return null;
