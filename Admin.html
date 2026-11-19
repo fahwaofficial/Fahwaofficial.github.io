@@ -14,11 +14,11 @@ async function loadAllWallets(){
   const count=document.createElement('p');count.className='status';count.textContent='Registered wallets: '+d.total;host.append(count);
   const cards=[];
   for(let i=0;i<d.items.length;i++){
-   const x=d.items[i],card=document.createElement('div');card.className='card';
+   const x=d.items[i],displayAddress=x.wallet_friendly||x.wallet_raw,card=document.createElement('div');card.className='card';
    const title=document.createElement('h3');title.textContent='#'+(i+1)+' · '+x.wallet_status;
-   const address=document.createElement('p');address.textContent=x.wallet_raw;
-   const open=document.createElement('a');open.href='https://tonviewer.com/'+encodeURIComponent(x.wallet_raw);open.target='_blank';open.rel='noopener';open.textContent='Open wallet transactions ↗';
-   const copy=document.createElement('button');copy.textContent='Copy address';copy.onclick=async()=>{try{await navigator.clipboard.writeText(x.wallet_raw);$('msg').textContent='Wallet address copied.'}catch{$('msg').textContent='Copy failed; select the address manually.'}};
+   const address=document.createElement('p');address.textContent=displayAddress;
+   const open=document.createElement('a');open.href='https://tonviewer.com/'+encodeURIComponent(displayAddress);open.target='_blank';open.rel='noopener';open.textContent='Open wallet transactions ↗';
+   const copy=document.createElement('button');copy.textContent='Copy address';copy.onclick=async()=>{try{await navigator.clipboard.writeText(displayAddress);$('msg').textContent='Wallet address copied.'}catch{$('msg').textContent='Copy failed; select the address manually.'}};
    const balance=document.createElement('p');balance.className='muted';balance.textContent='IFZI balance: loading…';
    const meta=document.createElement('p');meta.className='muted';meta.textContent='Network: '+x.network+' · Joined: '+new Date(x.created_at*1000).toLocaleString();
    card.append(title,address,open,copy,balance,meta);host.append(card);cards.push({x,balance});
