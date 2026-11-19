@@ -36,7 +36,10 @@ app.get('/health/ready',async c=>{
     await c.env.DB.prepare('SELECT total_raw,distributed_raw,reserved_raw FROM pool_state WHERE id=1').first();
     await c.env.DB.prepare('SELECT referral_code FROM auth_challenges LIMIT 1').all();
     await c.env.DB.prepare('SELECT wallet_status,network,referral_code FROM users LIMIT 1').all();
-    return c.json({ok:true,service:'ifzi-mining-api',database:true,migrations:'ready',ts:Date.now()});
+    const jwtSecretConfigured=!!c.env.JWT_SECRET&&c.env.JWT_SECRET.length>=32;
+    const adminSecretConfigured=!!c.env.ADMIN_SECRET&&c.env.ADMIN_SECRET.length>=32;
+    const ready=jwtSecretConfigured&&adminSecretConfigured;
+    return c.json({ok:ready,service:'ifzi-mining-api',database:true,migrations:'ready',jwt_secret_configured:jwtSecretConfigured,admin_secret_configured:adminSecretConfigured,ts:Date.now()},ready?200:503);
   }catch(e){
     return c.json({ok:false,service:'ifzi-mining-api',database:false,error:e instanceof Error?e.message:'D1 readiness check failed',ts:Date.now()},503);
   }
