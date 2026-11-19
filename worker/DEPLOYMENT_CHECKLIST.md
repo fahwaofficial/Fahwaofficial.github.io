@@ -1,6 +1,6 @@
 # IFZI production rollout checklist
 
-This release is intentionally staged on `ifzi-safe-repair`. Do not merge the draft PR until the checks below are complete.
+This follow-up release is staged on `ifzi-launch-polish`. Do not merge its pull request until the checks below are complete.
 
 ## 1. Back up the existing D1 database
 
@@ -41,9 +41,9 @@ The deployment workflow uses them to apply the pending D1 migration and then dep
 
 1. Open `https://fahwaofficial.github.io/IFZI.html`.
 2. Connect a TON Mainnet wallet that uses one of the supported standard wallet versions (V1R1–V5R1).
-3. TON Proof should verify the wallet; the account remains pending until manually approved.
-4. Open `https://fahwaofficial.github.io/Admin.html`, enter the Worker URL and ADMIN_SECRET, load wallet approvals, and approve the test wallet.
-5. Start a 24-hour cycle and test claim/withdrawal with a small amount after at least one social task is approved.
+3. A valid TON Proof automatically verifies and approves a normal wallet; the site starts its 24-hour mining cycle after verification. Wallets marked `under_review` or `suspended` remain restricted.
+4. Confirm the center IFZI logo shows the live 24-hour countdown; after expiry, tap the same logo to claim the reward. Confirm the balance remains after a refresh.
+5. Test an exact withdrawal amount (minimum 1,000 IFZI) after at least one social task is approved. Withdrawal requests remain manually reviewed and paid by the administrator.
 
 Unknown wallet implementations fail closed. WalletTg is not yet supported by this verifier.
 
