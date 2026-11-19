@@ -76,7 +76,6 @@ function fmt(raw:string|bigint){const n=BigInt(raw);return (Number(n)/1e9).toLoc
 function nowSec(){return Math.floor(Date.now()/1000);}
 app.post('/api/session/refresh',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Session expired; secure wallet login is required',401);
-  if(user.wallet_status!=='approved')return jsonError(c,'Wallet is restricted',403);
   return c.json({ok:true,token:await issueJWT(c.env,user),expires_in:30*DAY});
 });
 async function getUser(c:any):Promise<User|null>{
@@ -84,7 +83,7 @@ async function getUser(c:any):Promise<User|null>{
   const p=await verifyJWT(c.env,h.slice(7)); if(!p)return null;
   return await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE id=?').bind(p.sub).first() as User|null;
 }
-async function issueJWT(env:Bindings,user:User){
+async async function issueJWT(env:Bindings,user:User){
   if(!env.JWT_SECRET || env.JWT_SECRET.length < 32) throw new Error('JWT_SECRET must be configured as a strong Cloudflare secret (at least 32 characters)');
   const head=b64url(JSON.stringify({alg:'HS256',typ:'JWT'}));
   const body=b64url(JSON.stringify({sub:user.id,wallet:user.wallet_raw,iat:nowSec(),exp:nowSec()+30*DAY}));
@@ -176,12 +175,12 @@ app.post('/api/ton-proof/verify',async c=>{
     const referral=challenge.referral_code?await c.env.DB.prepare('SELECT id FROM users WHERE referral_code=?').bind(challenge.referral_code).first() as any:null;
     const newCode=crypto.randomUUID().replace(/-/g,'').slice(0,12).toUpperCase();
     // A valid TON Proof is the wallet-ownership approval for public mining.
-    await c.env.DB.prepare("INSERT INTO users(id,wallet_raw,referred_by,created_at,network,wallet_status,wallet_verified_at,updated_at,referral_code) VALUES(?,?,?,?,'-239','approved',?,?,?)").bind(id,wallet,referral?.id||null,nowSec(),nowSec(),nowSec(),newCode).run();
+    await c.env.DB.prepare("INSERT INTO users(id,wallet_raw,referred_by,created_at,network,wallet_status,wallet_verified_at,updated_at,referral_code) VALUES(?,?,?,?,'-239','pending',?,?,?)").bind(id,wallet,referral?.id||null,nowSec(),nowSec(),nowSec(),newCode).run();
     await c.env.DB.prepare("INSERT OR IGNORE INTO reward_balances(user_id,available_raw,total_earned_raw,total_referral_raw) VALUES(?,'0','0','0')").bind(id).run();
-    user={id,wallet_raw:wallet,wallet_status:'approved',network:'-239',referred_by:null};
+    user={id,wallet_raw:wallet,wallet_status:'pending',network:'-239',referred_by:null};
   }else{
     if(user.wallet_status==='suspended'||user.wallet_status==='under_review')return jsonError(c,'This wallet is restricted and requires administrator review.',403);
-    await c.env.DB.prepare("UPDATE users SET network='-239',wallet_status='approved',wallet_verified_at=COALESCE(wallet_verified_at,?),updated_at=? WHERE id=? AND wallet_status IN ('pending','approved')").bind(nowSec(),nowSec(),user.id).run();
+    await c.env.DB.prepare("UPDATE users SET network='-239',wallet_verified_at=COALESCE(wallet_verified_at,?),updated_at=? WHERE id=? AND wallet_status IN ('pending','approved')").bind(nowSec(),nowSec(),user.id).run();
     user=await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE id=?').bind(user.id).first() as User|null;
     if(!user||user.wallet_status!=='approved')return jsonError(c,'Wallet approval could not be completed. Please retry or contact support.',403);
   }
