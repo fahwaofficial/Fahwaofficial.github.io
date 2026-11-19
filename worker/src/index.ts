@@ -304,7 +304,7 @@ app.get('/api/pool/status',async c=>{
 app.get('/api/admin/wallets/all',async c=>{
   if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
   const rows=await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,created_at,wallet_verified_at FROM users ORDER BY created_at ASC LIMIT 1000').all();
-  return c.json({items:rows.results||[],total:(rows.results||[]).length});
+  return c.json({items:(rows.results||[]).map((x:any)=>({...x,wallet_friendly:Address.parse(x.wallet_raw).toString({urlSafe:true,bounceable:true,testOnly:false})})),total:(rows.results||[]).length});
 });
 app.get('/api/admin/wallets',async c=>{
   if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
