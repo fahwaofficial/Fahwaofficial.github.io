@@ -155,11 +155,15 @@ app.post('/api/ton-proof/verify',async c=>{
     const id=crypto.randomUUID();
     const referral=challenge.referral_code?await c.env.DB.prepare('SELECT id FROM users WHERE referral_code=?').bind(challenge.referral_code).first() as any:null;
     const newCode=crypto.randomUUID().replace(/-/g,'').slice(0,12).toUpperCase();
-    await c.env.DB.prepare("INSERT INTO users(id,wallet_raw,referred_by,created_at,network,wallet_status,updated_at,referral_code) VALUES(?,?,?,?,'-239','pending',?,?)").bind(id,wallet,referral?.id||null,nowSec(),nowSec(),newCode).run();
+    // A valid TON Proof is the wallet-ownership approval. No separate admin click is needed to start public mining.
+    await c.env.DB.prepare("INSERT INTO users(id,wallet_raw,referred_by,created_at,network,wallet_status,wallet_verified_at,updated_at,referral_code) VALUES(?,?,?,?,'-239','approved',?,?,?)").bind(id,wallet,referral?.id||null,nowSec(),nowSec(),nowSec(),newCode).run();
     await c.env.DB.prepare("INSERT OR IGNORE INTO reward_balances(user_id,available_raw,total_earned_raw,total_referral_raw) VALUES(?,'0','0','0')").bind(id).run();
-    user={id,wallet_raw:wallet,wallet_status:'pending',network:'-239',referred_by:null};
+    user={id,wallet_raw:wallet,wallet_status:'approved',network:'-239',referred_by:null};
   }else{
-    await c.env.DB.prepare("UPDATE users SET network='-239',updated_at=? WHERE id=?").bind(nowSec(),user.id).run();
+    if(user.wallet_status==='suspended'||user.wallet_status==='under_review')return jsonError(c,'This wallet is restricted and requires administrator review.',403);
+    await c.env.DB.prepare("UPDATE users SET network='-239',wallet_status='approved',wallet_verified_at=COALESCE(wallet_verified_at,?),updated_at=? WHERE id=? AND wallet_status IN ('pending','approved')").bind(nowSec(),nowSec(),user.id).run();
+    user=await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE id=?').bind(user.id).first() as User|null;
+    if(!user||user.wallet_status!=='approved')return jsonError(c,'Wallet approval could not be completed. Please retry or contact support.',403);
   }
   return c.json({ok:true,token:await issueJWT(c.env,user),wallet_status:user.wallet_status});
 });
