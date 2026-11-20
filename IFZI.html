@@ -78,11 +78,30 @@ body{background:radial-gradient(ellipse at 50% -24%,#171a1e 0%,#08090b 38%,#0304
 #optionalTask{border-color:#d7dce333;background:linear-gradient(145deg,rgba(35,37,41,.92),rgba(8,9,11,.96))}
 @media(max-width:760px){.wrap{padding:12px}.top{position:relative;align-items:center;flex-direction:column}.nav{justify-content:center}.hero{padding:30px 8px 24px}.grid{grid-template-columns:1fr}.mining{min-height:470px;padding:24px 14px}.mine-orb{width:224px;height:224px;min-height:224px}.mine-orb img{width:136px;height:136px}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{padding:13px 6px}}
 @media(max-width:420px){.nav .btn{font-size:10px;padding:9px 10px}.mine-orb{width:208px;height:208px;min-height:208px}.mine-orb img{width:126px;height:126px}.panel{padding:18px 15px}.hero h1{font-size:39px}}
+/* STON.fi Omniston swap panel */
+#ifziSwapMount{color:#f4f5f6}#ifziSwapMount>*{max-width:100%}@media(max-width:760px){#swap>div:first-of-type{grid-template-columns:1fr!important}#ifziSwapMount{min-height:520px!important}}
 </style><script src="https://telegram.org/js/telegram-web-app.js?65"></script></head><body><div class="wrap">
-<header class="top"><div class="brand"><img src="https://fahwaofficial.github.io/images/logo-ifc.jpg" alt="IFZI"><span>IFZI PROTOCOL</span></div><nav class="nav"><a class="btn" href="#mine">MINING</a><a class="btn" href="#tasks">TASKS</a><a class="btn" href="#withdrawalHistoryPanel">WITHDRAWALS</a><a class="btn" href="#buy">BUY IFZI</a><a class="btn primary" href="https://fahwaofficial.github.io/IFZI-presale.html">PRIVATE SALE ↗</a><a class="btn" href="https://app.ston.fi/pools/EQBjAe1hG6qi7AqSEXR7B6tueAvY5uONHDAIa8fJuX_B64f8" target="_blank" rel="noopener">LIQUIDITY POOL ↗</a></nav></header>
+<header class="top"><div class="brand"><img src="https://fahwaofficial.github.io/images/logo-ifc.jpg" alt="IFZI"><span>IFZI PROTOCOL</span></div><nav class="nav"><a class="btn" href="#mine">MINING</a><a class="btn" href="#tasks">TASKS</a><a class="btn" href="#withdrawalHistoryPanel">WITHDRAWALS</a><a class="btn" href="#buy">BUY IFZI</a><a class="btn" href="#swap">SWAP IFZI</a><a class="btn primary" href="https://fahwaofficial.github.io/IFZI-presale.html">PRIVATE SALE ↗</a><a class="btn" href="https://app.ston.fi/pools/EQBjAe1hG6qi7AqSEXR7B6tueAvY5uONHDAIa8fJuX_B64f8" target="_blank" rel="noopener">LIQUIDITY POOL ↗</a></nav></header>
 <section class="hero"><div class="eyebrow">TON ECOSYSTEM · COMMUNITY MINING</div><h1>Mine the next<br>digital frontier.</h1><p>Earn IFZI through transparent 24-hour mining cycles. Connect your TON wallet, complete verification and track your rewards.</p><button class="btn primary" id="connectWalletBtn" type="button">CONNECT TON WALLET</button></section>
 <div class="stats"><div class="stat"><b>84,000,000</b><span>Total supply · IFZI</span></div><div class="stat"><b>8,400,000</b><span>Mining allocation · IFZI</span></div><div class="stat"><b>24 H</b><span>Mining cycle</span></div></div>
 <section class="panel" id="poolPanel"><h2>Mining pool transparency</h2><div class="poolmeta"><span>Total allocation: <b>8,400,000 IFZI</b></span><span>Remaining: <b id="poolRemaining">Loading…</b></span></div><div class="poolbar"><i id="poolProgress"></i></div><div class="poolmeta"><span>Distributed: <b id="poolDistributed">—</b></span><span>Reserved: <b id="poolReserved">—</b></span><span id="poolPercent">—</span></div><p class="muted">The remaining amount is calculated from server-recorded claims and approved pool emissions. It updates automatically; no manual estimate is used.</p></section>
+<section class="panel" id="swap">
+ <h2>STON.fi · IFZI SWAP TERMINAL</h2>
+ <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px;align-items:center">
+  <div>
+   <div class="eyebrow">POWERED BY STON.FI OMNISTON</div>
+   <h3 style="font:700 clamp(22px,4vw,32px) 'Space Grotesk',sans-serif;margin:12px 0">Swap TON ↔ IFZI<br>without leaving IFZI.</h3>
+   <p class="muted" style="font-size:13px;line-height:1.8">Trade through STON.fi's embedded swap interface. Connect your TON wallet once and review the route, rate, network fee and transaction in your wallet before confirming.</p>
+   <div class="private-callout"><b style="display:block;margin-bottom:5px">Non-custodial trading</b><span class="muted">Your wallet signs each transaction. IFZI does not receive or store your seed phrase or private keys.</span></div>
+   <button class="btn primary" id="loadIfziSwap" type="button" style="margin-top:14px;width:100%">LOAD SECURE SWAP WIDGET</button>
+   <p class="muted" id="ifziSwapStatus" role="status" style="margin-top:10px">The swap module loads only when you press the button.</p>
+  </div>
+  <div id="ifziSwapMount" style="min-height:430px;width:100%;border:1px solid #ffffff20;border-radius:18px;background:#080a0c;padding:10px;overflow:hidden">
+   <div style="min-height:405px;display:grid;place-items:center;text-align:center;color:#9aa0a8;padding:20px"><div><div style="font-size:32px;margin-bottom:12px">⇄</div><b style="color:#f4f5f6">STON.fi swap widget</b><p class="muted">Press “Load secure swap widget” to open the live swap interface here.</p></div></div>
+  </div>
+ </div>
+ <p class="muted" style="margin:14px 0 0">Rates, token availability and execution depend on live liquidity and STON.fi routing. A swap is not a purchase guarantee or investment recommendation. Always verify IFZI's token address: <span style="overflow-wrap:anywhere">EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0</span>.</p>
+</section>
 <div class="grid"><main>
 <section class="panel mining" id="mine"><h2>01 / Mining terminal</h2><div class="eyebrow">IFZI MINER · 24 HOUR CYCLE</div><button class="mine-orb" id="mineActionBtn" type="button" aria-label="Connect wallet, start mining or claim reward"><img src="https://fahwaofficial.github.io/images/logo-ifc.jpg" alt="IFZI token logo"><span id="mineActionLabel">CONNECT WALLET TO START</span></button><div class="row"><span>Mining level</span><b id="mineLevel">—</b></div><div class="row"><span>Daily rate</span><b id="dailyRate">—</b></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 18px"><button class="btn primary" id="startBtn" disabled>START MINING</button><button class="btn green" id="claimBtn" disabled>CLAIM REWARD</button></div><div class="bigtime" id="timer">--:--:--</div><div class="muted" id="mineStatus">Connect your TON wallet. A valid TON Proof automatically approves the wallet and starts mining. Withdrawals remain manually reviewed.</div><div id="mineMsg"></div><p class="muted">This is a server-accounted 24-hour reward cycle, not proof-of-work mining or guaranteed earnings. A wallet with zero IFZI starts at Level 1; verified IFZI holdings increase the level. A verified TON Mainnet wallet starts automatically; tap the IFZI logo when a cycle is ready to claim. Holding at least 10,000 IFZI when a cycle starts adds 50% to the daily rate at levels 1–5 and 25% at levels 6–11.</p></section>
 <section class="panel" id="levelLadder"><h2>Mining levels · IFZI balance tiers</h2><p class="muted">Your level is recalculated from your verified IFZI Mainnet balance whenever a new 24-hour cycle starts. Holding at least 10,000 IFZI adds a cycle bonus: +50% at levels 1–5 and +25% at levels 6–11.</p><div class="rows"><div class="row"><span>Level 1 · 0 IFZI</span><b>100 IFZI / day</b></div><div class="row"><span>Level 2 · 10,000 IFZI</span><b>120 IFZI / day</b></div><div class="row"><span>Level 3 · 25,000 IFZI</span><b>140 IFZI / day</b></div><div class="row"><span>Level 4 · 50,000 IFZI</span><b>160 IFZI / day</b></div><div class="row"><span>Level 5 · 100,000 IFZI</span><b>180 IFZI / day</b></div><div class="row"><span>Level 6 · 200,000 IFZI</span><b>200 IFZI / day</b></div><div class="row"><span>Level 7 · 350,000 IFZI</span><b>220 IFZI / day</b></div><div class="row"><span>Level 8 · 500,000 IFZI</span><b>240 IFZI / day</b></div><div class="row"><span>Level 9 · 750,000 IFZI</span><b>260 IFZI / day</b></div><div class="row"><span>Level 10 · 1,000,000 IFZI</span><b>280 IFZI / day</b></div><div class="row"><span>Level 11 · 2,000,000 IFZI</span><b>300 IFZI / day</b></div></div><p class="muted">The displayed daily rate is a server-accounted reward, not guaranteed investment income. Balance is checked at cycle start; increasing your balance affects the next cycle.</p></section><section class="panel"><h2>02 / Wallet & rewards</h2><div class="rows"><div class="row"><span>Connected wallet</span><b id="wallet">Not connected</b></div><div class="row"><span>Network</span><b id="network">—</b></div><div class="row"><span>Verification</span><b id="approval">—</b></div><div class="row"><span>On-chain IFZI</span><b id="chainBalance">—</b></div><div class="row"><span>Available rewards</span><b id="available">—</b></div><div class="row"><span>Lifetime earned</span><b id="lifetime">—</b></div></div><div id="walletMsg"></div><button class="btn" id="disconnectWalletBtn" type="button">DISCONNECT WALLET</button><div class="row"><span>Your referral code</span><b id="refCode">Connect wallet</b></div><input class="input" id="refLink" readonly placeholder="Your referral link will appear here"><button class="btn" id="copyRef" style="width:100%">COPY REFERRAL LINK</button></section>
@@ -202,4 +221,39 @@ async function loadWithdrawalHistory(){
  }catch(e){host.textContent='Could not load withdrawal history: '+e.message}
 }
 $('loadWithdrawalHistory').onclick=loadWithdrawalHistory;
+
+/* STON.fi Omniston: lazy-load and reuse the mining page's existing TON Connect UI instance */
+let ifziSwapWidget=null,ifziSwapLoaderPromise=null;
+async function loadIfziSwap(){
+ const status=$('ifziSwapStatus'),button=$('loadIfziSwap'),mount=$('ifziSwapMount');
+ if(ifziSwapWidget){status.textContent='STON.fi swap widget is ready.';return}
+ button.disabled=true;button.textContent='LOADING STON.FI…';status.textContent='Loading the STON.fi swap module…';
+ try{
+  const client=await ensureTonConnectUI();
+  if(!window.OmnistonWidget){
+   if(!ifziSwapLoaderPromise)ifziSwapLoaderPromise=new Promise((resolve,reject)=>{
+    const script=document.createElement('script');script.src='https://widget.ston.fi/v0/index.js';script.async=true;
+    script.onload=()=>window.OmnistonWidget?resolve():reject(new Error('STON.fi widget constructor is unavailable.'));
+    script.onerror=()=>reject(new Error('Could not load the STON.fi widget CDN. Check your connection and retry.'));
+    document.head.appendChild(script);
+   });
+   await ifziSwapLoaderPromise;
+  }
+  ifziSwapWidget=new window.OmnistonWidget({
+   tonconnect:{type:'integrated',instance:client},
+   widget:{
+    defaultBidAsset:'EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c',
+    defaultAskAsset:'EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0'
+   }
+  });
+  mount.innerHTML='';ifziSwapWidget.mount(mount);
+  status.textContent='STON.fi widget loaded. Connect your TON wallet in the widget and review every transaction before signing.';
+  button.textContent='SWAP WIDGET READY';
+ }catch(e){
+  ifziSwapWidget=null;status.textContent='Swap widget could not load: '+(e?.message||String(e));
+  button.disabled=false;button.textContent='RETRY LOADING SWAP';
+  ifziSwapLoaderPromise&&!window.OmnistonWidget)ifziSwapLoaderPromise=null;
+ }
+}
+$('loadIfziSwap').addEventListener('click',loadIfziSwap);
 </script></body></html>
