@@ -108,7 +108,8 @@ async function getVerifiedIfziBalanceRaw(env:Bindings,walletRaw:string):Promise<
   const wallet=Address.parse(walletRaw).toString({urlSafe:true,bounceable:true,testOnly:false});
   const base=(env.TONAPI_BASE||'https://tonapi.io').replace(/\/$/,'');
   const response=await fetch(base+'/v2/accounts/'+encodeURIComponent(wallet)+'/jettons/'+encodeURIComponent(master),{signal:AbortSignal.timeout(8000)});
-  if(response.status===404)return 0n;\n   if(!response.ok)throw new Error('Unable to verify IFZI balance from TON mainnet (HTTP '+response.status+')');
+  if(response.status===404)return 0n;
+  if(!response.ok)throw new Error('Unable to verify IFZI balance from TON mainnet (HTTP '+response.status+')');
   const data=await response.json() as any;
   if(!data||data.jetton?.address===undefined)throw new Error('IFZI jetton balance response is incomplete');
   return BigInt(data.balance||'0');
@@ -163,8 +164,8 @@ async function validateTelegramInitData(raw:string,botToken:string):Promise<stri
   const userText=params.get('user');if(!userText)throw new Error('Telegram user identity is missing');
   let tgUser:any;try{tgUser=JSON.parse(userText)}catch{throw new Error('Telegram user identity is invalid');}
   const telegramId=String(tgUser?.id??'');
-  if(!/^\\d{5,20}$/.test(telegramId))throw new Error('Telegram numeric user ID is invalid');
-  const checkString=[...params.entries()].filter(([key])=>key!=='hash').sort(([a],[b])=>a.localeCompare(b)).map(([key,value])=>key+'='+value).join('\\n');
+  if(!/^[0-9]{5,20}$/.test(telegramId))throw new Error('Telegram numeric user ID is invalid');
+  const checkString=[...params.entries()].filter(([key])=>key!=='hash').sort(([a],[b])=>a.localeCompare(b)).map(([key,value])=>key+'='+value).join(String.fromCharCode(10));
   const encoder=new TextEncoder();
   const secretKey=await crypto.subtle.importKey('raw',encoder.encode('WebAppData'),{name:'HMAC',hash:'SHA-256'},false,['sign']);
   const secret=new Uint8Array(await crypto.subtle.sign('HMAC',secretKey,encoder.encode(botToken)));
