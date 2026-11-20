@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 migration = ROOT / "worker" / "migrations" / "001_add_ton_proof.sql"
 streak_migration = ROOT / "worker" / "migrations" / "003_daily_streaks.sql"
+telegram_migration = ROOT / "worker" / "migrations" / "004_telegram_identity.sql"
 
 db = sqlite3.connect(":memory:")
 db.execute("PRAGMA foreign_keys = ON")
@@ -62,6 +63,7 @@ db.execute("INSERT INTO withdrawals(id,user_id,wallet_raw,amount_raw,status,crea
 
 db.executescript(migration.read_text(encoding="utf-8"))
 db.executescript(streak_migration.read_text(encoding="utf-8"))
+db.executescript(telegram_migration.read_text(encoding="utf-8"))
 assert db.execute("SELECT wallet_raw FROM users WHERE id='u1'").fetchone()[0] == "0:abc"
 assert db.execute("SELECT available_raw FROM reward_balances WHERE user_id='u1'").fetchone()[0] == "123000000000"
 assert db.execute("SELECT status FROM withdrawals WHERE id='w1'").fetchone()[0] == "pending"
@@ -76,7 +78,7 @@ assert expected <= actual
 columns = {r[1] for r in db.execute("PRAGMA table_info(users)")}
 assert {"network", "wallet_status", "wallet_verified_at", "referral_code"} <= columns
 challenge_columns = {r[1] for r in db.execute("PRAGMA table_info(auth_challenges)")}
-assert "referral_code" in challenge_columns
+assert {"referral_code", "telegram_id"} <= challenge_columns
 streak_tables = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
 assert {"streak_rewards", "monthly_badges"} <= streak_tables
-print("PASS: migrations 001 and 003 apply to production schema snapshot; seeded user, balance, withdrawal and pool data preserved; streak tables created.")
+print("PASS: migrations 001, 003 and 004 apply to production schema snapshot; seeded user, balance, withdrawal and pool data preserved; streak tables created.")
