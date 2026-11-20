@@ -1,7 +1,7 @@
 name: IFZI Worker CI
 on:
   push:
-    branches: [ifzi-safe-repair]
+    branches: [ifzi-safe-repair, ifzi-wallet-mining-repair]
     paths:
       - "worker/**"
       - ".github/workflows/ifzi-worker-ci.yml"

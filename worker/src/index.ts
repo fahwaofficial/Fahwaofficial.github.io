@@ -1,3 +1,4 @@
+// IFZI production API: secure TON Proof sessions, mining rewards, pool accounting and admin registry.
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { Address, Cell, contractAddress, loadStateInit } from '@ton/core';
@@ -31,6 +32,19 @@ app.use('*', cors({
   maxAge:86400
 }));
 app.get('/health', c => c.json({ok:true, service:'ifzi-mining-api', ts:Date.now()}));
+app.get('/health/ready',async c=>{
+  try{
+    await c.env.DB.prepare('SELECT total_raw,distributed_raw,reserved_raw FROM pool_state WHERE id=1').first();
+    await c.env.DB.prepare('SELECT referral_code FROM auth_challenges LIMIT 1').all();
+    await c.env.DB.prepare('SELECT wallet_status,network,referral_code FROM users LIMIT 1').all();
+    const jwtSecretConfigured=!!c.env.JWT_SECRET&&c.env.JWT_SECRET.length>=32;
+    const adminSecretConfigured=!!c.env.ADMIN_SECRET&&c.env.ADMIN_SECRET.length>=32;
+    const ready=jwtSecretConfigured&&adminSecretConfigured;
+    return c.json({ok:ready,service:'ifzi-mining-api',database:true,migrations:'ready',jwt_secret_configured:jwtSecretConfigured,admin_secret_configured:adminSecretConfigured,ts:Date.now()},ready?200:503);
+  }catch(e){
+    return c.json({ok:false,service:'ifzi-mining-api',database:false,error:e instanceof Error?e.message:'D1 readiness check failed',ts:Date.now()},503);
+  }
+});
 
 function jsonError(c:any, message:string, status=400) { return c.json({error:message},status); }
 function b64url(data:Uint8Array|string) {
@@ -60,6 +74,10 @@ function parseAmount(value:unknown):bigint {
 }
 function fmt(raw:string|bigint){const n=BigInt(raw);return (Number(n)/1e9).toLocaleString('en-US',{maximumFractionDigits:9});}
 function nowSec(){return Math.floor(Date.now()/1000);}
+app.post('/api/session/refresh',async c=>{
+  const user=await getUser(c);if(!user)return jsonError(c,'Session expired; secure wallet login is required',401);
+  return c.json({ok:true,token:await issueJWT(c.env,user),expires_in:30*DAY});
+});
 async function getUser(c:any):Promise<User|null>{
   const h=c.req.header('Authorization'); if(!h?.startsWith('Bearer '))return null;
   const p=await verifyJWT(c.env,h.slice(7)); if(!p)return null;
@@ -68,7 +86,7 @@ async function getUser(c:any):Promise<User|null>{
 async function issueJWT(env:Bindings,user:User){
   if(!env.JWT_SECRET || env.JWT_SECRET.length < 32) throw new Error('JWT_SECRET must be configured as a strong Cloudflare secret (at least 32 characters)');
   const head=b64url(JSON.stringify({alg:'HS256',typ:'JWT'}));
-  const body=b64url(JSON.stringify({sub:user.id,wallet:user.wallet_raw,iat:nowSec(),exp:nowSec()+86400}));
+  const body=b64url(JSON.stringify({sub:user.id,wallet:user.wallet_raw,iat:nowSec(),exp:nowSec()+30*DAY}));
   const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(env.JWT_SECRET),{name:'HMAC',hash:'SHA-256'},false,['sign']);
   const sig=new Uint8Array(await crypto.subtle.sign('HMAC',key,new TextEncoder().encode(head+'.'+body)));
   return head+'.'+body+'.'+b64url(sig);
@@ -89,7 +107,7 @@ async function getVerifiedIfziBalanceRaw(env:Bindings,walletRaw:string):Promise<
   const master=Address.parse(env.JETTON_MASTER).toString({urlSafe:true,bounceable:true,testOnly:false});
   const wallet=Address.parse(walletRaw).toString({urlSafe:true,bounceable:true,testOnly:false});
   const base=(env.TONAPI_BASE||'https://tonapi.io').replace(/\/$/,'');
-  const response=await fetch(base+'/v2/accounts/'+encodeURIComponent(wallet)+'/jettons/'+encodeURIComponent(master));
+  const response=await fetch(base+'/v2/accounts/'+encodeURIComponent(wallet)+'/jettons/'+encodeURIComponent(master),{signal:AbortSignal.timeout(8000)});
   if(!response.ok)throw new Error('Unable to verify IFZI balance from TON mainnet');
   const data=await response.json() as any;
   if(!data||data.jetton?.address===undefined)throw new Error('IFZI jetton balance response is incomplete');
@@ -157,12 +175,12 @@ app.post('/api/ton-proof/verify',async c=>{
     const referral=challenge.referral_code?await c.env.DB.prepare('SELECT id FROM users WHERE referral_code=?').bind(challenge.referral_code).first() as any:null;
     const newCode=crypto.randomUUID().replace(/-/g,'').slice(0,12).toUpperCase();
     // A valid TON Proof is the wallet-ownership approval for public mining.
-    await c.env.DB.prepare("INSERT INTO users(id,wallet_raw,referred_by,created_at,network,wallet_status,wallet_verified_at,updated_at,referral_code) VALUES(?,?,?,?,'-239','approved',?,?,?)").bind(id,wallet,referral?.id||null,nowSec(),nowSec(),nowSec(),newCode).run();
+    await c.env.DB.prepare("INSERT INTO users(id,wallet_raw,referred_by,created_at,network,wallet_status,wallet_verified_at,updated_at,referral_code) VALUES(?,?,?,?,'-239','pending',?,?,?)").bind(id,wallet,referral?.id||null,nowSec(),nowSec(),nowSec(),newCode).run();
     await c.env.DB.prepare("INSERT OR IGNORE INTO reward_balances(user_id,available_raw,total_earned_raw,total_referral_raw) VALUES(?,'0','0','0')").bind(id).run();
-    user={id,wallet_raw:wallet,wallet_status:'approved',network:'-239',referred_by:null};
+    user={id,wallet_raw:wallet,wallet_status:'pending',network:'-239',referred_by:null};
   }else{
     if(user.wallet_status==='suspended'||user.wallet_status==='under_review')return jsonError(c,'This wallet is restricted and requires administrator review.',403);
-    await c.env.DB.prepare("UPDATE users SET network='-239',wallet_status='approved',wallet_verified_at=COALESCE(wallet_verified_at,?),updated_at=? WHERE id=? AND wallet_status IN ('pending','approved')").bind(nowSec(),nowSec(),user.id).run();
+    await c.env.DB.prepare("UPDATE users SET network='-239',wallet_verified_at=COALESCE(wallet_verified_at,?),updated_at=? WHERE id=? AND wallet_status IN ('pending','approved')").bind(nowSec(),nowSec(),user.id).run();
     user=await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE id=?').bind(user.id).first() as User|null;
     if(!user||user.wallet_status!=='approved')return jsonError(c,'Wallet approval could not be completed. Please retry or contact support.',403);
   }
@@ -188,11 +206,13 @@ app.post('/api/mining/start',async c=>{
   if(existing)return jsonError(c,'You already have an unclaimed mining cycle.',409);
   let balanceRaw:bigint;try{balanceRaw=await getVerifiedIfziBalanceRaw(c.env,user.wallet_raw)}catch(e){return jsonError(c,e instanceof Error?e.message:'Could not verify IFZI balance',503);}
   const wholeBalance=balanceRaw/UNIT;
-  let level=1,rateTokens=100n;for(let i=0;i<levels.length;i++){if(wholeBalance>=levels[i][0]){level=i+1;rateTokens=levels[i][1]}}
-  const rate=rateTokens*UNIT,reward=rate,started=nowSec(),ends=started+DAY,id=crypto.randomUUID();
+  let level=1,baseRateTokens=100n;for(let i=0;i<levels.length;i++){if(wholeBalance>=levels[i][0]){level=i+1;baseRateTokens=levels[i][1]}}
+  const holdingEligible=balanceRaw>=10_000n*UNIT;
+  const holdingBonusPercent=holdingEligible?(level<=5?50n:25n):0n;
+  const rate=baseRateTokens*UNIT*(100n+holdingBonusPercent)/100n,reward=rate,started=nowSec(),ends=started+DAY,id=crypto.randomUUID();
   const insert=await c.env.DB.prepare("INSERT INTO mining_cycles(id,user_id,level,daily_rate_raw,gross_reward_raw,started_at,ends_at,status) VALUES(?,?,?,?,?,?,?,'running')").bind(id,user.id,level,rate.toString(),reward.toString(),started,ends).run();
   if(insert.meta.changes!==1)return jsonError(c,'Could not start mining cycle',500);
-  return c.json({ok:true,cycle_id:id,ends_at:ends*1000,reward:fmt(reward),level,daily_rate:fmt(rate),verified_balance:fmt(balanceRaw)});
+  return c.json({ok:true,cycle_id:id,ends_at:ends*1000,reward:fmt(reward),level,daily_rate:fmt(rate),base_daily_rate:fmt(baseRateTokens*UNIT),holding_bonus_percent:Number(holdingBonusPercent),verified_balance:fmt(balanceRaw)});
 });
 app.post('/api/mining/claim',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
@@ -275,6 +295,19 @@ app.post('/api/admin/withdrawals/:id/:action',async c=>{
   }else return jsonError(c,'Unknown action');
   await c.env.DB.prepare('INSERT INTO admin_audit(id,action,target_type,target_id,details,created_at) VALUES(?,?,?,?,?,?)').bind(crypto.randomUUID(),'withdrawal_'+action,'withdrawal',id,null,now).run();
   return c.json({ok:true});
+});
+app.get('/api/pool/status',async c=>{
+  const pool=await c.env.DB.prepare('SELECT total_raw,distributed_raw,reserved_raw FROM pool_state WHERE id=1').first() as any;
+  if(!pool)return jsonError(c,'Mining pool is not initialized',503);
+  const total=BigInt(pool.total_raw),distributed=BigInt(pool.distributed_raw),reserved=BigInt(pool.reserved_raw);
+  const remaining=total>distributed+reserved?total-distributed-reserved:0n;
+  const percent=total>0n?Number(distributed*10000n/total)/100:0;
+  return c.json({total:fmt(total),distributed:fmt(distributed),reserved:fmt(reserved),remaining:fmt(remaining),distributed_percent:percent,total_raw:total.toString(),distributed_raw:distributed.toString(),reserved_raw:reserved.toString(),remaining_raw:remaining.toString()});
+});
+app.get('/api/admin/wallets/all',async c=>{
+  if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
+  const rows=await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,created_at,wallet_verified_at FROM users ORDER BY created_at ASC LIMIT 1000').all();
+  return c.json({items:(rows.results||[]).map((x:any)=>({...x,wallet_friendly:Address.parse(x.wallet_raw).toString({urlSafe:true,bounceable:true,testOnly:false})})),total:(rows.results||[]).length});
 });
 app.get('/api/admin/wallets',async c=>{
   if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
