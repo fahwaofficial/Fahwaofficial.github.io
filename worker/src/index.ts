@@ -179,8 +179,7 @@ app.post('/api/ton-proof/payload',async c=>{
   const nonce=crypto.randomUUID();
   const referralCode=typeof body.referralCode==='string'&&/^[A-Z0-9]{5,20}$/.test(body.referralCode.toUpperCase())?body.referralCode.toUpperCase():null;
   let telegramId:string|null=null;
-  if(typeof body.telegramInitData==='string'&&body.telegramInitData){
-    if(!c.env.TELEGRAM_BOT_TOKEN)return jsonError(c,'Telegram linking is not configured yet. Wallet proof can still proceed.',503);
+  if(typeof body.telegramInitData==='string'&&body.telegramInitData&&c.env.TELEGRAM_BOT_TOKEN){
     try{telegramId=await validateTelegramInitData(body.telegramInitData,c.env.TELEGRAM_BOT_TOKEN)}catch(e){return jsonError(c,e instanceof Error?e.message:'Telegram identity verification failed',401)}
   }
   await c.env.DB.prepare('INSERT INTO auth_challenges(nonce,wallet_raw,expires_at,used,referral_code,telegram_id) VALUES(?,NULL,?,0,?,?)').bind(nonce,Date.now()+5*60*1000,referralCode,telegramId).run();
