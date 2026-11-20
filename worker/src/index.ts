@@ -337,6 +337,25 @@ app.post('/api/tasks/submit',async c=>{
   await c.env.DB.prepare("INSERT INTO task_submissions(id,user_id,task_key,proof_url,status,created_at) VALUES(?,?,?,?,'pending',?)").bind(id,user.id,key,proofUrl,nowSec()).run();
   return c.json({ok:true,id,status:'pending'});
 });
+function utcDateOffset(date:string,days:number){const d=new Date(date+'T00:00:00.000Z');d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10);}
+async function readStreak(c:any,userId:string){
+  const today=new Date().toISOString().slice(0,10);
+  const rows=await c.env.DB.prepare('SELECT checkin_date FROM daily_checkins WHERE user_id=? ORDER BY checkin_date DESC LIMIT 60').bind(userId).all();
+  const dates=(rows.results||[]).map((x:any)=>String(x.checkin_date));
+  const dateSet=new Set(dates);
+  const anchor=dateSet.has(today)?today:utcDateOffset(today,-1);
+  let raw=0;
+  if(dateSet.has(anchor)){let cursor=anchor;while(dateSet.has(cursor)&&raw<365){raw++;cursor=utcDateOffset(cursor,-1)}}
+  const cycleDay=raw?((raw-1)%30)+1:0;
+  const cycleStart=raw?utcDateOffset(anchor,-(cycleDay-1)):null;
+  const calendar=Array.from({length:30},(_,i)=>{const date=utcDateOffset(today,i-29);return {date,checked:dateSet.has(date)}});
+  const badges=await c.env.DB.prepare('SELECT cycle_start_date,badge_code,awarded_at FROM monthly_badges WHERE user_id=? ORDER BY awarded_at DESC LIMIT 12').bind(userId).all();
+  return {today,streak_days:cycleDay,continuous_days:raw,last_checkin:dates[0]||null,next_weekly_milestone:cycleDay<7?7:cycleDay<14?14:cycleDay<21?21:cycleDay<28?28:cycleDay<30?30:null,calendar,badges:badges.results||[],badge_count:(badges.results||[]).length,cycle_start_date:cycleStart};
+}
+app.get('/api/tasks/streak',async c=>{
+  const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
+  return c.json(await readStreak(c,user.id));
+});
 app.post('/api/tasks/daily-checkin',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   if(user.wallet_status!=='approved')return jsonError(c,'Wallet approval is required before task rewards.',403);
@@ -349,7 +368,26 @@ app.post('/api/tasks/daily-checkin',async c=>{
     c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=? AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(amount.toString(),amount.toString(),user.id,ref)
   ]);
   if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1)return jsonError(c,'Daily check-in already claimed or community reward allocation exhausted',409);
-  return c.json({ok:true,reward:fmt(amount),date});
+  const stats=await readStreak(c,user.id);
+  let weeklyBonus=0n,weeklyMilestone=0;
+  if([7,14,21,28].includes(stats.streak_days)&&stats.cycle_start_date){
+    weeklyMilestone=stats.streak_days;
+    weeklyBonus=70n*BigInt(stats.streak_days/7)*UNIT;
+    const rewardRef=user.id+':'+stats.cycle_start_date+':'+weeklyMilestone;
+    const bonusResults=await c.env.DB.batch([
+      c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND NOT EXISTS(SELECT 1 FROM streak_rewards WHERE user_id=? AND cycle_start_date=? AND milestone_day=?)").bind(weeklyBonus.toString(),weeklyBonus.toString(),user.id,stats.cycle_start_date,weeklyMilestone),
+      c.env.DB.prepare("INSERT INTO streak_rewards(user_id,cycle_start_date,milestone_day,reward_raw,created_at) SELECT ?,?,?,?,? WHERE changes()=1").bind(user.id,stats.cycle_start_date,weeklyMilestone,weeklyBonus.toString(),now),
+      c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) SELECT ?,'daily_checkin',?,?,?,? WHERE changes()=1").bind(crypto.randomUUID(),user.id,weeklyBonus.toString(),rewardRef,now),
+      c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=? AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(weeklyBonus.toString(),weeklyBonus.toString(),user.id,rewardRef)
+    ]);
+    if(bonusResults[0]?.meta?.changes!==1||bonusResults[1]?.meta?.changes!==1)weeklyBonus=0n;
+  }
+  let monthlyBadgeAwarded=false;
+  if(stats.streak_days===30&&stats.cycle_start_date){
+    const badge=await c.env.DB.prepare("INSERT OR IGNORE INTO monthly_badges(user_id,cycle_start_date,badge_code,awarded_at) VALUES(?,?,'IFZI-30-DAY',?)").bind(user.id,stats.cycle_start_date,now).run();
+    monthlyBadgeAwarded=badge.meta.changes===1;
+  }
+  return c.json({ok:true,reward:fmt(amount),weekly_bonus:fmt(weeklyBonus),weekly_milestone:weeklyMilestone||null,monthly_badge_awarded:monthlyBadgeAwarded,streak_days:stats.streak_days,date});
 });
 app.post('/api/boost/verify',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
