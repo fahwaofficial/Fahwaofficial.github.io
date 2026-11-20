@@ -479,8 +479,8 @@ app.post('/api/admin/tasks/:id/:action',async c=>{
     await c.env.DB.prepare("INSERT INTO admin_audit(id,action,target_type,target_id,created_at) VALUES(?,'task_rejected','task',?,?)").bind(crypto.randomUUID(),id,now).run();
     return c.json({ok:true});
   }
-  // The database value 3 is a legacy boost-enabled flag (CHECK constraint: 1 or 3); the actual reward multiplier is 4x.
-  const multiplier=Number(task.task_boost_multiplier)===3?4:1;
+  // Ordinary social tasks have one fixed reward; the optional TON task is credited separately.
+  const multiplier=1;
   const amount=BigInt(c.env.TASK_REWARD_IFZI||'50')*BigInt(multiplier)*UNIT;
   const results=await c.env.DB.batch([
     c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND EXISTS(SELECT 1 FROM task_submissions WHERE id=? AND status='pending')").bind(amount.toString(),amount.toString(),id),
