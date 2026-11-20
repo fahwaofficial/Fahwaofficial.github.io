@@ -35,7 +35,7 @@ app.get('/health', c => c.json({ok:true, service:'ifzi-mining-api', ts:Date.now(
 app.get('/health/ready',async c=>{
   try{
     await c.env.DB.prepare('SELECT total_raw,distributed_raw,reserved_raw FROM pool_state WHERE id=1').first();
-    await c.env.DB.prepare('SELECT referral_code FROM auth_challenges LIMIT 1').all();
+    await c.env.DB.prepare('SELECT referral_code,telegram_id FROM auth_challenges LIMIT 1').all();
     await c.env.DB.prepare('SELECT wallet_status,network,referral_code FROM users LIMIT 1').all();
     const jwtSecretConfigured=!!c.env.JWT_SECRET&&c.env.JWT_SECRET.length>=32;
     const adminSecretConfigured=!!c.env.ADMIN_SECRET&&c.env.ADMIN_SECRET.length>=32;
