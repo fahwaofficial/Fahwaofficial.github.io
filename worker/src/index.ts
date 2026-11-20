@@ -83,7 +83,7 @@ async function getUser(c:any):Promise<User|null>{
   const p=await verifyJWT(c.env,h.slice(7)); if(!p)return null;
   return await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE id=?').bind(p.sub).first() as User|null;
 }
-async async function issueJWT(env:Bindings,user:User){
+async function issueJWT(env:Bindings,user:User){
   if(!env.JWT_SECRET || env.JWT_SECRET.length < 32) throw new Error('JWT_SECRET must be configured as a strong Cloudflare secret (at least 32 characters)');
   const head=b64url(JSON.stringify({alg:'HS256',typ:'JWT'}));
   const body=b64url(JSON.stringify({sub:user.id,wallet:user.wallet_raw,iat:nowSec(),exp:nowSec()+30*DAY}));
