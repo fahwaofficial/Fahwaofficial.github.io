@@ -47,6 +47,8 @@ The deployment workflow uses them to apply the pending D1 migration and then dep
 
 Unknown wallet implementations fail closed. WalletTg is not yet supported by this verifier.
 
-## 6. Optional 0.05 TON task
+## 6. Optional one-time 0.05 TON task
 
-Do not send the optional payment until the new Worker is deployed and the receiver, sender, exact amount and transaction-hash verification have been tested with a controlled mainnet transaction. The payment is optional and only boosts the next approved social-task reward; it does not boost mining rewards.
+The 0.05 TON payment is the only paid task and is entirely optional. Ordinary Telegram, YouTube, X and Daily Check-in tasks do not require TON. After the Worker verifies a successful TON Mainnet transaction from the user's own verified wallet, to the configured receiver, for exactly 50,000,000 nanotons, it credits exactly 50,000 IFZI to that user's internal rewards balance. The reward is limited to one successful claim per wallet and is recorded in `ton_boost_payments`, `pool_ledger` and `reward_balances`. It does not multiply ordinary social-task rewards or mining rewards.
+
+Before announcing the task publicly, deploy the Worker and run a controlled end-to-end mainnet test. Confirm the payment sender, receiver, exact amount, transaction hash, one-time restriction, pool allocation accounting and immediate balance update. Never ask users to send a second payment while the first is being checked.

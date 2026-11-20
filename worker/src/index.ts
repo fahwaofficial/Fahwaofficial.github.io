@@ -9,7 +9,7 @@ type Bindings = {
   DB: D1Database; SITE_ORIGIN: string; SITE_DOMAIN: string; JWT_SECRET: string;
   ADMIN_SECRET: string; TELEGRAM_BOT_TOKEN?: string; JETTON_MASTER: string; JETTON_DECIMALS: string;
   MINING_POOL_IFZI: string; MIN_WITHDRAW_IFZI: string; TONAPI_BASE: string;
-  TON_BOOST_RECEIVER: string; TON_BOOST_AMOUNT_NANO: string; TON_BOOST_MULTIPLIER: string;
+  TON_BOOST_RECEIVER: string; TON_BOOST_AMOUNT_NANO: string; TON_BOOST_REWARD_IFZI?: string;
   TASK_REWARD_IFZI: string; DAILY_CHECKIN_REWARD_IFZI: string;
   PRESALE_TREASURY: string; RESEND_API_KEY: string; PRESALE_NOTIFY_EMAIL: string; PRESALE_FROM_EMAIL: string;
 };
@@ -297,10 +297,15 @@ app.post('/api/withdrawals/request',async c=>{
   return c.json({ok:true,id,amount:fmt(amount),status:'pending'});
 });
 
+app.get('/api/withdrawals/history',async c=>{
+  const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
+  const rows=await c.env.DB.prepare('SELECT id,amount_raw,status,tx_hash,created_at,updated_at FROM withdrawals WHERE user_id=? ORDER BY created_at DESC LIMIT 100').bind(user.id).all();
+  return c.json({items:(rows.results||[]).map((x:any)=>({...x,amount:fmt(x.amount_raw)}))});
+});
 async function requireAdmin(c:any){return !!c.env.ADMIN_SECRET && c.req.header('x-admin-secret')===c.env.ADMIN_SECRET;}
 app.get('/api/admin/withdrawals',async c=>{
   if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
-  const rows=await c.env.DB.prepare("SELECT id,user_id,wallet_raw,amount_raw,status,tx_hash,created_at,updated_at,review_note FROM withdrawals WHERE status IN ('pending','approved') ORDER BY created_at ASC LIMIT 200").all();
+  const rows=await c.env.DB.prepare("SELECT id,user_id,wallet_raw,amount_raw,status,tx_hash,created_at,updated_at,review_note FROM withdrawals ORDER BY created_at DESC LIMIT 500").all();
   return c.json({items:(rows.results||[]).map((x:any)=>({...x,amount:fmt(x.amount_raw)}))});
 });
 app.post('/api/admin/withdrawals/:id/:action',async c=>{
@@ -424,15 +429,18 @@ app.post('/api/tasks/daily-checkin',async c=>{
   }
   return c.json({ok:true,reward:fmt(amount),weekly_bonus:fmt(weeklyBonus),weekly_milestone:weeklyMilestone||null,monthly_badge_awarded:monthlyBadgeAwarded,streak_days:stats.streak_days,date});
 });
+// One optional, one-time 0.05 TON task. A successful TON Mainnet payment credits 50,000 IFZI immediately.
 app.post('/api/boost/verify',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   if(user.wallet_status!=='approved')return jsonError(c,'Wallet approval is required.',403);
   const body=await c.req.json().catch(()=>({}));
   const hash=String(body.txHash||'').trim().toLowerCase();
   if(!/^[0-9a-f]{64}$/.test(hash))return jsonError(c,'Transaction hash must be 64 hexadecimal characters');
+  const already=await c.env.DB.prepare("SELECT id FROM ton_boost_payments WHERE user_id=? AND status='verified' UNION SELECT id FROM pool_ledger WHERE event_type='boost_task' AND reference_id=? LIMIT 1").bind(user.id,user.id).first();
+  if(already)return jsonError(c,'The optional 0.05 TON task has already been used by this wallet.',409);
   const base=(c.env.TONAPI_BASE||'https://tonapi.io').replace(/\/$/,'');
   let tx:any;
-  try{const r=await fetch(base+'/v2/blockchain/transactions/'+hash);if(!r.ok)return jsonError(c,'Transaction not found on TON mainnet',404);tx=await r.json()}catch{return jsonError(c,'TON mainnet transaction lookup failed',503);}
+  try{const r=await fetch(base+'/v2/blockchain/transactions/'+hash,{signal:AbortSignal.timeout(8000)});if(!r.ok)return jsonError(c,'Transaction not found on TON Mainnet',404);tx=await r.json()}catch{return jsonError(c,'TON Mainnet transaction lookup failed',503);}
   const msg=tx?.in_msg;
   if(tx?.success!==true||!msg?.source||!msg?.destination)return jsonError(c,'Transaction is not a successful incoming payment',400);
   let sender:string,destination:string,expected:string;
@@ -440,14 +448,18 @@ app.post('/api/boost/verify',async c=>{
   if(sender!==user.wallet_raw)return jsonError(c,'Payment sender does not match your verified wallet',403);
   if(destination!==expected)return jsonError(c,'Payment destination mismatch',400);
   if(BigInt(msg.value||'0')!==BigInt(c.env.TON_BOOST_AMOUNT_NANO||'50000000'))return jsonError(c,'Payment must be exactly 0.05 TON',400);
-  if(Number(tx.utime||0)<Number((await c.env.DB.prepare('SELECT created_at FROM users WHERE id=?').bind(user.id).first() as any)?.created_at||0))return jsonError(c,'Payment must be made after wallet registration',400);
-  try{
-    await c.env.DB.batch([
-      c.env.DB.prepare("INSERT INTO ton_boost_payments(id,user_id,tx_hash,sender_raw,destination_raw,amount_nano,network,status,verified_at,created_at) VALUES(?,?,?,?,?,?, '-239','verified',?,?)").bind(crypto.randomUUID(),user.id,hash,sender,destination,String(msg.value),nowSec(),nowSec()),
-      c.env.DB.prepare('UPDATE users SET task_boost_multiplier=3,updated_at=? WHERE id=?').bind(nowSec(),user.id)
-    ]);
-  }catch{return jsonError(c,'This transaction has already been used or boost was already recorded',409);}
-  return c.json({ok:true,multiplier:Number(c.env.TON_BOOST_MULTIPLIER||3),message:'Payment verified on TON mainnet. Task reward multiplier activated.'});
+  const registered=await c.env.DB.prepare('SELECT created_at FROM users WHERE id=?').bind(user.id).first() as any;
+  if(Number(tx.utime||0)<Number(registered?.created_at||0))return jsonError(c,'Payment must be made after wallet registration',400);
+  const reward=BigInt(c.env.TON_BOOST_REWARD_IFZI||'50000')*UNIT,now=nowSec(),paymentId=crypto.randomUUID();
+  const results=await c.env.DB.batch([
+    c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND NOT EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='boost_task' AND reference_id=?) AND NOT EXISTS(SELECT 1 FROM ton_boost_payments WHERE user_id=? AND status='verified') AND NOT EXISTS(SELECT 1 FROM ton_boost_payments WHERE tx_hash=?)").bind(reward.toString(),reward.toString(),user.id,user.id,hash),
+    c.env.DB.prepare("INSERT INTO ton_boost_payments(id,user_id,tx_hash,sender_raw,destination_raw,amount_nano,network,status,verified_at,created_at) SELECT ?,?,?,?,?,?,'-239','verified',?,? WHERE changes()=1").bind(paymentId,user.id,hash,sender,destination,String(msg.value),now,now),
+    c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) SELECT ?,'boost_task',?,?,?,? WHERE changes()=1").bind(crypto.randomUUID(),user.id,reward.toString(),user.id,now),
+    c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=? AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='boost_task' AND reference_id=?)").bind(reward.toString(),reward.toString(),user.id,user.id)
+  ]);
+  if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1||results[2]?.meta?.changes!==1||results[3]?.meta?.changes!==1)return jsonError(c,'Payment was already used, the task was already claimed, or the IFZI reward pool is exhausted.',409);
+  await c.env.DB.prepare("INSERT INTO admin_audit(id,action,target_type,target_id,details,created_at) VALUES(?,'optional_boost_paid','user',?,?,?)").bind(crypto.randomUUID(),user.id,'reward_raw='+reward.toString()+';tx='+hash,now).run();
+  return c.json({ok:true,status:'verified',reward:fmt(reward),message:'0.05 TON verified on TON Mainnet. 50,000 IFZI credited to your rewards balance.'});
 });
 app.get('/api/admin/tasks',async c=>{
   if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
@@ -467,8 +479,8 @@ app.post('/api/admin/tasks/:id/:action',async c=>{
     await c.env.DB.prepare("INSERT INTO admin_audit(id,action,target_type,target_id,created_at) VALUES(?,'task_rejected','task',?,?)").bind(crypto.randomUUID(),id,now).run();
     return c.json({ok:true});
   }
-  // The database value 3 is a legacy boost-enabled flag (CHECK constraint: 1 or 3); the actual reward multiplier is 4x.
-  const multiplier=Number(task.task_boost_multiplier)===3?4:1;
+  // Ordinary social tasks have one fixed reward; the optional TON task is credited separately.
+  const multiplier=1;
   const amount=BigInt(c.env.TASK_REWARD_IFZI||'50')*BigInt(multiplier)*UNIT;
   const results=await c.env.DB.batch([
     c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND EXISTS(SELECT 1 FROM task_submissions WHERE id=? AND status='pending')").bind(amount.toString(),amount.toString(),id),
