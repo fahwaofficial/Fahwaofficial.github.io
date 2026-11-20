@@ -108,7 +108,7 @@ async function getVerifiedIfziBalanceRaw(env:Bindings,walletRaw:string):Promise<
   const wallet=Address.parse(walletRaw).toString({urlSafe:true,bounceable:true,testOnly:false});
   const base=(env.TONAPI_BASE||'https://tonapi.io').replace(/\/$/,'');
   const response=await fetch(base+'/v2/accounts/'+encodeURIComponent(wallet)+'/jettons/'+encodeURIComponent(master),{signal:AbortSignal.timeout(8000)});
-  if(!response.ok)throw new Error('Unable to verify IFZI balance from TON mainnet');
+  if(response.status===404)return 0n;\n   if(!response.ok)throw new Error('Unable to verify IFZI balance from TON mainnet (HTTP '+response.status+')');
   const data=await response.json() as any;
   if(!data||data.jetton?.address===undefined)throw new Error('IFZI jetton balance response is incomplete');
   return BigInt(data.balance||'0');
@@ -198,6 +198,10 @@ app.post('/api/ton-proof/verify',async c=>{
   let user=await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE wallet_raw=?').bind(wallet).first() as User|null;
   if(!user){
     const id=crypto.randomUUID();
+    if(challenge.telegram_id){
+      const linkedTelegram=await c.env.DB.prepare('SELECT id FROM users WHERE telegram_id=?').bind(challenge.telegram_id).first() as any;
+      if(linkedTelegram)return jsonError(c,'This Telegram account is already linked to another IFZI wallet.',409);
+    }
     const referral=challenge.referral_code?await c.env.DB.prepare('SELECT id FROM users WHERE referral_code=? OR telegram_id=?').bind(challenge.referral_code,challenge.referral_code).first() as any:null;
     const newCode=crypto.randomUUID().replace(/-/g,'').slice(0,12).toUpperCase();
     // A valid TON Proof is the wallet-ownership approval for public mining.
