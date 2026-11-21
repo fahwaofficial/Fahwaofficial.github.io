@@ -140,6 +140,7 @@ const $=id=>document.getElementById(id);let token=null,wallet=null,cycleEnd=0,ti
 let ui=null,tonConnectLoadPromise=null,tonConnectListenersReady=false;
 let tonProofReady=false,tonProofError=null,tonProofPromise=null,tonProofPreparedAt=0,proofReconnectInProgress=false;
 let walletNullTimer=null,walletStatusVersion=0;
+let proofHandshakeRetryAttempted=false,proofHandshakeRetryPromise=null;
 async function ensureTonConnectUI(){
  if(ui)return ui;
  if(!tonConnectLoadPromise)tonConnectLoadPromise=(async()=>{
@@ -257,6 +258,32 @@ function prefetchTonProof(client){
  });
  tonProofPromise=pending;return pending;
 }
+// If a wallet session unexpectedly arrives without a proof item (but did not
+// explicitly reject ton_proof), retry the mining handshake once with a fresh
+// server challenge. TON Connect cannot add proof to an established session.
+// STON.fi continues to use this same single TON Connect instance; after the
+// fresh secure connection is established, the swap widget can reuse it.
+async function retryTonProofHandshake(client){
+ if(proofHandshakeRetryAttempted||proofHandshakeRetryPromise)return;
+ proofHandshakeRetryAttempted=true;
+ proofHandshakeRetryPromise=(async()=>{
+  proofReconnectInProgress=true;
+  token=null;clearSession();
+  msg('walletMsg','info','Wallet connected without the requested proof. Preparing one automatic secure reconnect; approve the next wallet request to finish mining verification.');
+  try{
+   await client.disconnect();
+   wallet=null;
+   tonProofPromise=null;tonProofReady=false;tonProofError=null;tonProofPreparedAt=0;
+   const ready=await startTonProofPreparation(client,true);
+   if(!ready)throw tonProofError||new Error('Could not prepare a fresh TON Proof challenge');
+   await client.openModal();
+  }catch(error){
+   proofReconnectInProgress=false;
+   msg('walletMsg','err','Automatic secure reconnect could not start: '+(error?.message||String(error))+'. Your wallet is not forcibly disconnected again; press CONNECT TON WALLET to retry.');
+  }
+ })();
+ try{await proofHandshakeRetryPromise}finally{proofHandshakeRetryPromise=null}
+}
 function syncMineAction(){const b=$('mineActionBtn'),label=$('mineActionLabel');if(!token){b.disabled=false;label.textContent=wallet?'CONNECTED · SECURE PROOF REQUIRED':'CONNECT WALLET TO START';return}if($('approval').textContent!=='Verified · active'){b.disabled=true;label.textContent=$('approval').textContent.includes('awaiting')?'AWAITING ADMIN APPROVAL':'WALLET RESTRICTED';return}if(!$('claimBtn').disabled){b.disabled=false;label.textContent='CLAIM YOUR IFZI REWARD';return}if(!$('startBtn').disabled){b.disabled=false;label.textContent='START 24-HOUR MINING';return}b.disabled=true;label.textContent='MINING ACTIVE · CLAIM AFTER 24H'}
 function countdown(){if(tick)clearInterval(tick);const draw=()=>{const ms=Math.max(0,cycleEnd-Date.now());const h=String(Math.floor(ms/3600000)).padStart(2,'0'),m=String(Math.floor(ms%3600000/60000)).padStart(2,'0'),s=String(Math.floor(ms%60000/1000)).padStart(2,'0');$('timer').textContent=h+':'+m+':'+s;if(ms===0){clearInterval(tick);$('mineStatus').textContent='Cycle complete · tap the IFZI logo to claim';$('claimBtn').disabled=false;syncMineAction()}else syncMineAction()};draw();tick=setInterval(draw,1000)}
 async function onWallet(w){
@@ -341,8 +368,14 @@ async function onWallet(w){
  }
  if(!proofItem||!('proof'in proofItem)){
   loadChainBalance(a.address);$('approval').textContent='TON Proof required';
-  msg('walletMsg','err','Wallet connected, but it did not return a TON Proof signature. The wallet remains connected. This can happen if the wallet does not support ton_proof or the connect request did not include the challenge. To retry, explicitly press DISCONNECT / CHANGE WALLET, then connect again.');
-  $('connectWalletBtn').textContent='WALLET CONNECTED · PROOF MISSING';$('disconnectWalletBtn').style.display='block';$('withdrawBtn').disabled=true;syncMineAction();return;
+  $('connectWalletBtn').textContent='SECURE VERIFICATION RETRY';
+  $('disconnectWalletBtn').style.display='block';$('withdrawBtn').disabled=true;syncMineAction();
+  // A missing item without an explicit wallet error is treated as a possible
+  // first-session race. Retry once automatically with a fresh nonce. If the
+  // wallet returns error code 400, the branch above reports unsupported proof
+  // and we do not loop or silently reconnect.
+  void retryTonProofHandshake(ui);
+  return;
  }
  try{
   const proof=proofItem.proof;
