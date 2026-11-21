@@ -208,9 +208,10 @@ async function prepareProof(client){
   client.setConnectRequestParameters({state:'ready',value:{tonProof:d.payload}});
   return true;
  }catch(error){
-  // Keep the connect request in the loading state. This prevents a wallet
-  // from connecting without TON Proof if the challenge endpoint is unavailable.
-  try{client.setConnectRequestParameters({state:'loading'})}catch(_){}
+  // TON Connect documents null as the way to clear its loading screen after
+  // a backend error. Never leave the wallet picker spinning forever.
+  // The onWallet handler still refuses secure mining without a valid TON Proof.
+  try{client.setConnectRequestParameters(null)}catch(_){}
   throw new Error('TON Proof challenge request failed: '+(error?.message||String(error)));
  }
 }
