@@ -32,7 +32,11 @@ jobs:
         run: |
           set -euo pipefail
           API="https://ifzi-mining-api.fahwaiman.workers.dev"
-          curl --fail --silent --show-error --retry 3 --retry-delay 2 "$API/health" -H "Origin: https://fahwaofficial.github.io" | tee /tmp/health.json
+          code=$(curl --silent --show-error -D /tmp/health.headers -o /tmp/health.json -w "%{http_code}" "$API/health" -H "Origin: https://fahwaofficial.github.io")
+          echo "HTTP status: $code"
+          cat /tmp/health.headers
+          cat /tmp/health.json
+          test "$code" = "200"
           grep -q '"ok":true' /tmp/health.json
           grep -q '"service":"ifzi-mining-api"' /tmp/health.json
 
