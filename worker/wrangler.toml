@@ -4,6 +4,15 @@ main = "src/index.ts"
 compatibility_date = "2026-11-01"
 compatibility_flags = ["nodejs_compat"]
 
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+invocation_logs = true
+persist = true
+
 [vars]
 SITE_ORIGIN = "https://fahwaofficial.github.io"
 SITE_DOMAIN = "fahwaofficial.github.io"
@@ -13,7 +22,7 @@ MIN_WITHDRAW_IFZI = "1000"
 MINING_POOL_IFZI = "8400000"
 TONAPI_BASE = "https://tonapi.io"
 TON_BOOST_RECEIVER = "UQAzPsvm5wnLdBiVqNV07mJvDEDZEfT1fQb08tw0oE4Lb40D"
-PRESALE_TREASURY = "UQAzPsvm5wnLdBiVqNV07mJvDEDZEfT1fQb08tw0oE4Lb40D"
+PRESALE_TREASURY = "UQAzPsvm5wnLdBiVqNV07mJvDEDZEfT1fQb08E4Lb40D"
 TON_BOOST_AMOUNT_NANO = "50000000"
 TON_BOOST_REWARD_IFZI = "50000"
 TASK_REWARD_IFZI = "100"
