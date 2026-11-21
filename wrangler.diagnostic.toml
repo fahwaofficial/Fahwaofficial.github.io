@@ -1,4 +1,0 @@
-name = "ifzi-runtime-diagnostic"
-main = "ifzi-diagnostic/src/index.ts"
-compatibility_date = "2026-11-01"
-compatibility_flags = ["nodejs_compat"]
