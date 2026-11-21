@@ -40,7 +40,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set +e
-          npx wrangler tail ifzi-mining-api --format pretty > /tmp/ifzi-worker-tail.log 2>&1 &
+          npx wrangler tail ifzi-mining-api --format json > /tmp/ifzi-worker-tail.log 2>&1 &
           TAIL_PID=$!
           sleep 5
           API="https://ifzi-mining-api.fahwaiman.workers.dev"
