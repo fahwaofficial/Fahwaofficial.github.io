@@ -303,7 +303,7 @@ async function loadIfziSwap(){
  }catch(e){
   ifziSwapWidget=null;status.textContent='Swap widget could not load: '+(e?.message||String(e));
   button.disabled=false;button.textContent='RETRY LOADING SWAP';
-  ifziSwapLoaderPromise&&!window.OmnistonWidget)ifziSwapLoaderPromise=null;
+  if(ifziSwapLoaderPromise&&!window.OmnistonWidget)ifziSwapLoaderPromise=null;
  }
 }
 $('loadIfziSwap').addEventListener('click',loadIfziSwap);
