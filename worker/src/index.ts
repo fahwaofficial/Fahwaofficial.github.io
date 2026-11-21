@@ -5,6 +5,8 @@ import { Address, Cell, contractAddress, loadStateInit } from '@ton/core';
 import { sha256 } from '@noble/hashes/sha256';
 import { ed25519 } from '@noble/curves/ed25519';
 
+console.log('IFZI worker: imports loaded');
+
 type Bindings = {
   DB: D1Database; SITE_ORIGIN: string; SITE_DOMAIN: string; JWT_SECRET: string;
   ADMIN_SECRET: string; TELEGRAM_BOT_TOKEN?: string; JETTON_MASTER: string; JETTON_DECIMALS: string;
@@ -15,6 +17,7 @@ type Bindings = {
 };
 type User = { id:string; wallet_raw:string; wallet_status:string; network:string; referred_by:string|null };
 const app = new Hono<{Bindings:Bindings}>();
+console.log('IFZI worker: Hono app initialized');
 app.onError((error,c)=>{
   console.error('IFZI Worker request exception',error);
   return c.json({error:'Internal server error',request_id:c.req.header('cf-ray')||null},500);
@@ -37,6 +40,7 @@ app.use('*', cors({
   allowHeaders:['Content-Type','Authorization','x-admin-secret'],
   maxAge:86400
 }));
+console.log('IFZI worker: CORS middleware registered');
 app.get('/health/ready',async c=>{
   try{
     await c.env.DB.prepare('SELECT total_raw,distributed_raw,reserved_raw FROM pool_state WHERE id=1').first();
