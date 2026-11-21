@@ -186,17 +186,34 @@ app.get('/api/mining/status',async c=>{
 app.post('/api/mining/start',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   if(user.wallet_status!=='approved')return jsonError(c,'Wallet account is not active.',403);
-  const existing=await c.env.DB.prepare("SELECT id FROM mining_cycles WHERE user_id=? AND status IN ('running','completed') LIMIT 1").bind(user.id).first();
-  if(existing)return jsonError(c,'You already have an unclaimed mining cycle.',409);
-  let balanceRaw:bigint;try{balanceRaw=await getVerifiedIfziBalanceRaw(c.env,user.wallet_raw)}catch(e){return jsonError(c,e instanceof Error?e.message:'Could not verify IFZI balance',503);}
+  const existing=await c.env.DB.prepare("SELECT id,level,daily_rate_raw,gross_reward_raw,started_at,ends_at,status FROM mining_cycles WHERE user_id=? AND status IN ('running','completed') ORDER BY started_at DESC LIMIT 1").bind(user.id).first() as any;
+  const existingResponse=(cycle:any)=>c.json({ok:true,already_running:true,status:cycle.ends_at<=nowSec()?'ready':'active',cycle_id:cycle.id,ends_at:cycle.ends_at*1000,reward:fmt(cycle.gross_reward_raw),level:cycle.level,daily_rate:fmt(cycle.daily_rate_raw)});
+  if(existing)return existingResponse(existing);
+  // IFZI balance only affects the optional level/holding bonus. A TONAPI outage
+  // must never prevent a connected address-only wallet from starting Level 1.
+  let balanceRaw=0n,balanceVerified=true;
+  try{balanceRaw=await getVerifiedIfziBalanceRaw(c.env,user.wallet_raw)}
+  catch(error){
+    balanceVerified=false;
+    console.warn('IFZI balance lookup unavailable; starting this cycle at Level 1 without holding bonus.',error);
+  }
   const wholeBalance=balanceRaw/UNIT;
   let level=1,baseRateTokens=100n;for(let i=0;i<levels.length;i++){if(wholeBalance>=levels[i][0]){level=i+1;baseRateTokens=levels[i][1]}}
-  const holdingEligible=balanceRaw>=10_000n*UNIT;
+  const holdingEligible=balanceVerified&&balanceRaw>=10_000n*UNIT;
   const holdingBonusPercent=holdingEligible?(level<=5?50n:25n):0n;
   const rate=baseRateTokens*UNIT*(100n+holdingBonusPercent)/100n,reward=rate,started=nowSec(),ends=started+DAY,id=crypto.randomUUID();
-  const insert=await c.env.DB.prepare("INSERT INTO mining_cycles(id,user_id,level,daily_rate_raw,gross_reward_raw,started_at,ends_at,status) VALUES(?,?,?,?,?,?,?,'running')").bind(id,user.id,level,rate.toString(),reward.toString(),started,ends).run();
-  if(insert.meta.changes!==1)return jsonError(c,'Could not start mining cycle',500);
-  return c.json({ok:true,cycle_id:id,ends_at:ends*1000,reward:fmt(reward),level,daily_rate:fmt(rate),base_daily_rate:fmt(baseRateTokens*UNIT),holding_bonus_percent:Number(holdingBonusPercent),verified_balance:fmt(balanceRaw)});
+  try{
+    const insert=await c.env.DB.prepare("INSERT INTO mining_cycles(id,user_id,level,daily_rate_raw,gross_reward_raw,started_at,ends_at,status) VALUES(?,?,?,?,?,?,?,'running')").bind(id,user.id,level,rate.toString(),reward.toString(),started,ends).run();
+    if(insert.meta.changes!==1)return jsonError(c,'Could not start mining cycle',500);
+  }catch(error){
+    // Concurrent wallet-status callbacks are safe: return the cycle created by
+    // the first request instead of surfacing a duplicate-cycle server error.
+    const raced=await c.env.DB.prepare("SELECT id,level,daily_rate_raw,gross_reward_raw,started_at,ends_at,status FROM mining_cycles WHERE user_id=? AND status IN ('running','completed') ORDER BY started_at DESC LIMIT 1").bind(user.id).first() as any;
+    if(raced)return existingResponse(raced);
+    console.error('IFZI mining cycle insert failed',error);
+    return jsonError(c,'Could not start mining cycle. Please retry.',500);
+  }
+  return c.json({ok:true,already_running:false,status:'active',cycle_id:id,ends_at:ends*1000,reward:fmt(reward),level,daily_rate:fmt(rate),base_daily_rate:fmt(baseRateTokens*UNIT),holding_bonus_percent:Number(holdingBonusPercent),balance_verified:balanceVerified,verified_balance:balanceVerified?fmt(balanceRaw):null});
 });
 app.post('/api/mining/claim',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
