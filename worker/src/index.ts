@@ -129,6 +129,7 @@ const WALLET_CODE_LAYOUTS:Record<string,(slice:any)=>Uint8Array>={
   'fe9530d3243853083ef2ef0b4c2908c0abf6fa1c31ea243aacaa5bf8c7d753f1':s=>{s.loadUint(32);return s.loadBuffer(32)}, // v2r2
   'b61041a58a7980b946e8fb9e198e3c904d24799ffa36574ea4251c41a566f581':s=>{s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}, // v3r1
   '84dafa449f98a6987789ba232358072bc0f76dc4524002a5d0918b9a75d2d599':s=>{s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}, // v3r2
+  '64dd54805522c5be8a9db59cea0105ccf0d08786ca79beb8cb79e880a8d7322d':s=>{s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}, // v4r1
   'feb5ff6820e2ff0d9483e7e0d62c817d846789fb4ae580c878866d959dabd5c0':s=>{s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}, // v4r2
   '20834b7b72b112147e1b2fb457b84e74d1a30f04f737d4f62a668e9552d2b72f':s=>{s.loadBoolean();s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)} // v5r1
 };
