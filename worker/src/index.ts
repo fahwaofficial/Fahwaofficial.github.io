@@ -215,52 +215,6 @@ app.post('/api/wallet/connect',async c=>{
   return c.json({ok:true,token:await issueJWT(c.env,user),wallet_status:user.wallet_status,ownership_verified:false});
 });
 app.get('/api/user',async c=>{
-  const body=await c.req.json().catch(()=>({}));
-  const nonce=crypto.randomUUID();
-  const referralCode=typeof body.referralCode==='string'&&/^[A-Z0-9]{5,20}$/.test(body.referralCode.toUpperCase())?body.referralCode.toUpperCase():null;
-  let telegramId:string|null=null;
-  if(typeof body.telegramInitData==='string'&&body.telegramInitData&&c.env.TELEGRAM_BOT_TOKEN){
-    try{telegramId=await validateTelegramInitData(body.telegramInitData,c.env.TELEGRAM_BOT_TOKEN)}catch(e){return jsonError(c,e instanceof Error?e.message:'Telegram identity verification failed',401)}
-  }
-  await c.env.DB.prepare('INSERT INTO auth_challenges(nonce,wallet_raw,expires_at,used,referral_code,telegram_id) VALUES(?,NULL,?,0,?,?)').bind(nonce,Date.now()+5*60*1000,referralCode,telegramId).run();
-  return c.json({payload:nonce});
-});
-app.post('/api/ton-proof/verify',async c=>{
-  const body=await c.req.json().catch(()=>({}));
-  let wallet:string;try{wallet=rawAddress(body.address)}catch{return jsonError(c,'Invalid wallet address');}
-  const challenge=await c.env.DB.prepare('SELECT nonce,referral_code,telegram_id FROM auth_challenges WHERE nonce=? AND (wallet_raw IS NULL OR wallet_raw=?) AND used=0 AND expires_at>?').bind(body.proof?.payload,wallet,Date.now()).first() as {nonce:string;referral_code:string|null;telegram_id:string|null}|null;
-  if(!challenge)return jsonError(c,'Challenge invalid, expired, or already used',401);
-  try{verifyTonProof(wallet,String(body.network),body.walletStateInit||body.proof?.state_init,body.proof,c.env.SITE_DOMAIN,challenge.nonce,body.publicKey||body.public_key);}
-  catch(e){return jsonError(c,e instanceof Error?e.message:'Proof verification failed',401);}
-  const used=await c.env.DB.prepare('UPDATE auth_challenges SET used=1,wallet_raw=? WHERE nonce=? AND (wallet_raw IS NULL OR wallet_raw=?) AND used=0 AND expires_at>?').bind(wallet,challenge.nonce,wallet,Date.now()).run();
-  if(used.meta.changes!==1)return jsonError(c,'Challenge already consumed',409);
-  let user=await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE wallet_raw=?').bind(wallet).first() as User|null;
-  if(!user){
-    const id=crypto.randomUUID();
-    if(challenge.telegram_id){
-      const linkedTelegram=await c.env.DB.prepare('SELECT id FROM users WHERE telegram_id=?').bind(challenge.telegram_id).first() as any;
-      if(linkedTelegram)return jsonError(c,'This Telegram account is already linked to another IFZI wallet.',409);
-    }
-    const referral=challenge.referral_code?await c.env.DB.prepare('SELECT id FROM users WHERE referral_code=?').bind(challenge.referral_code).first() as any:null;
-    const newCode=crypto.randomUUID().replace(/-/g,'').slice(0,12).toUpperCase();
-    // A valid TON Proof is the wallet-ownership approval for public mining.
-    await c.env.DB.prepare("INSERT INTO users(id,wallet_raw,referred_by,created_at,network,wallet_status,wallet_verified_at,updated_at,referral_code,telegram_id) VALUES(?,?,?,?,'-239','approved',?,?,?,?)").bind(id,wallet,referral?.id||null,nowSec(),nowSec(),nowSec(),newCode,challenge.telegram_id).run();
-    await c.env.DB.prepare("INSERT OR IGNORE INTO reward_balances(user_id,available_raw,total_earned_raw,total_referral_raw) VALUES(?,'0','0','0')").bind(id).run();
-    user={id,wallet_raw:wallet,wallet_status:'approved',network:'-239',referred_by:referral?.id||null};
-  }else{
-    if(user.wallet_status==='suspended'||user.wallet_status==='under_review')return jsonError(c,'This wallet is restricted and requires administrator review.',403);
-    if(challenge.telegram_id){
-      const linked=await c.env.DB.prepare('SELECT telegram_id FROM users WHERE id=?').bind(user.id).first() as any;
-      if(linked?.telegram_id&&String(linked.telegram_id)!==challenge.telegram_id)return jsonError(c,'This Telegram account is already linked to a different identity.',409);
-      await c.env.DB.prepare('UPDATE users SET telegram_id=COALESCE(telegram_id,?),updated_at=? WHERE id=?').bind(challenge.telegram_id,nowSec(),user.id).run();
-    }
-    await c.env.DB.prepare("UPDATE users SET network='-239',wallet_status=CASE WHEN wallet_status='pending' THEN 'approved' ELSE wallet_status END,wallet_verified_at=COALESCE(wallet_verified_at,?),updated_at=? WHERE id=? AND wallet_status IN ('pending','approved')").bind(nowSec(),nowSec(),user.id).run();
-    user=await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE id=?').bind(user.id).first() as User|null;
-    if(!user||user.wallet_status!=='approved')return jsonError(c,'Wallet approval could not be completed. Please retry or contact support.',403);
-  }
-  return c.json({ok:true,token:await issueJWT(c.env,user),wallet_status:user.wallet_status});
-});
-app.get('/api/user',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   const bal=await c.env.DB.prepare('SELECT available_raw,total_earned_raw,total_referral_raw FROM reward_balances WHERE user_id=?').bind(user.id).first() as any;
   const totals=await c.env.DB.prepare("SELECT COALESCE(SUM(CAST(gross_raw AS INTEGER)),0) AS gross FROM claims WHERE user_id=?").bind(user.id).first() as any;
