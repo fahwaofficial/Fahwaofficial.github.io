@@ -140,7 +140,18 @@ const $=id=>document.getElementById(id);let token=null,wallet=null,cycleEnd=0,ti
 let ui=null,tonConnectLoadPromise=null,tonConnectListenersReady=false;
 
 function msg(id,type,text){$(id).innerHTML='';const d=document.createElement('div');d.className='status '+type;d.textContent=text;$(id).append(d)}
-async function api(path,method='GET',body){const r=await fetch(API+path,{method,headers:{'content-type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},body:body?JSON.stringify(body):undefined});const d=await r.json().catch(()=>({error:'Invalid server response'}));if(!r.ok)throw new Error(d.error||'Request failed');return d}
+async function api(path,method='GET',body){
+ const headers={...(token?{Authorization:'Bearer '+token}:{})};
+ // Avoid forcing JSON Content-Type on GET requests; it needlessly triggers CORS preflight.
+ if(body!==undefined&&body!==null)headers['content-type']='application/json';
+ let r;
+ try{r=await fetch(API+path,{method,headers,body:body!==undefined&&body!==null?JSON.stringify(body):undefined})}
+ catch(e){throw new Error('Network/CORS failure at '+path+' ('+API+path+'). The browser received no HTTP response from the IFZI Worker. '+(e?.message||String(e)))}
+ const raw=await r.text();let d={};
+ try{d=raw?JSON.parse(raw):{}}catch{d={error:'Worker returned a non-JSON response (HTTP '+r.status+'). '+raw.slice(0,180)}}
+ if(!r.ok)throw new Error(path+' · HTTP '+r.status+' · '+(d.error||'Request failed'));
+ return d
+}
 function short(s){return s?s.slice(0,8)+'…'+s.slice(-6):'—'}
 function saveSession(address,jwt){localStorage.setItem('ifzi_session_wallet',address);localStorage.setItem('ifzi_session_token',jwt)}
 function clearSession(){localStorage.removeItem('ifzi_session_wallet');localStorage.removeItem('ifzi_session_token')}
@@ -207,42 +218,42 @@ async function onWallet(w){
   token=d.token;saveSession(a.address,token);
   $('approval').textContent='Connected · address-only (ownership not verified)';
   $('startBtn').disabled=false;$('withdrawBtn').disabled=false;
-  await refresh();
+  // Start immediately after account creation. /api/mining/start is idempotent:
+  // it starts a new cycle or returns the existing cycle without a status preflight.
   await ensureMiningStarted();
-  await refresh();
+  $('connectWalletBtn').textContent='WALLET CONNECTED';
+  msg('walletMsg','ok','Wallet connected and IFZI mining is active.');
+  // Secondary profile/streak refresh must not prevent mining from starting.
+  try{await refresh()}catch(e){msg('walletMsg','err','Mining is active, but account details could not refresh: '+e.message)}
   await loadChainBalance(a.address);
   await loadPoolStatus();
-  $('connectWalletBtn').textContent='WALLET CONNECTED';
  }catch(e){
   $('startBtn').disabled=!token;$('claimBtn').disabled=true;$('withdrawBtn').disabled=!token;
-  msg('walletMsg','err','Wallet connected, but IFZI account/mining setup failed: '+e.message);
+  msg('walletMsg','err','Wallet connected, but IFZI setup failed: '+e.message);
   syncMineAction();
  }
 }
 
 async function ensureMiningStarted(){
  try{
-  const current=await api('/api/mining/status');
-  if(current.status==='idle'){
-   const started=await api('/api/mining/start','POST',{});
-   cycleEnd=started.ends_at;
-   $('mineLevel').textContent='Level '+started.level;
-   $('dailyRate').textContent=started.daily_rate+' IFZI';
-   $('startBtn').disabled=true;$('claimBtn').disabled=true;
-   countdown();$('mineStatus').textContent='Mining started automatically · 24-hour cycle';
-  }else if(current.status==='active'||current.status==='ready'){
-   cycleEnd=current.ends_at;
-   $('mineLevel').textContent='Level '+current.level;
-   $('dailyRate').textContent=current.daily_rate+' IFZI';
-   countdown();
-   $('mineStatus').textContent=current.status==='ready'?'Cycle complete · tap logo to claim':'Mining active';
-   $('startBtn').disabled=true;$('claimBtn').disabled=current.status!=='ready';
-  }
+  const started=await api('/api/mining/start','POST',{});
+  cycleEnd=started.ends_at;
+  $('mineLevel').textContent='Level '+started.level;
+  $('dailyRate').textContent=started.daily_rate+' IFZI';
+  $('startBtn').disabled=true;
+  $('claimBtn').disabled=started.status!=='ready';
+  countdown();
+  $('mineStatus').textContent=started.status==='ready'
+   ?'Cycle complete · tap logo to claim'
+   :'Mining started automatically · 24-hour cycle';
+  syncMineAction();
+  return started;
  }catch(e){
   $('startBtn').disabled=false;
   $('mineStatus').textContent='Mining could not start. Tap START MINING to retry.';
   msg('mineMsg','err','Mining start failed: '+(e?.message||String(e)));
   syncMineAction();
+  throw e;
  }
 }
 
