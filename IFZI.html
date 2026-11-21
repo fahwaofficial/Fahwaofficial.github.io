@@ -194,18 +194,22 @@ async function prepareProof(client){
   finally{clearTimeout(timer)}
  };
  try{
-  const health=await requestJson('/health/ready',{},12000);
-  if(health.ok!==true)throw new Error('IFZI API is not ready. Database: '+(health.database?'OK':'FAILED')+'; JWT secret: '+(health.jwt_secret_configured?'OK':'MISSING')+'; Admin secret: '+(health.admin_secret_configured?'OK':'MISSING')+(health.error?'; '+health.error:''));
+  // Do not gate wallet login on /health/ready. That endpoint performs several
+  // sequential D1 reads and was the source of the observed 12-second timeout.
+  // The payload endpoint below is the actual operation required for TON Proof.
   const referralCode=new URLSearchParams(location.search).get('ref');
   const telegramInitData=window.Telegram?.WebApp?.initData||'';
-  const d=await requestJson('/api/ton-proof/payload',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({referralCode,telegramInitData})},20000);
-  if(typeof d.payload!=='string'||!d.payload)throw new Error('API response did not contain a valid TON Proof challenge');
+  const d=await requestJson('/api/ton-proof/payload',{
+   method:'POST',
+   headers:{'content-type':'application/json'},
+   body:JSON.stringify({referralCode,telegramInitData})
+  },30000);
+  if(typeof d.payload!=='string'||!d.payload)throw new Error('TON Proof payload endpoint returned no valid challenge');
   client.setConnectRequestParameters({state:'ready',value:{tonProof:d.payload}});
   return true;
  }catch(error){
-  // Never leave TonConnect's modal in its permanent loading/spinner state.
   try{client.setConnectRequestParameters(null)}catch(_){}
-  throw new Error('Secure TON Proof preparation failed: '+(error?.message||String(error)));
+  throw new Error('TON Proof challenge request failed: '+(error?.message||String(error)));
  }
 }
 function startTonProofPreparation(client){
@@ -248,9 +252,9 @@ $('connectWalletBtn').onclick=async()=>{
   await client.openModal();
   b.textContent='SELECT YOUR TON WALLET';
  }catch(e){
-  let details=e?.message||String(e);
-  if(ui){try{const wallets=await ui.getWallets();details+=' · Wallet registry returned '+wallets.length+' wallets'}catch(registryError){details+=' · Wallet registry error: '+(registryError?.message||String(registryError))}}
-  msg('walletMsg','err','Wallet connection could not start: '+details);
+  // Keep the real failing step visible. Wallet-registry count is not an API
+  // health check and previously made a server timeout look like a wallet error.
+  msg('walletMsg','err',e?.message||String(e));
  }finally{
   b.disabled=false;
   b.textContent=wallet?(token?'WALLET CONNECTED':'RETRY SECURE LOGIN'):'CONNECT TON WALLET';
