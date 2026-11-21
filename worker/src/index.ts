@@ -37,9 +37,22 @@ app.use('*', cors({
 app.get('/health', c => c.json({ok:true, service:'ifzi-mining-api', ts:Date.now()}));
 app.get('/health/ready',async c=>{
   try{
+    // Probe every production table/column used by public mining, tasks and payouts.
+    // LIMIT 0 validates the schema without reading or changing user records.
     await c.env.DB.prepare('SELECT total_raw,distributed_raw,reserved_raw FROM pool_state WHERE id=1').first();
-    await c.env.DB.prepare('SELECT referral_code,telegram_id FROM auth_challenges LIMIT 1').all();
-    await c.env.DB.prepare('SELECT wallet_status,network,referral_code FROM users LIMIT 1').all();
+    await c.env.DB.prepare('SELECT referral_code,telegram_id FROM auth_challenges LIMIT 0').all();
+    await c.env.DB.prepare('SELECT wallet_status,network,referral_code,telegram_id,task_boost_multiplier FROM users LIMIT 0').all();
+    await c.env.DB.prepare('SELECT id,level,daily_rate_raw,gross_reward_raw,started_at,ends_at,status FROM mining_cycles LIMIT 0').all();
+    await c.env.DB.prepare('SELECT available_raw,total_earned_raw,total_referral_raw FROM reward_balances LIMIT 0').all();
+    await c.env.DB.prepare('SELECT cycle_id,user_id,gross_raw,user_raw,referral_raw,referral_user_id,created_at FROM claims LIMIT 0').all();
+    await c.env.DB.prepare('SELECT id,user_id,wallet_raw,amount_raw,status,tx_hash,review_note,created_at,updated_at FROM withdrawals LIMIT 0').all();
+    await c.env.DB.prepare('SELECT id,user_id,task_key,proof_url,status,created_at,reviewed_at FROM task_submissions LIMIT 0').all();
+    await c.env.DB.prepare('SELECT user_id,checkin_date,created_at FROM daily_checkins LIMIT 0').all();
+    await c.env.DB.prepare('SELECT user_id,cycle_start_date,milestone_day,reward_raw,created_at FROM streak_rewards LIMIT 0').all();
+    await c.env.DB.prepare('SELECT user_id,cycle_start_date,badge_code,awarded_at FROM monthly_badges LIMIT 0').all();
+    await c.env.DB.prepare('SELECT id,event_type,user_id,amount_raw,reference_id,created_at FROM pool_ledger LIMIT 0').all();
+    await c.env.DB.prepare('SELECT id,user_id,tx_hash,sender_raw,destination_raw,amount_nano,network,status,verified_at,created_at FROM ton_boost_payments LIMIT 0').all();
+    await c.env.DB.prepare('SELECT id,action,target_type,target_id,details,created_at FROM admin_audit LIMIT 0').all();
     const jwtSecretConfigured=!!c.env.JWT_SECRET&&c.env.JWT_SECRET.length>=32;
     const adminSecretConfigured=!!c.env.ADMIN_SECRET&&c.env.ADMIN_SECRET.length>=32;
     const ready=jwtSecretConfigured&&adminSecretConfigured;
