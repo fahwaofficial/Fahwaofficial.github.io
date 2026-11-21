@@ -23,6 +23,8 @@ const DAY = 86400;
 const DECIMALS = 9;
 const UNIT = 10n ** 9n;
 const MAX_PROOF_AGE = 600;
+app.get('/health', c => c.json({ok:true, service:'ifzi-mining-api', ts:Date.now()}));
+
 const levels = [
   [0n,100n],[10_000n,120n],[25_000n,140n],[50_000n,160n],[100_000n,180n],
   [200_000n,200n],[350_000n,220n],[500_000n,240n],[750_000n,260n],
@@ -35,7 +37,6 @@ app.use('*', cors({
   allowHeaders:['Content-Type','Authorization','x-admin-secret'],
   maxAge:86400
 }));
-app.get('/health', c => c.json({ok:true, service:'ifzi-mining-api', ts:Date.now()}));
 app.get('/health/ready',async c=>{
   try{
     await c.env.DB.prepare('SELECT total_raw,distributed_raw,reserved_raw FROM pool_state WHERE id=1').first();
