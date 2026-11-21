@@ -29,7 +29,10 @@ const levels = [
 ] as const;
 
 app.use('*', cors({
-  origin: (origin) => ['https://fahwaofficial.github.io','http://localhost:3000'].includes(origin) ? origin : null,
+  // Public mining API: allow browser requests from GitHub Pages and wallet
+  // in-app browsers even when they report a different HTTPS origin.
+  // User/admin authorization is enforced by JWT/admin secrets, not CORS.
+  origin: '*',
   allowMethods:['GET','POST','OPTIONS'],
   allowHeaders:['Content-Type','Authorization','x-admin-secret'],
   maxAge:86400
