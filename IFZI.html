@@ -213,10 +213,16 @@ async function prepareProof(client){
  }
 }
 function startTonProofPreparation(client,force=false){
- // TON Proof challenges are one-time and expire after five minutes. Reuse only a fresh challenge.
- if(!force&&tonProofPromise&&!tonProofError&&tonProofPreparedAt&&Date.now()-tonProofPreparedAt<4*60*1000)return tonProofPromise;
+ // TON Proof challenges are single-use and expire after five minutes.
+ // IMPORTANT: share an in-flight request. The page warm-up, STON.fi widget
+ // and Connect button all call this function; parallel calls would create
+ // competing nonces and race to overwrite TonConnect's active proof payload.
+ if(!force&&tonProofPromise&&!tonProofError){
+  if(!tonProofPreparedAt)return tonProofPromise; // request is still in flight
+  if(Date.now()-tonProofPreparedAt<4*60*1000)return tonProofPromise; // fresh payload
+ }
  tonProofReady=false;tonProofError=null;tonProofPreparedAt=0;
- tonProofPromise=prepareProof(client).then(()=>{
+ const pending=prepareProof(client).then(()=>{
   tonProofReady=true;tonProofError=null;tonProofPreparedAt=Date.now();
   return true;
  }).catch(error=>{
@@ -224,7 +230,8 @@ function startTonProofPreparation(client,force=false){
   msg('walletMsg','err',error?.message||String(error));
   return false;
  });
- return tonProofPromise;
+ tonProofPromise=pending;
+ return pending;
 }
 function syncMineAction(){const b=$('mineActionBtn'),label=$('mineActionLabel');if(!token){b.disabled=false;label.textContent=wallet?'CONNECTED · SECURE PROOF REQUIRED':'CONNECT WALLET TO START';return}if($('approval').textContent!=='Verified · active'){b.disabled=true;label.textContent=$('approval').textContent.includes('awaiting')?'AWAITING ADMIN APPROVAL':'WALLET RESTRICTED';return}if(!$('claimBtn').disabled){b.disabled=false;label.textContent='CLAIM YOUR IFZI REWARD';return}if(!$('startBtn').disabled){b.disabled=false;label.textContent='START 24-HOUR MINING';return}b.disabled=true;label.textContent='MINING ACTIVE · CLAIM AFTER 24H'}
 function countdown(){if(tick)clearInterval(tick);const draw=()=>{const ms=Math.max(0,cycleEnd-Date.now());const h=String(Math.floor(ms/3600000)).padStart(2,'0'),m=String(Math.floor(ms%3600000/60000)).padStart(2,'0'),s=String(Math.floor(ms%60000/1000)).padStart(2,'0');$('timer').textContent=h+':'+m+':'+s;if(ms===0){clearInterval(tick);$('mineStatus').textContent='Cycle complete · tap the IFZI logo to claim';$('claimBtn').disabled=false;syncMineAction()}else syncMineAction()};draw();tick=setInterval(draw,1000)}
