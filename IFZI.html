@@ -78,7 +78,7 @@ body{background:radial-gradient(ellipse at 50% -24%,#171a1e 0%,#08090b 38%,#0304
 #optionalTask{border-color:#d7dce333;background:linear-gradient(145deg,rgba(35,37,41,.92),rgba(8,9,11,.96))}
 @media(max-width:760px){.wrap{padding:12px}.top{position:relative;align-items:center;flex-direction:column}.nav{justify-content:center}.hero{padding:30px 8px 24px}.grid{grid-template-columns:1fr}.mining{min-height:470px;padding:24px 14px}.mine-orb{width:224px;height:224px;min-height:224px}.mine-orb img{width:136px;height:136px}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{padding:13px 6px}}
 @media(max-width:420px){.nav .btn{font-size:10px;padding:9px 10px}.mine-orb{width:208px;height:208px;min-height:208px}.mine-orb img{width:126px;height:126px}.panel{padding:18px 15px}.hero h1{font-size:39px}}
-/* STON.fi Omniston swap panel: force a readable light palette for quote/amount text */
+/* STON.fi Omniston swap panel */
 #ifziSwapMount{
  color:#111!important;color-scheme:light!important;background:#fff!important;
  --widget-text-primary:#111111;--widget-text-secondary:#333333;
@@ -138,30 +138,20 @@ body{background:radial-gradient(ellipse at 50% -24%,#171a1e 0%,#08090b 38%,#0304
 const API='https://ifzi-mining-api.fahwaiman.workers.dev',MASTER='EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0',TONAPI='https://tonapi.io/v2';
 const $=id=>document.getElementById(id);let token=null,wallet=null,cycleEnd=0,tick=null;
 let ui=null,tonConnectLoadPromise=null,tonConnectListenersReady=false;
-let pendingProofPayload=null; // ✅ payload موقت برای tonProof
+let pendingProofPayload=null;
 
 function msg(id,type,text){$(id).innerHTML='';const d=document.createElement('div');d.className='status '+type;d.textContent=text;$(id).append(d)}
-
-async function api(path,method='GET',body){
- const r=await fetch(API+path,{method,headers:{'content-type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},body:body?JSON.stringify(body):undefined});
- const d=await r.json().catch(()=>({error:'Invalid server response'}));
- if(!r.ok)throw new Error(d.error||'Request failed');
- return d;
-}
-
+async function api(path,method='GET',body){const r=await fetch(API+path,{method,headers:{'content-type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},body:body?JSON.stringify(body):undefined});const d=await r.json().catch(()=>({error:'Invalid server response'}));if(!r.ok)throw new Error(d.error||'Request failed');return d}
 function short(s){return s?s.slice(0,8)+'…'+s.slice(-6):'—'}
 function saveSession(address,jwt){localStorage.setItem('ifzi_session_wallet',address);localStorage.setItem('ifzi_session_token',jwt)}
 function clearSession(){localStorage.removeItem('ifzi_session_wallet');localStorage.removeItem('ifzi_session_token')}
 function fmt(n){return Number(n||0).toLocaleString(undefined,{maximumFractionDigits:4})}
 
-// ---------- TON Connect با tonProof ----------
+// ==================== TON Connect ====================
 async function ensureTonConnectUI(){
  if(ui)return ui;
  if(!tonConnectLoadPromise)tonConnectLoadPromise=(async()=>{
-  const sources=[
-   'https://cdn.jsdelivr.net/npm/@tonconnect/ui@3.0.0/dist/tonconnect-ui.min.js',
-   'https://unpkg.com/@tonconnect/ui@3.0.0/dist/tonconnect-ui.min.js'
-  ];
+  const sources=['https://cdn.jsdelivr.net/npm/@tonconnect/ui@3.0.0/dist/tonconnect-ui.min.js','https://unpkg.com/@tonconnect/ui@3.0.0/dist/tonconnect-ui.min.js'];
   let lastError=null;
   for(const src of sources){
    try{
@@ -176,15 +166,8 @@ async function ensureTonConnectUI(){
     break;
    }catch(e){lastError=e}
   }
-  if(!window.TON_CONNECT_UI?.TonConnectUI)throw new Error('TON Connect SDK could not load from either CDN. '+(lastError?.message||'Unknown loader error'));
-
-  ui=new window.TON_CONNECT_UI.TonConnectUI({
-   manifestUrl:'https://fahwaofficial.github.io/tonconnect-manifest-v2.json',
-   network:'-239',
-   enableAndroidBackHandler:false,
-   restoreConnection:true // بازیابی نشست قبلی مجاز است، اما با tonProof هماهنگ می‌شود
-  });
-
+  if(!window.TON_CONNECT_UI?.TonConnectUI)throw new Error('TON Connect SDK could not load. '+(lastError?.message||''));
+  ui=new window.TON_CONNECT_UI.TonConnectUI({manifestUrl:'https://fahwaofficial.github.io/tonconnect-manifest-v2.json',network:'-239',enableAndroidBackHandler:false,restoreConnection:true});
   if(!tonConnectListenersReady){
    ui.onStatusChange(onWallet,e=>msg('walletMsg','err','TON Connect error: '+(e?.message||String(e))));
    ui.onModalStateChange(state=>{if(state.status==='opened')$('connectWalletBtn').textContent='SELECT YOUR TON WALLET'});
@@ -195,25 +178,22 @@ async function ensureTonConnectUI(){
  try{return await tonConnectLoadPromise}catch(e){tonConnectLoadPromise=null;throw e}
 }
 
-// ✅ دریافت payload از بک‌اند و تنظیم درخواست tonProof
-async function setProofPayload(){
+// ==================== دریافت Payload از Worker ====================
+async function fetchProofPayload(){
  try{
   const res=await fetch(API+'/api/ton-proof/payload',{method:'POST',headers:{'content-type':'application/json'},body:'{}'});
-  if(!res.ok)throw new Error('Could not fetch proof payload');
+  if(!res.ok)throw new Error('Payload endpoint returned '+res.status);
   const data=await res.json();
+  if(!data.payload)throw new Error('No payload in server response');
   pendingProofPayload=data.payload;
-  if(ui){
-   ui.setConnectRequestParameters({state:'ready',value:{tonProof:pendingProofPayload}});
-  }
+  return data.payload;
  }catch(e){
-  // اگر endpoint payload در دسترس نبود، اتصال بدون proof انجام می‌شود
-  console.warn('tonProof payload unavailable:',e.message);
-  pendingProofPayload=null;
-  if(ui)ui.setConnectRequestParameters({state:'ready',value:{}});
+  console.error('fetchProofPayload failed:',e);
+  return null;
  }
 }
 
-// ---------- onWallet: شامل tonProof ----------
+// ==================== onWallet: هماهنگ با tonProof ====================
 async function onWallet(w){
  if(!w){
   const active=ui?.wallet;
@@ -237,70 +217,61 @@ async function onWallet(w){
   msg('walletMsg','err','Please switch your wallet to TON Mainnet.');return;
  }
 
- // 1) اگر tonProof در پاسخ موجود است، آن را به بک‌اند بفرست
+ // ---- استخراج tonProof از پاسخ کیف پول ----
  const tonProof=w.connectItems?.tonProof;
  let proofVerified=false;
+
  if(tonProof&&('proof' in tonProof)){
   try{
    const verifyRes=await fetch(API+'/api/ton-proof/verify',{
     method:'POST',headers:{'content-type':'application/json'},
     body:JSON.stringify({account:a,proof:tonProof.proof,payload:pendingProofPayload})
    });
-   const verifyData=await verifyRes.json();
-   if(verifyRes.ok){proofVerified=true}
-   else{msg('walletMsg','err','Proof verification failed: '+(verifyData.error||'Unknown error'))}
-  }catch(e){msg('walletMsg','err','Proof verification request failed: '+e.message)}
- }else{
-  msg('walletMsg','err','This wallet did not return a tonProof item. Connect a wallet that supports TON Proof (Tonkeeper, MyTonWallet).');
- }
-
- // 2) تلاش برای بازیابی نشست
- const savedToken=localStorage.getItem('ifzi_session_token');
- const savedAddress=localStorage.getItem('ifzi_session_wallet');
- if(savedToken&&savedAddress===a.address&&proofVerified){
-  token=savedToken;
-  try{
-   const session=await api('/api/user');
-   if(session.address===a.address&&session.wallet_status==='approved'){
-    $('approval').textContent='Connected · proof verified';$('withdrawBtn').disabled=false;
-    await refresh();await ensureMiningStarted();
-    $('connectWalletBtn').textContent='WALLET CONNECTED';
-    msg('walletMsg','ok','Wallet session restored with TON Proof.');return;
+   const verifyData=await verifyRes.json().catch(()=>({error:'Invalid JSON from verify endpoint'}));
+   if(verifyRes.ok&&verifyData.token){
+    token=verifyData.token;proofVerified=true;
+    saveSession(a.address,token);
+   }else{
+    msg('walletMsg','err','Proof verification failed: '+(verifyData.error||'Server rejected proof'));
    }
   }catch(e){
-   if(e.message==='Unauthorized'||e.message.includes('Session expired')){token=null;clearSession()}
-   else{token=savedToken;msg('walletMsg','err','API temporarily unavailable.');$('connectWalletBtn').textContent='API RETRY';return}
+   msg('walletMsg','err','Proof verification request failed: '+e.message);
   }
-  token=null;clearSession();
  }
 
- // 3) ایجاد حساب جدید با ارسال proof به بک‌اند
- try{
-  const referralCode=new URLSearchParams(location.search).get('ref');
-  const telegramInitData=window.Telegram?.WebApp?.initData||'';
-  const d=await api('/api/wallet/connect','POST',{
-   address:a.address,
-   network:a.chain,
-   referralCode,
-   telegramInitData,
-   proof:tonProof?.proof||null,   // ✅ ارسال proof به بک‌اند
-   payload:pendingProofPayload
-  });
-  token=d.token;saveSession(a.address,token);
+ // ---- اگر proof تأیید نشد، به حالت قبلی (address-only) برمی‌گردیم ----
+ if(!proofVerified){
+  msg('walletMsg','err','TON Proof could not be verified. Falling back to address-only mode. Mining will start but wallet ownership is not cryptographically proven.');
+  try{
+   const referralCode=new URLSearchParams(location.search).get('ref');
+   const telegramInitData=window.Telegram?.WebApp?.initData||'';
+   const d=await api('/api/wallet/connect','POST',{address:a.address,network:a.chain,referralCode,telegramInitData});
+   token=d.token;saveSession(a.address,token);
+   $('approval').textContent='Connected · address-only (no proof)';
+  }catch(e){
+   token=null;clearSession();$('approval').textContent='Connection failed';
+   $('startBtn').disabled=$('claimBtn').disabled=$('withdrawBtn').disabled=true;
+   msg('walletMsg','err','Account setup failed: '+e.message);
+   return;
+  }
+ }else{
   $('approval').textContent='Connected · proof verified';
+ }
+
+ // ---- ادامه: شروع خودکار استخراج ----
+ try{
   $('startBtn').disabled=false;$('withdrawBtn').disabled=false;
-  await refresh();await ensureMiningStarted();
-  await refresh();await loadChainBalance(a.address);await loadPoolStatus();
+  await refresh();
+  await ensureMiningStarted();
+  await refresh();
+  await loadChainBalance(a.address);
+  await loadPoolStatus();
   $('connectWalletBtn').textContent='WALLET CONNECTED';
-  msg('walletMsg','ok','Wallet connected with TON Proof. Mining account created and the 24-hour cycle started.');
  }catch(e){
-  token=null;clearSession();$('approval').textContent='Connection failed';
-  $('startBtn').disabled=$('claimBtn').disabled=$('withdrawBtn').disabled=true;
-  msg('walletMsg','err','IFZI account setup failed: '+e.message);
+  msg('walletMsg','err','Post-connect setup error: '+e.message);
  }
 }
 
-// ✅ تابع کمکی: شروع خودکار ماینر
 async function ensureMiningStarted(){
  try{
   const current=await api('/api/mining/status');
@@ -387,7 +358,7 @@ async function loadStreak(){
  }catch(e){$('streakCalendar').textContent='Streak information is temporarily unavailable.'}
 }
 
-// ---------- رویدادها ----------
+// ==================== رویدادها ====================
 $('startBtn').onclick=async()=>{try{$('startBtn').disabled=true;const d=await api('/api/mining/start','POST',{});cycleEnd=d.ends_at;$('mineLevel').textContent='Level '+d.level;$('dailyRate').textContent=d.daily_rate+' IFZI';countdown();$('mineStatus').textContent='Mining active';$('claimBtn').disabled=true;syncMineAction();msg('mineMsg','ok','Mining cycle started.')}catch(e){msg('mineMsg','err',e.message);$('startBtn').disabled=false;syncMineAction()}};
 
 $('claimBtn').onclick=async()=>{
@@ -402,13 +373,20 @@ $('mineActionBtn').onclick=()=>{if(wallet&&!token){void onWallet(wallet);return}
 
 $('withdrawBtn').onclick=async()=>{try{const amount=$('withdrawAmount').value;if(!amount)throw new Error('Enter the withdrawal amount');const d=await api('/api/withdrawals/request','POST',{amount});msg('withdrawMsg','ok','Request '+d.id+' submitted for '+d.amount+' IFZI.');$('withdrawAmount').value='';await refresh();await loadWithdrawalHistory()}catch(e){msg('withdrawMsg','err',e.message)}};
 
+// ==================== دکمه اتصال کیف پول ====================
 $('connectWalletBtn').onclick=async()=>{
  const b=$('connectWalletBtn');
  if(wallet&&token){msg('walletMsg','ok','Wallet already connected.');return}
  b.disabled=true;
  try{
   const client=await ensureTonConnectUI();
-  await setProofPayload(); // ✅ قبل از باز کردن مودال، payload را تنظیم می‌کنیم
+  // ۱. دریافت payload از Worker قبل از باز کردن مودال
+  const payload=await fetchProofPayload();
+  if(payload){
+   client.setConnectRequestParameters({state:'ready',value:{tonProof:payload}});
+  }else{
+   client.setConnectRequestParameters({state:'ready',value:{}}); // بدون proof
+  }
   if(wallet&&!token){await onWallet(wallet);return}
   b.textContent='OPENING TON WALLET…';
   await client.openModal();
@@ -440,7 +418,7 @@ async function loadWithdrawalHistory(){
 }
 $('loadWithdrawalHistory').onclick=loadWithdrawalHistory;
 
-// ---------- STON.fi Omniston (بدون تغییر) ----------
+// ==================== STON.fi Omniston ====================
 let ifziSwapWidget=null,ifziSwapLoaderPromise=null;
 async function loadIfziSwap(){
  const status=$('ifziSwapStatus'),button=$('loadIfziSwap'),mount=$('ifziSwapMount');
@@ -472,7 +450,7 @@ async function loadIfziSwap(){
 }
 $('loadIfziSwap').addEventListener('click',loadIfziSwap);
 
-// ---------- راه‌اندازی اولیه (بدون مسدود کردن رندر) ----------
+// ==================== راه‌اندازی اولیه ====================
 (async()=>{
  try{
   await ensureTonConnectUI();
