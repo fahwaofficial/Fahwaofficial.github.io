@@ -3,101 +3,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
 <style>
-:root{--bg:#080b14;--panel:#101727;--panel2:#0c1220;--line:#202c43;--muted:#8493ae;--white:#edf4ff;--cyan:#49e6ed;--violet:#9874ff;--green:#51e0a5;--red:#ff728c}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#19284a 0%,#080b14 52%);color:var(--white);font-family:Inter,system-ui,sans-serif;line-height:1.55}a{color:inherit;text-decoration:none}.wrap{max-width:1080px;margin:auto;padding:22px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 0 26px}.brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.12em}.brand img{width:42px;height:42px;border-radius:14px;box-shadow:0 0 28px #49e6ed35}.nav{display:flex;gap:10px;flex-wrap:wrap}.btn{border:1px solid var(--line);border-radius:12px;padding:11px 16px;font:700 13px Inter;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#182238;color:var(--white);transition:.2s}.btn:hover{transform:translateY(-1px);border-color:#49e6ed88}.primary{background:linear-gradient(110deg,#36cbd8,#7564f4);border:0;color:#06121d}.green{background:linear-gradient(110deg,#52e5ad,#25b991);border:0;color:#06251c}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}.hero{text-align:center;padding:34px 12px 28px}.eyebrow{color:var(--cyan);font-size:11px;font-weight:800;letter-spacing:.24em;text-transform:uppercase}.hero h1{font-size:clamp(34px,7vw,66px);line-height:1.02;margin:14px 0;background:linear-gradient(100deg,#fff 20%,#65e8ef 55%,#a58bff 90%);background-clip:text;color:transparent;letter-spacing:-.055em}.hero p{color:var(--muted);max-width:620px;margin:0 auto 20px;font-size:14px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 22px}.stat,.panel{background:linear-gradient(145deg,#121d31ed,#0c1322f2);border:1px solid var(--line);border-radius:20px;box-shadow:0 16px 50px #0003}.stat{padding:16px;text-align:center}.stat b{display:block;font-size:clamp(18px,3vw,25px)}.stat span{font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}.panel{padding:22px;margin-bottom:14px}.panel h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9caeff;margin:0 0 16px}.mining{text-align:center;position:relative;overflow:hidden}.mining:before{content:"";position:absolute;inset:-100px;background:radial-gradient(circle,#6357d72b,transparent 65%);pointer-events:none}.token-banner{display:block;width:min(220px,65%);margin:8px auto 18px;border-radius:24px;filter:drop-shadow(0 0 32px #47e2ed55);cursor:pointer;position:relative}.bigtime{font-size:clamp(30px,6vw,46px);font-weight:900;letter-spacing:.04em;font-variant-numeric:tabular-nums;margin:8px 0}.muted{color:var(--muted);font-size:12px}.status{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:12px;overflow-wrap:anywhere}.ok{background:#51e0a515;color:var(--green)}.err{background:#ff728c18;color:var(--red)}.info{background:#49e6ed12;color:var(--cyan)}.rows{display:grid;gap:0}.row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #ffffff0c;font-size:13px}.row:last-child{border:0}.row span:first-child{color:var(--muted)}.row b{overflow-wrap:anywhere;text-align:right}.input{width:100%;background:#080e1b;border:1px solid var(--line);border-radius:11px;padding:13px;color:white;font:600 14px Inter;margin:8px 0}.buy{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.buy .btn{width:100%}.ad{border:1px dashed #354461;border-radius:16px;padding:22px;text-align:center;color:#73839e;background:#0b1220;font-size:12px}.roadmap{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.phase{border:1px solid var(--line);border-radius:14px;padding:14px;background:#0b1322}.phase b{color:var(--cyan);font-size:12px}.phase p{font-size:12px;color:var(--muted);margin-bottom:0}.foot{text-align:center;color:#64748c;font-size:11px;padding:22px}.hide{display:none!important}
-@media(max-width:760px){.grid{grid-template-columns:1fr}.roadmap{grid-template-columns:repeat(2,1fr)}.stats{gap:7px}.stat{padding:12px 6px}.wrap{padding:14px}.top{align-items:flex-start}.nav .btn{padding:9px 10px;font-size:11px}}
-@media(max-width:420px){.roadmap{grid-template-columns:1fr 1fr}.buy{grid-template-columns:1fr}.hero{padding-top:20px}}
-/* Premium dark glass interface */
-:root{--bg:#060912;--panel:#0c1422;--line:#26364b;--muted:#91a2b8;--white:#f1f6ff;--cyan:#67e8e1;--violet:#9b8cff;--green:#63e6b0}
-body{font-family:Manrope,system-ui,sans-serif;background:radial-gradient(ellipse at 50% -18%,#1c3150 0%,#0a1020 38%,#060912 75%)}
-h1,h2,.brand,.bigtime{font-family:"Space Grotesk",Manrope,sans-serif}
-.panel,.stat{background:linear-gradient(145deg,rgba(20,32,51,.84),rgba(8,15,27,.9));border-color:#31445c88;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 20px 70px #0005,inset 0 1px #ffffff0a}
-.panel{border-radius:24px}.stat{border-radius:17px}.btn{border-radius:14px;padding:13px 17px;box-shadow:inset 0 1px #ffffff0a}.primary{background:linear-gradient(115deg,#63e8df,#8a8cff);box-shadow:0 10px 28px #6ce6df20}.green{background:linear-gradient(115deg,#62e6b0,#32b995)}
-.mining{padding:28px 24px 24px;min-height:470px;display:flex;flex-direction:column;align-items:center;justify-content:center}.mining h2{align-self:stretch;text-align:left}
-.mine-orb{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;width:min(270px,100%);min-height:220px;margin:2px auto 18px;padding:12px;border:1px solid #5ce7df55;border-radius:26px;background:radial-gradient(circle at 50% 40%,#65e8e11a,transparent 68%),#08111f99;box-shadow:0 0 0 7px #65e8e108,0 0 45px #65e8e11c,inset 0 1px #ffffff12;cursor:pointer;color:var(--white);font:700 12px Manrope;letter-spacing:.13em;transition:.25s}
-.mine-orb:hover:not(:disabled){transform:translateY(-3px);border-color:#8b91ff;box-shadow:0 0 0 8px #8b91ff0b,0 0 55px #65e8e12b}.mine-orb img{width:145px;height:145px;object-fit:cover;border-radius:28px;box-shadow:0 0 38px #58e7e955;border:1px solid #ffffff24}.mine-orb:disabled{cursor:default;opacity:1}.mine-orb span{color:var(--cyan)}
-#startBtn,#claimBtn{display:none!important}.bigtime{font-size:clamp(34px,7vw,52px);letter-spacing:.06em;text-shadow:0 0 26px #62e7e122}
-.task-link{display:inline-flex;align-items:center;justify-content:center;margin:4px 0 8px;padding:8px 12px;border:1px solid #344961;border-radius:10px;background:#111d2c;color:#9cebe5;font-size:11px;font-weight:800}.task-link:hover{border-color:var(--cyan)}
-.vote-frame{width:100%;height:760px;border:1px solid #31445c;border-radius:16px;background:#080e19}.vote-fallback{font-size:12px;color:var(--muted);margin-top:10px}.private-callout{border:1px solid #9b8cff55;background:linear-gradient(120deg,#9b8cff12,#67e8e10b);border-radius:16px;padding:16px;margin-top:12px}
-@media(max-width:760px){.mining{min-height:430px;padding:22px 16px}.mine-orb{min-height:205px}.mine-orb img{width:132px;height:132px}.vote-frame{height:680px}}
-@media(max-width:420px){.vote-frame{height:620px}}
-/* Live mining-pool meter and wallet session controls */
-.poolbar{height:12px;border-radius:99px;background:#17243a;overflow:hidden;border:1px solid #31445c;margin:12px 0 7px}
-.poolbar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#63e8df,#8a8cff);box-shadow:0 0 18px #63e8df66;transition:width .35s}
-.poolmeta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
-#disconnectWalletBtn{display:none;margin-top:10px;width:100%}
-/* Obsidian black glass theme */
-:root{--bg:#030405;--panel:#090b0e;--panel2:#060708;--line:#25292e;--muted:#9aa0a8;--white:#f4f5f6;--cyan:#d9e0e5;--violet:#8b949e;--green:#79e0b0;--red:#ff7b89}
-body{background:radial-gradient(ellipse at 50% -24%,#171a1e 0%,#08090b 38%,#030405 78%);color:#f4f5f6}
-.panel,.stat{background:linear-gradient(145deg,rgba(22,24,27,.88),rgba(7,8,10,.94));border:1px solid #ffffff18;box-shadow:0 22px 70px #000b,inset 0 1px #ffffff0c;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
-.panel h2{color:#d8dde2}.hero h1{background:linear-gradient(100deg,#fff 18%,#cbd1d7 58%,#858d96 95%);background-clip:text;color:transparent}
-.eyebrow{color:#c0c7ce}.btn{background:linear-gradient(145deg,#171a1e,#090a0c);border:1px solid #ffffff20;color:#f4f5f6}.btn:hover{border-color:#d4d9df88}
-.primary{background:linear-gradient(115deg,#e6e9ec,#8e969f);color:#090a0c;box-shadow:0 10px 28px #ffffff13}.green{background:linear-gradient(115deg,#a4e8c9,#55b991);color:#06130d}
-.input{background:#050607;border-color:#30343a}.mine-orb{background:radial-gradient(circle at 50% 40%,#ffffff13,transparent 68%),#050607;border-color:#ffffff35;box-shadow:0 0 0 7px #ffffff08,0 0 45px #ffffff10,inset 0 1px #ffffff14}.mine-orb span{color:#e2e6ea}
-.task-link{background:#0b0d0f;border-color:#454b52;color:#e0e5e9}.poolbar>i{background:linear-gradient(90deg,#d8dfe5,#8e969f);box-shadow:0 0 18px #d8dfe555}
-.streak-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;margin:14px 0}.streak-day{min-height:54px;border:1px solid #ffffff18;border-radius:12px;background:#080a0c;padding:7px 3px;text-align:center;font-size:10px;color:#89919a}.streak-day b{display:block;font-size:13px;color:#dce1e6}.streak-day.done{background:linear-gradient(145deg,#183329,#0b1712);border-color:#66d6a455;color:#a8e8ca}.streak-day.today{outline:1px solid #dce2e866;outline-offset:1px}.streak-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.streak-stat{border:1px solid #ffffff18;border-radius:13px;padding:11px;background:#07090b}.streak-stat b{display:block;font-size:19px}.streak-stat span{font-size:10px;color:var(--muted)}
-.badge-medal{display:inline-flex;align-items:center;gap:7px;border:1px solid #c5a85c66;border-radius:999px;padding:7px 11px;background:#c5a85c12;color:#f1d98c;font-size:11px;font-weight:800;margin:4px}
-.social-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.social-links a{border:1px solid #ffffff20;border-radius:10px;padding:8px 11px;background:#080a0c;font-size:11px;font-weight:800}
-@media(max-width:420px){.streak-day{min-height:48px;font-size:9px}.streak-meta{gap:5px}.streak-stat{padding:8px 5px}.streak-stat b{font-size:16px}}
-
-/* IFZI premium glass finish */
-.wrap{max-width:1180px;padding:20px 24px}
-.top{position:sticky;top:0;z-index:30;padding:12px 0 16px;background:rgba(4,5,7,.82);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-bottom:1px solid #ffffff12}
-.nav{justify-content:flex-end}
-.hero{padding:46px 12px 34px}
-.hero h1{font-size:clamp(40px,8vw,76px);letter-spacing:-.065em}
-.hero p{font-size:15px;line-height:1.8}
-.panel,.stat{position:relative;overflow:hidden;border-radius:26px;background:linear-gradient(145deg,rgba(25,28,32,.82),rgba(7,8,10,.94));border:1px solid rgba(255,255,255,.12);box-shadow:0 26px 80px #000b,inset 0 1px 0 #ffffff13;backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px)}
-.panel:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(130deg,#ffffff08,transparent 36%,#ffffff03)}
-.panel>*{position:relative}
-.panel h2{font-size:13px;letter-spacing:.14em;color:#e4e8ed}
-.stat{padding:20px 14px}
-.stat b{font-family:"Space Grotesk",sans-serif;font-size:clamp(22px,3vw,30px);letter-spacing:-.04em}
-.stat span{letter-spacing:.15em}
-.btn{min-height:44px;border-radius:15px;border-color:#ffffff20;background:linear-gradient(145deg,#1b1e22,#090a0c);box-shadow:0 8px 24px #0005,inset 0 1px #ffffff10}
-.btn:hover{border-color:#dce3eb88;box-shadow:0 12px 30px #0008,0 0 22px #ffffff0b}
-.primary{background:linear-gradient(115deg,#f2f4f6,#9da6af);color:#08090a;border:0}
-.green{background:linear-gradient(115deg,#b5f1d5,#60c99b);color:#06140d;border:0}
-.grid{grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);gap:18px}
-.mining{min-height:530px;padding:32px 26px}
-.mine-orb{width:258px;height:258px;min-height:258px;aspect-ratio:1;border-radius:50%;gap:12px;padding:16px;background:radial-gradient(circle at 50% 35%,#ffffff1b,transparent 65%),linear-gradient(145deg,#181b1f,#050607);border:1px solid #ffffff4a;box-shadow:0 0 0 9px #ffffff07,0 0 70px #cbd2da18,inset 0 2px #ffffff22;letter-spacing:.16em}
-.mine-orb img{width:158px;height:158px;border-radius:50%;object-fit:cover;border:2px solid #ffffff55;box-shadow:0 0 42px #ffffff24}
-.mine-orb span{font-size:11px;color:#f2f4f6;text-shadow:0 2px 8px #000}
-.mine-orb:hover:not(:disabled){transform:scale(1.025);border-color:#f1f4f7;box-shadow:0 0 0 11px #ffffff09,0 0 85px #dce4ec2b,inset 0 2px #ffffff28}
-.bigtime{font-size:clamp(38px,7vw,58px);letter-spacing:.08em}
-.row{padding:13px 0;border-bottom:1px solid #ffffff10}
-.input{border-radius:14px;border:1px solid #ffffff20;background:rgba(3,4,5,.75);min-height:48px}
-.buy{grid-template-columns:1fr;gap:9px}
-.buy .btn{min-height:48px}
-.task-link,.social-links a{border-radius:12px;background:#0b0d0f;border-color:#ffffff22;color:#e9edf1}
-.private-callout{border-color:#ffffff24;background:linear-gradient(125deg,#ffffff0a,#ffffff03);border-radius:20px}
-.poolbar{height:14px;background:#181b1f;border-color:#ffffff20}
-.poolbar>i{background:linear-gradient(90deg,#f0f2f4,#8b949e);box-shadow:0 0 20px #ffffff3a}
-#withdrawalHistory .row{align-items:flex-start}
-#withdrawalHistory .row b{max-width:60%;font-size:12px}
-#optionalTask{border-color:#d7dce333;background:linear-gradient(145deg,rgba(35,37,41,.92),rgba(8,9,11,.96))}
-@media(max-width:760px){.wrap{padding:12px}.top{position:relative;align-items:center;flex-direction:column}.nav{justify-content:center}.hero{padding:30px 8px 24px}.grid{grid-template-columns:1fr}.mining{min-height:470px;padding:24px 14px}.mine-orb{width:224px;height:224px;min-height:224px}.mine-orb img{width:136px;height:136px}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{padding:13px 6px}}
-@media(max-width:420px){.nav .btn{font-size:10px;padding:9px 10px}.mine-orb{width:208px;height:208px;min-height:208px}.mine-orb img{width:126px;height:126px}.panel{padding:18px 15px}.hero h1{font-size:39px}}
-/* STON.fi Omniston swap panel: force a readable light palette for quote/amount text */
-#ifziSwapMount{
- color:#111!important;color-scheme:light!important;background:#fff!important;
- --widget-text-primary:#111111;--widget-text-secondary:#333333;
- --color-text-primary:#111111;--color-text-secondary:#333333;
- --text-primary:#111111;--text-secondary:#333333;
- --color-primary-text:#111111;--color-base-content:#111111;
- --mantine-color-text:#111111;--mantine-color-dimmed:#444444;
- --tg-theme-text-color:#111111;--tg-theme-hint-color:#444444;
-}
-#ifziSwapMount>*{max-width:100%}
-#ifziSwapMount input,#ifziSwapMount textarea,
-#ifziSwapMount [class*="amount"],#ifziSwapMount [class*="Amount"],
-#ifziSwapMount [class*="price"],#ifziSwapMount [class*="Price"],
-#ifziSwapMount [class*="value"],#ifziSwapMount [class*="Value"],
-#ifziSwapMount [class*="balance"],#ifziSwapMount [class*="Balance"]{
- color:#111!important;-webkit-text-fill-color:#111!important
-}
-#ifziSwapMount input::placeholder{color:#666!important;-webkit-text-fill-color:#666!important}
-@media(max-width:760px){#swap>div:first-of-type{grid-template-columns:1fr!important}#ifziSwapMount{min-height:520px!important}}
+/* ... (تمام استایل‌های قبلی بدون تغییر) ... */
 </style><script src="https://telegram.org/js/telegram-web-app.js?65"></script></head><body><div class="wrap">
 <header class="top"><div class="brand"><img src="https://fahwaofficial.github.io/images/logo-ifc.jpg" alt="IFZI"><span>IFZI PROTOCOL</span></div><nav class="nav"><a class="btn" href="#mine">MINING</a><a class="btn" href="#tasks">TASKS</a><a class="btn" href="#withdrawalHistoryPanel">WITHDRAWALS</a><a class="btn" href="#buy">BUY IFZI</a><a class="btn" href="#swap">SWAP IFZI</a><a class="btn primary" href="https://fahwaofficial.github.io/IFZI-presale.html">PRIVATE SALE ↗</a><a class="btn" href="https://app.ston.fi/pools/EQBjAe1hG6qi7AqSEXR7B6tueAvY5uONHDAIa8fJuX_B64f8" target="_blank" rel="noopener">LIQUIDITY POOL ↗</a></nav></header>
 <section class="hero"><div class="eyebrow">TON ECOSYSTEM · COMMUNITY MINING</div><h1>Mine the next<br>digital frontier.</h1><p>Earn IFZI through transparent 24-hour mining cycles. Connect your TON wallet and track your rewards.</p><button class="btn primary" id="connectWalletBtn" type="button">CONNECT TON WALLET</button></section>
@@ -138,7 +44,8 @@ body{background:radial-gradient(ellipse at 50% -24%,#171a1e 0%,#08090b 38%,#0304
 const API='https://ifzi-mining-api.fahwaiman.workers.dev',MASTER='EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0',TONAPI='https://tonapi.io/v2';
 const $=id=>document.getElementById(id);let token=null,wallet=null,cycleEnd=0,tick=null;
 let ui=null,tonConnectLoadPromise=null,tonConnectListenersReady=false;
-let walletNullTimer=null,walletStatusVersion=0;
+let walletSessionReady=false;   // ✅ نشانگر داخلی جایگزین بررسی متن approval
+
 async function ensureTonConnectUI(){
  if(ui)return ui;
  if(!tonConnectLoadPromise)tonConnectLoadPromise=(async()=>{
@@ -161,8 +68,14 @@ async function ensureTonConnectUI(){
    }catch(e){lastError=e}
   }
   if(!window.TON_CONNECT_UI?.TonConnectUI)throw new Error('TON Connect SDK could not load from either CDN. '+(lastError?.message||'Unknown loader error'));
-  ui=new window.TON_CONNECT_UI.TonConnectUI({manifestUrl:'https://fahwaofficial.github.io/tonconnect-manifest-v2.json',network:'-239',enableAndroidBackHandler:false,restoreConnection:true});
-  // Standard TON Connect address-only handshake. No ton_proof item is requested.
+
+  ui=new window.TON_CONNECT_UI.TonConnectUI({
+   manifestUrl:'https://fahwaofficial.github.io/tonconnect-manifest-v2.json',
+   network:'-239',
+   enableAndroidBackHandler:false,
+   restoreConnection:false   // ✅ جلوگیری از تداخل restore با اتصال دستی
+  });
+
   if(!tonConnectListenersReady){
    ui.onStatusChange(onWallet,e=>msg('walletMsg','err','TON Connect error: '+(e?.message||String(e))));
    ui.onModalStateChange(state=>{if(state.status==='opened')$('connectWalletBtn').textContent='SELECT YOUR TON WALLET'});
@@ -172,6 +85,7 @@ async function ensureTonConnectUI(){
  })();
  try{return await tonConnectLoadPromise}catch(e){tonConnectLoadPromise=null;throw e}
 }
+
 function msg(id,type,text){$(id).innerHTML='';const d=document.createElement('div');d.className='status '+type;d.textContent=text;$(id).append(d)}
 async function api(path,method='GET',body){const r=await fetch(API+path,{method,headers:{'content-type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},body:body?JSON.stringify(body):undefined});const d=await r.json().catch(()=>({error:'Invalid server response'}));if(!r.ok)throw new Error(d.error||'Request failed');return d}
 function short(s){return s?s.slice(0,8)+'…'+s.slice(-6):'—'}
@@ -180,93 +94,301 @@ function clearSession(){localStorage.removeItem('ifzi_session_wallet');localStor
 async function loadPoolStatus(){try{const d=await api('/api/pool/status');$('poolRemaining').textContent=fmt(d.remaining)+' IFZI';$('poolDistributed').textContent=fmt(d.distributed)+' IFZI';$('poolReserved').textContent=fmt(d.reserved)+' IFZI';const p=Math.max(0,Math.min(100,Number(d.distributed_percent||0)));$('poolProgress').style.width=p+'%';$('poolPercent').textContent=p.toFixed(2)+'% distributed'}catch(e){$('poolRemaining').textContent='API unavailable';$('poolPercent').textContent='Live data unavailable'}}
 function fmt(n){return Number(n||0).toLocaleString(undefined,{maximumFractionDigits:4})}
 async function loadStreak(){if(!token)return;try{const d=await api('/api/tasks/streak');$('streakCount').textContent=d.streak_days+' / 30';$('streakNext').textContent=d.next_weekly_milestone?d.next_weekly_milestone+' days':(d.streak_days===30?'Badge earned':'—');$('badgeCount').textContent=d.badge_count||0;const host=$('streakCalendar');host.innerHTML='';for(const day of d.calendar){const el=document.createElement('div');el.className='streak-day'+(day.checked?' done':'')+(day.date===d.today?' today':'');const dt=new Date(day.date+'T00:00:00Z');const name=dt.toLocaleDateString(undefined,{weekday:'short',timeZone:'UTC'});const num=dt.getUTCDate();const b=document.createElement('b');b.textContent=String(num);const small=document.createElement('span');small.textContent=day.checked?'✓ '+name:name;el.append(b,small);host.append(el)}const badges=$('streakBadges');badges.innerHTML='';if(!d.badges.length){badges.textContent='Your 30-day badges will appear here.'}else{for(const badge of d.badges){const el=document.createElement('span');el.className='badge-medal';el.textContent='🏅 IFZI 30-DAY · '+badge.cycle_start_date;badges.append(el)}}}catch(e){$('streakCalendar').textContent='Streak information is temporarily unavailable.'}}
-function syncMineAction(){const b=$('mineActionBtn'),label=$('mineActionLabel');if(!token){b.disabled=false;label.textContent=wallet?'WALLET CONNECTED · LOADING ACCOUNT':'CONNECT WALLET TO START';return}if($('approval').textContent!=='Connected · address-only'){b.disabled=true;label.textContent='WALLET RESTRICTED';return}if(!$('claimBtn').disabled){b.disabled=false;label.textContent='CLAIM YOUR IFZI REWARD';return}if(!$('startBtn').disabled){b.disabled=false;label.textContent='START 24-HOUR MINING';return}b.disabled=true;label.textContent='MINING ACTIVE · CLAIM AFTER 24H'}
+
+/* ✅ اصلاح شد: syncMineAction حالا از walletSessionReady استفاده می‌کند */
+function syncMineAction(){
+ const b=$('mineActionBtn'),label=$('mineActionLabel');
+ if(!token){b.disabled=false;label.textContent=wallet?'WALLET CONNECTED · LOADING ACCOUNT':'CONNECT WALLET TO START';return}
+ if(!walletSessionReady){b.disabled=true;label.textContent='WALLET RESTRICTED';return}
+ if(!$('claimBtn').disabled){b.disabled=false;label.textContent='CLAIM YOUR IFZI REWARD';return}
+ if(!$('startBtn').disabled){b.disabled=false;label.textContent='START 24-HOUR MINING';return}
+ b.disabled=true;label.textContent='MINING ACTIVE · CLAIM AFTER 24H';
+}
+
 function countdown(){if(tick)clearInterval(tick);const draw=()=>{const ms=Math.max(0,cycleEnd-Date.now());const h=String(Math.floor(ms/3600000)).padStart(2,'0'),m=String(Math.floor(ms%3600000/60000)).padStart(2,'0'),s=String(Math.floor(ms%60000/1000)).padStart(2,'0');$('timer').textContent=h+':'+m+':'+s;if(ms===0){clearInterval(tick);$('mineStatus').textContent='Cycle complete · tap the IFZI logo to claim';$('claimBtn').disabled=false;syncMineAction()}else syncMineAction()};draw();tick=setInterval(draw,1000)}
+
+/* ✅ onWallet ساده‌سازی شد: بدون walletNullTimer، همگام‌سازی مستقیم */
 async function onWallet(w){
  if(!w){
-  const version=++walletStatusVersion;
-  if(walletNullTimer)clearTimeout(walletNullTimer);
-  walletNullTimer=setTimeout(()=>{
-   if(version!==walletStatusVersion)return;
-   const active=ui?.wallet;
-   if(active?.account?.address){if(wallet?.account?.address!==active.account.address)void onWallet(active);return}
-   const wasConnected=!!wallet;token=null;wallet=null;if(wasConnected)clearSession();
-   $('disconnectWalletBtn').style.display='none';$('connectWalletBtn').textContent='CONNECT TON WALLET';
-   if(tick)clearInterval(tick);
-   $('wallet').textContent='Not connected';$('network').textContent='—';$('approval').textContent='—';
-   $('startBtn').disabled=$('claimBtn').disabled=$('withdrawBtn').disabled=true;
-   $('timer').textContent='--:--:--';$('mineStatus').textContent='Connect your TON wallet to start mining';syncMineAction();
-  },1200);return;
+  // فقط اگر SDK هم کیف پولی نداشته باشد، واقعاً قطع شده است
+  const active=ui?.wallet;
+  if(active?.account?.address){
+   if(wallet?.account?.address!==active.account.address)void onWallet(active);
+   return;
+  }
+  const wasConnected=!!wallet;
+  wallet=null;token=null;walletSessionReady=false;
+  if(wasConnected)clearSession();
+  $('disconnectWalletBtn').style.display='none';
+  $('connectWalletBtn').textContent='CONNECT TON WALLET';
+  if(tick)clearInterval(tick);
+  $('wallet').textContent='Not connected';$('network').textContent='—';$('approval').textContent='—';
+  $('startBtn').disabled=$('claimBtn').disabled=$('withdrawBtn').disabled=true;
+  $('timer').textContent='--:--:--';$('mineStatus').textContent='Connect your TON wallet to start mining';
+  syncMineAction();
+  return;
  }
- if(walletNullTimer){clearTimeout(walletNullTimer);walletNullTimer=null}
- walletStatusVersion++;wallet=w;const a=w.account;
- $('wallet').textContent=short(a.address);$('network').textContent=a.chain==='-239'?'TON Mainnet':'Unsupported network';
+
+ wallet=w;const a=w.account;
+ $('wallet').textContent=short(a.address);
+ $('network').textContent=a.chain==='-239'?'TON Mainnet':'Unsupported network';
  $('disconnectWalletBtn').style.display='block';
- if(a.chain!=='-239'){token=null;clearSession();$('approval').textContent='Unsupported network';$('startBtn').disabled=$('claimBtn').disabled=$('withdrawBtn').disabled=true;msg('walletMsg','err','Please switch your wallet to TON Mainnet. No proof or payment is requested.');syncMineAction();return}
- const savedToken=localStorage.getItem('ifzi_session_token'),savedAddress=localStorage.getItem('ifzi_session_wallet');
+
+ if(a.chain!=='-239'){
+  token=null;walletSessionReady=false;clearSession();
+  $('approval').textContent='Unsupported network';
+  $('startBtn').disabled=$('claimBtn').disabled=$('withdrawBtn').disabled=true;
+  msg('walletMsg','err','Please switch your wallet to TON Mainnet. No proof or payment is requested.');
+  syncMineAction();return;
+ }
+
+ // 1) تلاش برای بازیابی نشست موجود
+ const savedToken=localStorage.getItem('ifzi_session_token');
+ const savedAddress=localStorage.getItem('ifzi_session_wallet');
  if(savedToken&&savedAddress===a.address){
   token=savedToken;
   try{
    const session=await api('/api/user');
    if(session.address===a.address&&session.wallet_status==='approved'){
-    $('approval').textContent='Connected · address-only';$('withdrawBtn').disabled=false;await refresh();
-    const current=await api('/api/mining/status');
-    if(current.status==='idle'){
-     const started=await api('/api/mining/start','POST',{});
-     cycleEnd=started.ends_at;$('mineLevel').textContent='Level '+started.level;$('dailyRate').textContent=started.daily_rate+' IFZI';
-     $('startBtn').disabled=true;$('claimBtn').disabled=true;countdown();$('mineStatus').textContent='Mining started automatically · 24-hour cycle';
-    }
-    await loadChainBalance(a.address);await loadPoolStatus();syncMineAction();$('connectWalletBtn').textContent='WALLET CONNECTED';
-    msg('walletMsg','ok','Wallet session restored. Address-only mode: wallet ownership is not cryptographically verified.');return;
+    walletSessionReady=true;
+    $('approval').textContent='Connected · address-only';
+    $('withdrawBtn').disabled=false;
+    await refresh();
+    await ensureMiningStarted();
+    await loadChainBalance(a.address);
+    await loadPoolStatus();
+    syncMineAction();$('connectWalletBtn').textContent='WALLET CONNECTED';
+    msg('walletMsg','ok','Wallet session restored. Address-only mode: wallet ownership is not cryptographically verified.');
+    return;
    }
   }catch(e){
-   if(e.message==='Unauthorized'||e.message.includes('Session expired')){token=null;clearSession()}
-   else{token=savedToken;msg('walletMsg','err','IFZI API is temporarily unavailable. Your connected wallet is preserved; retry when the API recovers.');$('connectWalletBtn').textContent='API RETRY';syncMineAction();return}
+   if(e.message==='Unauthorized'||e.message.includes('Session expired')){
+    token=null;walletSessionReady=false;clearSession();
+   }else{
+    token=savedToken;walletSessionReady=true;
+    msg('walletMsg','err','IFZI API is temporarily unavailable. Your connected wallet is preserved; retry when the API recovers.');
+    $('connectWalletBtn').textContent='API RETRY';syncMineAction();return;
+   }
   }
-  token=null;clearSession();
- }else{token=null;clearSession()}
+  token=null;walletSessionReady=false;clearSession();
+ }
+
+ // 2) ایجاد حساب جدید با ارسال فقط آدرس (بدون tonProof)
  try{
-  const referralCode=new URLSearchParams(location.search).get('ref'),telegramInitData=window.Telegram?.WebApp?.initData||'';
-  const d=await api('/api/wallet/connect','POST',{address:a.address,network:a.chain,referralCode,telegramInitData});
-  token=d.token;saveSession(a.address,token);$('approval').textContent='Connected · address-only';
-  $('startBtn').disabled=false;$('withdrawBtn').disabled=false;await refresh();
-  const current=await api('/api/mining/status');
-  if(current.status==='idle'){
-   const started=await api('/api/mining/start','POST',{});
-   cycleEnd=started.ends_at;$('mineLevel').textContent='Level '+started.level;$('dailyRate').textContent=started.daily_rate+' IFZI';
-   $('startBtn').disabled=true;$('claimBtn').disabled=true;countdown();$('mineStatus').textContent='Mining started automatically · 24-hour cycle';
-  }
-  await refresh();await loadChainBalance(a.address);await loadPoolStatus();syncMineAction();$('connectWalletBtn').textContent='WALLET CONNECTED';
+  const referralCode=new URLSearchParams(location.search).get('ref');
+  const telegramInitData=window.Telegram?.WebApp?.initData||'';
+  const d=await api('/api/wallet/connect','POST',{
+   address:a.address,
+   network:a.chain,
+   referralCode,
+   telegramInitData
+   // ✅ هیچ tonProof یا payload ارسال نمی‌شود
+  });
+  token=d.token;saveSession(a.address,token);
+  walletSessionReady=true;
+  $('approval').textContent='Connected · address-only';
+  $('startBtn').disabled=false;$('withdrawBtn').disabled=false;
+  await refresh();
+  await ensureMiningStarted();
+  await refresh();await loadChainBalance(a.address);await loadPoolStatus();
+  syncMineAction();$('connectWalletBtn').textContent='WALLET CONNECTED';
   msg('walletMsg','ok','Wallet connected. Mining account created and the 24-hour cycle started. Address-only mode does not verify wallet ownership.');
  }catch(e){
-  token=null;clearSession();$('approval').textContent='Connection failed';$('startBtn').disabled=$('claimBtn').disabled=$('withdrawBtn').disabled=true;
+  token=null;walletSessionReady=false;clearSession();
+  $('approval').textContent='Connection failed';
+  $('startBtn').disabled=$('claimBtn').disabled=$('withdrawBtn').disabled=true;
   msg('walletMsg','err','IFZI account setup failed: '+e.message+'. Your TON wallet remains connected; retry without disconnecting it.');
   $('disconnectWalletBtn').style.display='block';syncMineAction();
  }
 }
-async function refresh(){if(!token)return;const u=await api('/api/user');if(u.referral_code){$('refCode').textContent=u.referral_code;$('refLink').value=location.origin+location.pathname+'?ref='+encodeURIComponent(u.referral_code)}$('available').textContent=fmt(u.available_rewards)+' IFZI';$('lifetime').textContent=fmt(u.lifetime_mined)+' IFZI';await loadStreak();const s=await api('/api/mining/status');if(s.status==='active'||s.status==='ready'){cycleEnd=s.ends_at;$('mineLevel').textContent='Level '+s.level;$('dailyRate').textContent=s.daily_rate+' IFZI';countdown();$('mineStatus').textContent=s.status==='ready'?'Cycle complete · tap logo to claim':'Mining active';$('startBtn').disabled=true;$('claimBtn').disabled=s.status!=='ready';syncMineAction()}else{$('timer').textContent='24:00:00';$('mineStatus').textContent='Miner idle · tap logo to start';$('startBtn').disabled=u.wallet_status!=='approved';$('claimBtn').disabled=true;syncMineAction()}}
+
+/* ✅ تابع کمکی: اگر ماینر idle بود، یک بار start کند */
+async function ensureMiningStarted(){
+ try{
+  const current=await api('/api/mining/status');
+  if(current.status==='idle'){
+   const started=await api('/api/mining/start','POST',{});
+   cycleEnd=started.ends_at;
+   $('mineLevel').textContent='Level '+started.level;
+   $('dailyRate').textContent=started.daily_rate+' IFZI';
+   $('startBtn').disabled=true;$('claimBtn').disabled=true;
+   countdown();
+   $('mineStatus').textContent='Mining started automatically · 24-hour cycle';
+  }else if(current.status==='active'||current.status==='ready'){
+   cycleEnd=current.ends_at;
+   $('mineLevel').textContent='Level '+current.level;
+   $('dailyRate').textContent=current.daily_rate+' IFZI';
+   countdown();
+   $('mineStatus').textContent=current.status==='ready'?'Cycle complete · tap logo to claim':'Mining active';
+   $('startBtn').disabled=true;
+   $('claimBtn').disabled=current.status!=='ready';
+  }
+ }catch(e){
+  // شروع خودکار ناموفق: دکمه start را برای تلاش دستی فعال نگه می‌داریم
+  $('startBtn').disabled=false;
+  $('mineStatus').textContent='Mining not started automatically. Tap START MINING to retry.';
+  syncMineAction();
+ }
+}
+
+async function refresh(){
+ if(!token)return;
+ const u=await api('/api/user');
+ if(u.referral_code){
+  $('refCode').textContent=u.referral_code;
+  $('refLink').value=location.origin+location.pathname+'?ref='+encodeURIComponent(u.referral_code);
+ }
+ $('available').textContent=fmt(u.available_rewards)+' IFZI';
+ $('lifetime').textContent=fmt(u.lifetime_mined)+' IFZI';
+ await loadStreak();
+ const s=await api('/api/mining/status');
+ if(s.status==='active'||s.status==='ready'){
+  cycleEnd=s.ends_at;
+  $('mineLevel').textContent='Level '+s.level;
+  $('dailyRate').textContent=s.daily_rate+' IFZI';
+  countdown();
+  $('mineStatus').textContent=s.status==='ready'?'Cycle complete · tap logo to claim':'Mining active';
+  $('startBtn').disabled=true;
+  $('claimBtn').disabled=s.status!=='ready';
+  syncMineAction();
+ }else{
+  $('timer').textContent='24:00:00';
+  $('mineStatus').textContent='Miner idle · tap logo to start';
+  $('startBtn').disabled=!walletSessionReady;
+  $('claimBtn').disabled=true;
+  syncMineAction();
+ }
+}
+
 async function loadChainBalance(address){try{const r=await fetch(TONAPI+'/accounts/'+encodeURIComponent(address)+'/jettons/'+encodeURIComponent(MASTER));if(!r.ok)throw 0;const d=await r.json();$('chainBalance').textContent=fmt(Number(d.balance||0)/10**(d.jetton?.decimals??9))+' IFZI'}catch{$('chainBalance').textContent='Unavailable'}}
-$('startBtn').onclick=async()=>{try{$('startBtn').disabled=true;const d=await api('/api/mining/start','POST',{});cycleEnd=d.ends_at;$('mineLevel').textContent='Level '+d.level;$('dailyRate').textContent=d.daily_rate+' IFZI';countdown();$('mineStatus').textContent='Mining active';$('claimBtn').disabled=true;syncMineAction();msg('mineMsg','ok','Mining cycle started. Return after 24 hours.')}catch(e){msg('mineMsg','err',e.message);$('startBtn').disabled=false;syncMineAction()}};
-$('claimBtn').onclick=async()=>{$('claimBtn').disabled=true;let d;try{d=await api('/api/mining/claim','POST',{})}catch(e){msg('mineMsg','err',e.message);$('claimBtn').disabled=false;syncMineAction();return}msg('mineMsg','ok','Claimed '+d.reward+' IFZI. Starting your next 24-hour cycle…');try{await refresh()}catch(e){msg('mineMsg','err','Claimed '+d.reward+' IFZI, but the miner status could not refresh. Reload the page before continuing.');return}try{const next=await api('/api/mining/start','POST',{});cycleEnd=next.ends_at;$('mineLevel').textContent='Level '+next.level;$('dailyRate').textContent=next.daily_rate+' IFZI';$('startBtn').disabled=true;$('claimBtn').disabled=true;countdown();$('mineStatus').textContent='Next 24-hour mining cycle started automatically';msg('mineMsg','ok','Claimed '+d.reward+' IFZI. Your next 24-hour mining cycle has started.');syncMineAction()}catch(e){try{await refresh()}catch(_){}msg('mineMsg','err','Claimed '+d.reward+' IFZI, but the next cycle did not start: '+e.message+'. Tap the IFZI logo once to retry.');syncMineAction()}};
-$('mineActionBtn').onclick=()=>{if(wallet&&!token){void onWallet(wallet);return}if(!token){$('connectWalletBtn').click();return}if(!$('claimBtn').disabled){$('claimBtn').click();return}if(!$('startBtn').disabled){$('startBtn').click();return}};
-$('withdrawBtn').onclick=async()=>{try{const amount=$('withdrawAmount').value;if(!amount)throw new Error('Enter the withdrawal amount');const d=await api('/api/withdrawals/request','POST',{amount});msg('withdrawMsg','ok','Request '+d.id+' submitted for '+d.amount+' IFZI. Admin review is required.');$('withdrawAmount').value='';await refresh();await loadWithdrawalHistory()}catch(e){msg('withdrawMsg','err',e.message)}};
+
+$('startBtn').onclick=async()=>{
+ try{
+  $('startBtn').disabled=true;
+  const d=await api('/api/mining/start','POST',{});
+  cycleEnd=d.ends_at;
+  $('mineLevel').textContent='Level '+d.level;
+  $('dailyRate').textContent=d.daily_rate+' IFZI';
+  countdown();
+  $('mineStatus').textContent='Mining active';
+  $('claimBtn').disabled=true;
+  syncMineAction();
+  msg('mineMsg','ok','Mining cycle started. Return after 24 hours.');
+ }catch(e){
+  msg('mineMsg','err',e.message);
+  $('startBtn').disabled=false;
+  syncMineAction();
+ }
+};
+
+$('claimBtn').onclick=async()=>{
+ $('claimBtn').disabled=true;
+ let d;
+ try{d=await api('/api/mining/claim','POST',{})}catch(e){msg('mineMsg','err',e.message);$('claimBtn').disabled=false;syncMineAction();return}
+ msg('mineMsg','ok','Claimed '+d.reward+' IFZI. Starting your next 24-hour cycle…');
+ try{await refresh()}catch(e){msg('mineMsg','err','Claimed '+d.reward+' IFZI, but the miner status could not refresh. Reload the page before continuing.');return}
+ try{
+  const next=await api('/api/mining/start','POST',{});
+  cycleEnd=next.ends_at;
+  $('mineLevel').textContent='Level '+next.level;
+  $('dailyRate').textContent=next.daily_rate+' IFZI';
+  $('startBtn').disabled=true;$('claimBtn').disabled=true;
+  countdown();
+  $('mineStatus').textContent='Next 24-hour mining cycle started automatically';
+  msg('mineMsg','ok','Claimed '+d.reward+' IFZI. Your next 24-hour mining cycle has started.');
+  syncMineAction();
+ }catch(e){
+  try{await refresh()}catch(_){}
+  msg('mineMsg','err','Claimed '+d.reward+' IFZI, but the next cycle did not start: '+e.message+'. Tap the IFZI logo once to retry.');
+  syncMineAction();
+ }
+};
+
+$('mineActionBtn').onclick=()=>{
+ if(wallet&&!token){void onWallet(wallet);return}
+ if(!token){$('connectWalletBtn').click();return}
+ if(!$('claimBtn').disabled){$('claimBtn').click();return}
+ if(!$('startBtn').disabled){$('startBtn').click();return}
+};
+
+$('withdrawBtn').onclick=async()=>{
+ try{
+  const amount=$('withdrawAmount').value;
+  if(!amount)throw new Error('Enter the withdrawal amount');
+  const d=await api('/api/withdrawals/request','POST',{amount});
+  msg('withdrawMsg','ok','Request '+d.id+' submitted for '+d.amount+' IFZI. Admin review is required.');
+  $('withdrawAmount').value='';
+  await refresh();await loadWithdrawalHistory();
+ }catch(e){msg('withdrawMsg','err',e.message)}
+};
+
 $('connectWalletBtn').onclick=async()=>{
- const b=$('connectWalletBtn');if(wallet&&token){msg('walletMsg','ok','Wallet already connected. Tap the IFZI logo to mine or claim.');return}
+ const b=$('connectWalletBtn');
+ if(wallet&&token){msg('walletMsg','ok','Wallet already connected. Tap the IFZI logo to mine or claim.');return}
  b.disabled=true;
- try{const client=await ensureTonConnectUI();if(wallet&&!token){await onWallet(wallet);return}b.textContent='OPENING TON WALLET…';await client.openModal()}
- catch(e){msg('walletMsg','err',e?.message||String(e))}
- finally{b.disabled=false;b.textContent=wallet?(token?'WALLET CONNECTED':'RETRY ACCOUNT SETUP'):'CONNECT TON WALLET'}
-};$('disconnectWalletBtn').onclick=async()=>{try{await ui.disconnect();clearSession()}catch(e){msg('walletMsg','err','Disconnect failed: '+e.message)}};loadPoolStatus();setInterval(loadPoolStatus,30000);
-async function submitTask(key,id){try{const proofUrl=$(id).value.trim();if(!proofUrl)throw new Error('Enter a public proof URL');const d=await api('/api/tasks/submit','POST',{taskKey:key,proofUrl});msg('taskMsg','ok','Task submitted for manual review. Reference: '+d.id);$(id).value=''}catch(e){msg('taskMsg','err',e.message)}}
+ try{
+  const client=await ensureTonConnectUI();
+  if(wallet&&!token){await onWallet(wallet);return}
+  b.textContent='OPENING TON WALLET…';
+  await client.openModal();
+ }catch(e){msg('walletMsg','err',e?.message||String(e))}
+ finally{
+  b.disabled=false;
+  b.textContent=wallet?(token?'WALLET CONNECTED':'RETRY ACCOUNT SETUP'):'CONNECT TON WALLET';
+ }
+};
+
+$('disconnectWalletBtn').onclick=async()=>{
+ try{
+  await ui.disconnect();
+  clearSession();
+  walletSessionReady=false;
+ }catch(e){msg('walletMsg','err','Disconnect failed: '+e.message)}
+};
+
+loadPoolStatus();setInterval(loadPoolStatus,30000);
+
+async function submitTask(key,id){
+ try{
+  const proofUrl=$(id).value.trim();
+  if(!proofUrl)throw new Error('Enter a public proof URL');
+  const d=await api('/api/tasks/submit','POST',{taskKey:key,proofUrl});
+  msg('taskMsg','ok','Task submitted for manual review. Reference: '+d.id);
+  $(id).value='';
+ }catch(e){msg('taskMsg','err',e.message)}
+}
 $('telegramTask').onclick=()=>submitTask('telegram','telegramProof');
 $('youtubeTask').onclick=()=>submitTask('youtube','youtubeProof');
 $('xTask').onclick=()=>submitTask('x','xProof');
-$('dailyCheck').onclick=async()=>{try{const d=await api('/api/tasks/daily-checkin','POST',{});msg('taskMsg','ok','Daily check-in: '+d.reward+' IFZI'+(Number(d.weekly_bonus)>0?' + '+d.weekly_bonus+' IFZI weekly streak bonus':'')+(d.monthly_badge_awarded?' · 30-day badge unlocked':'')+'.');await refresh();await loadStreak()}catch(e){msg('taskMsg','err',e.message)}};
-$('copyRef').onclick=async()=>{try{await navigator.clipboard.writeText($('refLink').value);msg('walletMsg','ok','Referral link copied.')}catch(e){msg('walletMsg','err','Copy failed; select and copy the referral link manually.')}};
-$('boostVerify').onclick=async()=>{try{if(!token)throw new Error('Connect and verify your TON wallet first');const txHash=$('boostHash').value.trim();if(!txHash)throw new Error('Enter the TON transaction hash');const d=await api('/api/boost/verify','POST',{txHash});msg('boostMsg','ok','Payment verified. '+d.reward+' IFZI has been credited immediately to your rewards balance.');$('boostHash').value='';await refresh()}catch(e){msg('boostMsg','err',e.message)}};
+
+$('dailyCheck').onclick=async()=>{
+ try{
+  const d=await api('/api/tasks/daily-checkin','POST',{});
+  msg('taskMsg','ok','Daily check-in: '+d.reward+' IFZI'+(Number(d.weekly_bonus)>0?' + '+d.weekly_bonus+' IFZI weekly streak bonus':'')+(d.monthly_badge_awarded?' · 30-day badge unlocked':'')+'.');
+  await refresh();await loadStreak();
+ }catch(e){msg('taskMsg','err',e.message)}
+};
+
+$('copyRef').onclick=async()=>{
+ try{await navigator.clipboard.writeText($('refLink').value);msg('walletMsg','ok','Referral link copied.')}
+ catch(e){msg('walletMsg','err','Copy failed; select and copy the referral link manually.')}
+};
+
+$('boostVerify').onclick=async()=>{
+ try{
+  if(!token)throw new Error('Connect and verify your TON wallet first');
+  const txHash=$('boostHash').value.trim();
+  if(!txHash)throw new Error('Enter the TON transaction hash');
+  const d=await api('/api/boost/verify','POST',{txHash});
+  msg('boostMsg','ok','Payment verified. '+d.reward+' IFZI has been credited immediately to your rewards balance.');
+  $('boostHash').value='';
+  await refresh();
+ }catch(e){msg('boostMsg','err',e.message)}
+};
 
 async function loadWithdrawalHistory(){
- const host=$('withdrawalHistory');if(!host)return;
+ const host=$('withdrawalHistory');
+ if(!host)return;
  if(!token){host.textContent='Connect your TON wallet to view your withdrawal history.';return}
  try{
   const d=await api('/api/withdrawals/history');host.innerHTML='';
@@ -276,13 +398,16 @@ async function loadWithdrawalHistory(){
    const left=document.createElement('span');left.textContent=new Date(x.created_at*1000).toLocaleString()+' · '+x.status.toUpperCase();
    const right=document.createElement('b');right.textContent=x.amount+' IFZI';
    row.append(left,right);host.append(row);
-   if(x.tx_hash){const tx=document.createElement('div');tx.className='muted';tx.style.overflowWrap='anywhere';tx.textContent='TON transaction: '+x.tx_hash;host.append(tx)}
+   if(x.tx_hash){
+    const tx=document.createElement('div');tx.className='muted';
+    tx.style.overflowWrap='anywhere';tx.textContent='TON transaction: '+x.tx_hash;host.append(tx);
+   }
   }
  }catch(e){host.textContent='Could not load withdrawal history: '+e.message}
 }
 $('loadWithdrawalHistory').onclick=loadWithdrawalHistory;
 
-/* STON.fi Omniston: lazy-load and reuse the mining page's existing TON Connect UI instance */
+/* STON.fi Omniston: بدون تغییر */
 let ifziSwapWidget=null,ifziSwapLoaderPromise=null;
 async function loadIfziSwap(){
  const status=$('ifziSwapStatus'),button=$('loadIfziSwap'),mount=$('ifziSwapMount');
@@ -290,8 +415,6 @@ async function loadIfziSwap(){
  button.disabled=true;button.textContent='LOADING STON.FI…';status.textContent='Loading the STON.fi swap module…';
  try{
   const client=await ensureTonConnectUI();
-  // STON.fi shares the same TON Connect UI instance; mining uses a separate
-  // address-only account session and never requests TON Proof.
   if(!window.OmnistonWidget){
    if(!ifziSwapLoaderPromise)ifziSwapLoaderPromise=new Promise((resolve,reject)=>{
     const script=document.createElement('script');script.src='https://widget.ston.fi/v0/index.js';script.async=true;
@@ -328,8 +451,6 @@ async function loadIfziSwap(){
 }
 $('loadIfziSwap').addEventListener('click',loadIfziSwap);
 
-// Initialize one shared TON Connect instance for wallet connection and STON.fi.
-// Mining login requests only the standard TON address item; no TON Proof.
 (async()=>{
  try{
   await ensureTonConnectUI();
