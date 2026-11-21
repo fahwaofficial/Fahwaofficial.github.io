@@ -15,6 +15,10 @@ type Bindings = {
 };
 type User = { id:string; wallet_raw:string; wallet_status:string; network:string; referred_by:string|null };
 const app = new Hono<{Bindings:Bindings}>();
+app.onError((error,c)=>{
+  console.error('IFZI Worker request exception',error);
+  return c.json({error:'Internal server error',request_id:c.req.header('cf-ray')||null},500);
+});
 const DAY = 86400;
 const DECIMALS = 9;
 const UNIT = 10n ** 9n;
