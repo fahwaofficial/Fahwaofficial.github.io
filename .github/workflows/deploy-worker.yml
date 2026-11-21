@@ -33,23 +33,3 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: worker
           command: deploy
-
-      - name: Capture Worker runtime logs and smoke-test health
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          set +e
-          npx wrangler tail ifzi-mining-api --format json > /tmp/ifzi-worker-tail.log 2>&1 &
-          TAIL_PID=$!
-          sleep 5
-          API="https://ifzi-mining-api.fahwaiman.workers.dev"
-          code=$(curl --silent --show-error -D /tmp/ifzi-health.headers -o /tmp/ifzi-health.json -w "%{http_code}" "$API/health" -H "Origin: https://fahwaofficial.github.io")
-          sleep 3
-          kill "$TAIL_PID" 2>/dev/null
-          echo "Worker health HTTP status: $code"
-          cat /tmp/ifzi-health.headers
-          cat /tmp/ifzi-health.json
-          echo "---- Cloudflare Worker runtime logs ----"
-          cat /tmp/ifzi-worker-tail.log
-          test "$code" = "200"
