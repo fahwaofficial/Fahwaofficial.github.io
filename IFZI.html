@@ -138,9 +138,8 @@ body{background:radial-gradient(ellipse at 50% -24%,#171a1e 0%,#08090b 38%,#0304
 const API='https://ifzi-mining-api.fahwaiman.workers.dev',MASTER='EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0',TONAPI='https://tonapi.io/v2';
 const $=id=>document.getElementById(id);let token=null,wallet=null,cycleEnd=0,tick=null;
 let ui=null,tonConnectLoadPromise=null,tonConnectListenersReady=false;
-let tonProofReady=false,tonProofError=null,tonProofPromise=null,tonProofPreparedAt=0,proofReconnectInProgress=false;
+let tonProofReady=false,tonProofError=null,tonProofPromise=null,tonProofPreparedAt=0;
 let walletNullTimer=null,walletStatusVersion=0;
-let proofHandshakeRetryAttempted=false,proofHandshakeRetryPromise=null;
 async function ensureTonConnectUI(){
  if(ui)return ui;
  if(!tonConnectLoadPromise)tonConnectLoadPromise=(async()=>{
@@ -163,7 +162,7 @@ async function ensureTonConnectUI(){
    }catch(e){lastError=e}
   }
   if(!window.TON_CONNECT_UI?.TonConnectUI)throw new Error('TON Connect SDK could not load from either CDN. '+(lastError?.message||'Unknown loader error'));
-  ui=new window.TON_CONNECT_UI.TonConnectUI({manifestUrl:'https://fahwaofficial.github.io/tonconnect-manifest-v2.json',network:'-239',enableAndroidBackHandler:false});
+  ui=new window.TON_CONNECT_UI.TonConnectUI({manifestUrl:'https://fahwaofficial.github.io/tonconnect-manifest-v2.json',network:'-239',enableAndroidBackHandler:false,restoreConnection:!!localStorage.getItem('ifzi_session_token')});
   // Do not set state:'loading' here: TON Connect intentionally shows a spinner
   // instead of wallet choices while that state is active. The proof challenge
   // is prepared in the background and the chooser opens only after state='ready'.
@@ -258,32 +257,8 @@ function prefetchTonProof(client){
  });
  tonProofPromise=pending;return pending;
 }
-// If a wallet session unexpectedly arrives without a proof item (but did not
-// explicitly reject ton_proof), retry the mining handshake once with a fresh
-// server challenge. TON Connect cannot add proof to an established session.
-// STON.fi continues to use this same single TON Connect instance; after the
-// fresh secure connection is established, the swap widget can reuse it.
-async function retryTonProofHandshake(client){
- if(proofHandshakeRetryAttempted||proofHandshakeRetryPromise)return;
- proofHandshakeRetryAttempted=true;
- proofHandshakeRetryPromise=(async()=>{
-  proofReconnectInProgress=true;
-  token=null;clearSession();
-  msg('walletMsg','info','Wallet connected without the requested proof. Preparing one automatic secure reconnect; approve the next wallet request to finish mining verification.');
-  try{
-   await client.disconnect();
-   wallet=null;
-   tonProofPromise=null;tonProofReady=false;tonProofError=null;tonProofPreparedAt=0;
-   const ready=await startTonProofPreparation(client,true);
-   if(!ready)throw tonProofError||new Error('Could not prepare a fresh TON Proof challenge');
-   await client.openModal();
-  }catch(error){
-   proofReconnectInProgress=false;
-   msg('walletMsg','err','Automatic secure reconnect could not start: '+(error?.message||String(error))+'. Your wallet is not forcibly disconnected again; press CONNECT TON WALLET to retry.');
-  }
- })();
- try{await proofHandshakeRetryPromise}finally{proofHandshakeRetryPromise=null}
-}
+// TON Connect only returns ton_proof during a fresh connect handshake.
+// A restored legacy session has no proof. Never disconnect the user's wallet automatically.
 function syncMineAction(){const b=$('mineActionBtn'),label=$('mineActionLabel');if(!token){b.disabled=false;label.textContent=wallet?'CONNECTED · SECURE PROOF REQUIRED':'CONNECT WALLET TO START';return}if($('approval').textContent!=='Verified · active'){b.disabled=true;label.textContent=$('approval').textContent.includes('awaiting')?'AWAITING ADMIN APPROVAL':'WALLET RESTRICTED';return}if(!$('claimBtn').disabled){b.disabled=false;label.textContent='CLAIM YOUR IFZI REWARD';return}if(!$('startBtn').disabled){b.disabled=false;label.textContent='START 24-HOUR MINING';return}b.disabled=true;label.textContent='MINING ACTIVE · CLAIM AFTER 24H'}
 function countdown(){if(tick)clearInterval(tick);const draw=()=>{const ms=Math.max(0,cycleEnd-Date.now());const h=String(Math.floor(ms/3600000)).padStart(2,'0'),m=String(Math.floor(ms%3600000/60000)).padStart(2,'0'),s=String(Math.floor(ms%60000/1000)).padStart(2,'0');$('timer').textContent=h+':'+m+':'+s;if(ms===0){clearInterval(tick);$('mineStatus').textContent='Cycle complete · tap the IFZI logo to claim';$('claimBtn').disabled=false;syncMineAction()}else syncMineAction()};draw();tick=setInterval(draw,1000)}
 async function onWallet(w){
@@ -292,7 +267,7 @@ async function onWallet(w){
   const version=++walletStatusVersion;
   if(walletNullTimer)clearTimeout(walletNullTimer);
   walletNullTimer=setTimeout(()=>{
-   if(version!==walletStatusVersion||proofReconnectInProgress)return;
+   if(version!==walletStatusVersion)return;
    const active=ui?.wallet;
    if(active?.account?.address){
     if(wallet?.account?.address!==active.account.address)void onWallet(active);
@@ -370,11 +345,10 @@ async function onWallet(w){
   loadChainBalance(a.address);$('approval').textContent='TON Proof required';
   $('connectWalletBtn').textContent='SECURE VERIFICATION RETRY';
   $('disconnectWalletBtn').style.display='block';$('withdrawBtn').disabled=true;syncMineAction();
-  // A missing item without an explicit wallet error is treated as a possible
-  // first-session race. Retry once automatically with a fresh nonce. If the
-  // wallet returns error code 400, the branch above reports unsupported proof
-  // and we do not loop or silently reconnect.
-  void retryTonProofHandshake(ui);
+  // Keep the wallet session intact. TON Proof cannot be appended to an
+  // established session; mining remains locked until a fresh proof-bearing
+  // connection handshake is completed.
+  msg('walletMsg','err','Wallet connected, but this connection did not include TON Proof. Your wallet has NOT been disconnected. TON Connect only provides TON Proof during a fresh connection handshake; mining remains locked until a valid proof is returned.');
   return;
  }
  try{
@@ -405,7 +379,6 @@ $('claimBtn').onclick=async()=>{$('claimBtn').disabled=true;let d;try{d=await ap
 $('mineActionBtn').onclick=()=>{if(wallet&&!token){msg('walletMsg','err','Your wallet is connected, but this session has no verified TON Proof. The mining button will not disconnect it. Use the top CONNECT TON WALLET button only for the one-time secure reconnect.');$('connectWalletBtn').scrollIntoView({behavior:'smooth',block:'center'});return}if(!token){$('connectWalletBtn').click();return}if(!$('claimBtn').disabled){$('claimBtn').click();return}if(!$('startBtn').disabled){$('startBtn').click();return}};
 $('withdrawBtn').onclick=async()=>{try{const amount=$('withdrawAmount').value;if(!amount)throw new Error('Enter the withdrawal amount');const d=await api('/api/withdrawals/request','POST',{amount});msg('withdrawMsg','ok','Request '+d.id+' submitted for '+d.amount+' IFZI. Admin review is required.');$('withdrawAmount').value='';await refresh();await loadWithdrawalHistory()}catch(e){msg('withdrawMsg','err',e.message)}};
 $('connectWalletBtn').onclick=async()=>{
- if(!proofHandshakeRetryPromise&&!wallet)proofHandshakeRetryAttempted=false;
  const b=$('connectWalletBtn');
  if(wallet&&token){msg('walletMsg','ok','Wallet already connected. Tap the IFZI logo to mine or claim.');return}
  b.disabled=true;
@@ -414,9 +387,8 @@ $('connectWalletBtn').onclick=async()=>{
   if(wallet&&!token){
    const item=wallet.connectItems?.tonProof;
    if(item&&'proof'in item){await onWallet(wallet);if(token)return}
-   // TON Connect cannot add ton_proof to an already established address-only session.
-   // Never silently disconnect a user's wallet from the Connect button.
-   msg('walletMsg','err','This wallet session was created without TON Proof. Your wallet is still connected. If you want secure mining, use DISCONNECT / CHANGE WALLET yourself, then connect again so the proof is included in the first handshake.');
+   // Preserve the existing wallet session; never disconnect it automatically.
+   msg('walletMsg','err','Your wallet is connected, but this session has no TON Proof. The connection is being kept intact. TON Proof must be included in a fresh connect handshake; mining stays locked until that proof is returned.');
    $('disconnectWalletBtn').style.display='block';
    return;
   }
@@ -434,12 +406,8 @@ $('connectWalletBtn').onclick=async()=>{
   b.textContent='SELECT YOUR TON WALLET';
   await client.openModal();
  }catch(e){
-  proofReconnectInProgress=false;
   msg('walletMsg','err',e?.message||String(e));
  }finally{
-  // Keep the reconnect guard active until the new wallet event arrives; a
-  // delayed null status event must not replace the fresh challenge.
-  if(wallet)proofReconnectInProgress=false;
   b.disabled=false;
   b.textContent=wallet?(token?'WALLET CONNECTED':'WALLET CONNECTED · PROOF REQUIRED'):'CONNECT TON WALLET';
  }
