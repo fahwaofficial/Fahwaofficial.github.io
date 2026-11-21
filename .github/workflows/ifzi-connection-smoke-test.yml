@@ -1,0 +1,61 @@
+name: IFZI connection smoke tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "IFZI.html"
+      - "tonconnect-manifest-v2.json"
+      - ".github/workflows/ifzi-connection-smoke-test.yml"
+  workflow_dispatch:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Parse the miner's inline JavaScript
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const html = fs.readFileSync('IFZI.html', 'utf8');
+          const scripts = [...html.matchAll(/<script\\b(?![^>]*\\bsrc=)[^>]*>([\\s\\S]*?)<\\/script>/gi)];
+          if (!scripts.length) throw new Error('No inline JavaScript block found');
+          scripts.forEach((match, index) => new Function(match[1]));
+          console.log('Parsed ' + scripts.length + ' inline script block(s) successfully.');
+          NODE
+
+      - name: Check public IFZI Worker health
+        run: |
+          set -euo pipefail
+          API="https://ifzi-mining-api.fahwaiman.workers.dev"
+          curl --fail --silent --show-error --retry 3 --retry-delay 2 "$API/health" | tee /tmp/health.json
+          grep -q '"ok":true' /tmp/health.json
+          grep -q '"service":"ifzi-mining-api"' /tmp/health.json
+
+      - name: Check browser CORS preflight and TON Proof challenge
+        run: |
+          set -euo pipefail
+          API="https://ifzi-mining-api.fahwaiman.workers.dev"
+          ORIGIN="https://fahwaofficial.github.io"
+          curl --fail --silent --show-error -D /tmp/preflight.headers -o /dev/null -X OPTIONS "$API/api/ton-proof/payload" \
+            -H "Origin: $ORIGIN" \
+            -H "Access-Control-Request-Method: POST" \
+            -H "Access-Control-Request-Headers: content-type"
+          grep -iq "access-control-allow-origin: $ORIGIN" /tmp/preflight.headers
+
+          curl --fail --silent --show-error -D /tmp/post.headers -o /tmp/challenge.json -X POST "$API/api/ton-proof/payload" \
+            -H "Origin: $ORIGIN" \
+            -H "Content-Type: application/json" \
+            --data '{}'
+          grep -iq "access-control-allow-origin: $ORIGIN" /tmp/post.headers
+          node -e "const d=require('/tmp/challenge.json'); if(typeof d.payload!=='string'||!d.payload) process.exit(1); console.log('TON Proof challenge endpoint returned a payload.');"
+
+      - name: Check TON Connect manifest and icon
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error https://fahwaofficial.github.io/tonconnect-manifest-v2.json | tee /tmp/manifest.json
+          grep -q '"url"' /tmp/manifest.json
+          curl --fail --silent --show-error -I https://fahwaofficial.github.io/images/fahwa3.png | head -n 1
