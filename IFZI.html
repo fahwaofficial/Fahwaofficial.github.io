@@ -208,7 +208,9 @@ async function prepareProof(client){
   client.setConnectRequestParameters({state:'ready',value:{tonProof:d.payload}});
   return true;
  }catch(error){
-  try{client.setConnectRequestParameters(null)}catch(_){}
+  // Keep the connect request in the loading state. This prevents a wallet
+  // from connecting without TON Proof if the challenge endpoint is unavailable.
+  try{client.setConnectRequestParameters({state:'loading'})}catch(_){}
   throw new Error('TON Proof challenge request failed: '+(error?.message||String(error)));
  }
 }
@@ -222,6 +224,9 @@ function startTonProofPreparation(client,force=false){
   if(Date.now()-tonProofPreparedAt<4*60*1000)return tonProofPromise; // fresh payload
  }
  tonProofReady=false;tonProofError=null;tonProofPreparedAt=0;
+ // Open the wallet modal immediately; it will show a loader until the secure
+ // challenge arrives, then TON Connect replaces the loader with wallet choices.
+ try{client.setConnectRequestParameters({state:'loading'})}catch(_){}
  const pending=prepareProof(client).then(()=>{
   tonProofReady=true;tonProofError=null;tonProofPreparedAt=Date.now();
   return true;
@@ -250,15 +255,14 @@ $('connectWalletBtn').onclick=async()=>{
  b.disabled=true;b.textContent='OPENING WALLET SELECTOR…';
  try{
   const client=await ensureTonConnectUI();
-  // Never disconnect a wallet automatically. A connected session is preserved until the user chooses DISCONNECT WALLET.
-  // The TON Connect SDK shows a spinner instead of wallet choices while
-  // request parameters are in the 'loading' state. Wait for the secure challenge
-  // first, then open the chooser with a ready TON Proof request attached.
-  b.textContent='PREPARING SECURE TON PROOF…';
-  const proofOk=await startTonProofPreparation(client);
-  if(!proofOk)throw new Error(tonProofError?.message||'Secure TON Proof could not be prepared. Please retry.');
-  b.textContent='OPENING WALLET CHOOSER…';
+  // Preserve the single TON Connect instance shared with the STON.fi widget.
+  // Show the modal immediately; it displays a loader until TON Proof is ready.
+  b.textContent='OPENING WALLET SELECTOR…';
+  const proofTask=startTonProofPreparation(client);
   await client.openModal();
+  b.textContent='PREPARING SECURE TON PROOF…';
+  const proofOk=await proofTask;
+  if(!proofOk)throw new Error(tonProofError?.message||'Secure TON Proof could not be prepared. Retry after checking the IFZI API.');
   b.textContent='SELECT YOUR TON WALLET';
  }catch(e){
   // Keep the real failing step visible. Wallet-registry count is not an API
@@ -302,8 +306,9 @@ async function loadIfziSwap(){
  button.disabled=true;button.textContent='LOADING STON.FI…';status.textContent='Loading the STON.fi swap module…';
  try{
   const client=await ensureTonConnectUI();
-  const proofReady=await startTonProofPreparation(client);
-  if(!proofReady)throw new Error(tonProofError?.message||'Secure TON Proof challenge is not ready. Retry after the IFZI API is available.');
+  // The swap UI must render independently of API availability. It still uses
+  // the exact same TON Connect instance as the miner; connection remains gated
+  // by the shared TON Proof request parameters.
   if(!window.OmnistonWidget){
    if(!ifziSwapLoaderPromise)ifziSwapLoaderPromise=new Promise((resolve,reject)=>{
     const script=document.createElement('script');script.src='https://widget.ston.fi/v0/index.js';script.async=true;
@@ -340,9 +345,9 @@ async function loadIfziSwap(){
 }
 $('loadIfziSwap').addEventListener('click',loadIfziSwap);
 
-// Warm up TON Connect and prepare a secure TON Proof challenge in the background.
-// The wallet chooser is opened only after the challenge is ready, so users see
-// the wallet list instead of TON Connect's intentional loading spinner.
+// Initialize one shared TON Connect instance. Prepare TON Proof in the
+// background while the STON.fi widget mounts independently. If the user opens
+// the wallet picker early, it shows a loader until the proof challenge is ready.
 (async()=>{
  try{
   const client=await ensureTonConnectUI();
