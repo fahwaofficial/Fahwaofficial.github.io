@@ -191,6 +191,8 @@ async function onWallet(w){
   syncMineAction();return;
  }
  wallet=w;const a=w.account;
+ // Never let a previous wallet's bearer token remain active after account switching.
+ if(localStorage.getItem('ifzi_session_wallet')!==a.address){token=null;clearSession()}
  $('wallet').textContent=short(a.address);$('network').textContent=a.chain==='-239'?'TON Mainnet':'Unsupported network';
  $('disconnectWalletBtn').style.display='block';
  if(a.chain!=='-239'){
