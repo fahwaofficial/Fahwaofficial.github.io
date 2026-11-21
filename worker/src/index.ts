@@ -592,16 +592,18 @@ app.post('/api/admin/presale/orders/:id/:action',async c=>{
   return c.json({ok:true});
 });
 
-// Cloudflare still delivers a Cron ScheduledEvent to this Worker (observed in
-// production logs), even though no scheduled job is required by IFZI.
-// Handle it explicitly as a harmless no-op so it cannot produce a 1101 error.
-// Mining cycles are started by authenticated HTTP requests, not by Cron.
-export const scheduled = (
-  _controller: ScheduledController,
-  _env: Bindings,
-  _ctx: ExecutionContext
-): void => {
-  console.log('IFZI scheduled event received; no scheduled task is configured.');
+// Export both handlers through the Module Worker default object.
+// Cloudflare expects scheduled() on the default ExportedHandler; a separate
+// named export alongside "export default app" is not picked up for Cron events.
+// IFZI mining cycles are started by authenticated HTTP requests, so Cron is a
+// harmless no-op and must never modify user balances or mining cycles.
+export default {
+  fetch: app.fetch,
+  async scheduled(
+    _controller: ScheduledController,
+    _env: Bindings,
+    _ctx: ExecutionContext
+  ): Promise<void> {
+    console.log('IFZI scheduled event received; no scheduled task is configured.');
+  },
 };
-
-export default app;
