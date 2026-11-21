@@ -202,10 +202,10 @@ app.post('/api/ton-proof/verify',async c=>{
       const linkedTelegram=await c.env.DB.prepare('SELECT id FROM users WHERE telegram_id=?').bind(challenge.telegram_id).first() as any;
       if(linkedTelegram)return jsonError(c,'This Telegram account is already linked to another IFZI wallet.',409);
     }
-    const referral=challenge.referral_code?await c.env.DB.prepare('SELECT id FROM users WHERE referral_code=? OR telegram_id=?').bind(challenge.referral_code,challenge.referral_code).first() as any:null;
+    const referral=challenge.referral_code?await c.env.DB.prepare('SELECT id FROM users WHERE referral_code=?').bind(challenge.referral_code).first() as any:null;
     const newCode=crypto.randomUUID().replace(/-/g,'').slice(0,12).toUpperCase();
     // A valid TON Proof is the wallet-ownership approval for public mining.
-    await c.env.DB.prepare("INSERT INTO users(id,wallet_raw,referred_by,created_at,network,wallet_status,wallet_verified_at,updated_at,referral_code,telegram_id) VALUES(?,?,?,?,'-239','approved',?,?,?,?)").bind(id,wallet,referral?.id||null,nowSec(),nowSec(),nowSec(),challenge.telegram_id||newCode,challenge.telegram_id).run();
+    await c.env.DB.prepare("INSERT INTO users(id,wallet_raw,referred_by,created_at,network,wallet_status,wallet_verified_at,updated_at,referral_code,telegram_id) VALUES(?,?,?,?,'-239','approved',?,?,?,?)").bind(id,wallet,referral?.id||null,nowSec(),nowSec(),nowSec(),newCode,challenge.telegram_id).run();
     await c.env.DB.prepare("INSERT OR IGNORE INTO reward_balances(user_id,available_raw,total_earned_raw,total_referral_raw) VALUES(?,'0','0','0')").bind(id).run();
     user={id,wallet_raw:wallet,wallet_status:'approved',network:'-239',referred_by:referral?.id||null};
   }else{
@@ -226,7 +226,17 @@ app.get('/api/user',async c=>{
   const bal=await c.env.DB.prepare('SELECT available_raw,total_earned_raw,total_referral_raw FROM reward_balances WHERE user_id=?').bind(user.id).first() as any;
   const totals=await c.env.DB.prepare("SELECT COALESCE(SUM(CAST(gross_raw AS INTEGER)),0) AS gross FROM claims WHERE user_id=?").bind(user.id).first() as any;
   const profile=await c.env.DB.prepare('SELECT referral_code,telegram_id FROM users WHERE id=?').bind(user.id).first() as any;
-  return c.json({address:user.wallet_raw,wallet_status:user.wallet_status,referral_code:profile?.telegram_id||profile?.referral_code||null,telegram_id:profile?.telegram_id||null,mining_rewards:fmt(totals?.gross||'0'),available_rewards:fmt(bal?.available_raw||'0'),available_raw:bal?.available_raw||'0',lifetime_mined:fmt(bal?.total_earned_raw||'0'),referral_rewards:fmt(bal?.total_referral_raw||'0')});
+  // Referral codes are app-generated identifiers, never Telegram user IDs.
+  // Repair older accounts created by the previous mapping bug without changing
+  // wallet identity, referral relationships, balances, or mining history.
+  let referralCode=profile?.referral_code||null;
+  if(!referralCode||(profile?.telegram_id&&referralCode===String(profile.telegram_id))){
+    referralCode=crypto.randomUUID().replace(/-/g,'').slice(0,12).toUpperCase();
+    await c.env.DB.prepare('UPDATE users SET referral_code=? WHERE id=? AND (referral_code IS NULL OR referral_code=telegram_id)').bind(referralCode,user.id).run();
+    const saved=await c.env.DB.prepare('SELECT referral_code FROM users WHERE id=?').bind(user.id).first() as any;
+    referralCode=saved?.referral_code||referralCode;
+  }
+  return c.json({address:user.wallet_raw,wallet_status:user.wallet_status,referral_code:referralCode,telegram_id:profile?.telegram_id||null,mining_rewards:fmt(totals?.gross||'0'),available_rewards:fmt(bal?.available_raw||'0'),available_raw:bal?.available_raw||'0',lifetime_mined:fmt(bal?.total_earned_raw||'0'),referral_rewards:fmt(bal?.total_referral_raw||'0')});
 });
 app.get('/api/mining/status',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
