@@ -380,6 +380,7 @@ $('connectWalletBtn').onclick=async()=>{
    b.textContent='SELECT YOUR TON WALLET';
    await client.openModal();
    return;
+  }
   // Official TON Connect flow: obtain the server nonce and set tonProof BEFORE
   // opening the selector, so the wallet receives address + proof in one handshake.
   b.textContent='PREPARING SECURE TON PROOF…';
