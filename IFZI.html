@@ -385,7 +385,13 @@ $('connectWalletBtn').onclick=async()=>{
   // opening the selector, so the wallet receives address + proof in one handshake.
   b.textContent='PREPARING SECURE TON PROOF…';
   const proofOk=await startTonProofPreparation(client);
-  if(!proofOk)throw new Error(tonProofError?.message||'Secure TON Proof could not be prepared. Retry after checking the IFZI API.');
+  if(!proofOk){
+   // Fail open for wallet connectivity only: the wallet can still connect to
+   // STON.fi and display public balances. No mining, claims or withdrawals are
+   // authorized without a valid TON Proof session.
+   try{client.setConnectRequestParameters(null)}catch(_){}
+   msg('walletMsg','info','IFZI secure verification is temporarily unavailable. Your TON wallet can still connect for STON.fi; mining and withdrawals remain locked until proof verification succeeds.');
+  }
   b.textContent='SELECT YOUR TON WALLET';
   await client.openModal();
  }catch(e){
@@ -432,10 +438,10 @@ async function loadIfziSwap(){
  button.disabled=true;button.textContent='LOADING STON.FI…';status.textContent='Loading the STON.fi swap module…';
  try{
   const client=await ensureTonConnectUI();
-  // Do not expose STON.fi's connect control until the shared instance has a fresh
-  // server challenge. This prevents a no-proof session from being created first.
-  const proofOk=tonProofReady||await startTonProofPreparation(client);
-  if(!proofOk)throw new Error(tonProofError?.message||'Secure wallet challenge is unavailable. Retry after the IFZI API recovers.');
+  // STON.fi must remain usable even if the IFZI mining API is unavailable.
+  // It shares this TON Connect UI instance, but swap wallet connection is not
+  // gated by the mining server's TON Proof challenge. Mining stays locked until
+  // a valid server-verified TON Proof session exists.
   if(!window.OmnistonWidget){
    if(!ifziSwapLoaderPromise)ifziSwapLoaderPromise=new Promise((resolve,reject)=>{
     const script=document.createElement('script');script.src='https://widget.ston.fi/v0/index.js';script.async=true;
@@ -472,15 +478,13 @@ async function loadIfziSwap(){
 }
 $('loadIfziSwap').addEventListener('click',loadIfziSwap);
 
-// Initialize one shared TON Connect instance. Prepare TON Proof in the
-// background while the STON.fi widget mounts independently. If the user opens
-// the wallet picker early, it shows a loader until the proof challenge is ready.
+// Initialize one shared TON Connect instance and mount STON.fi independently.
+// Do not put the wallet picker behind an IFZI API request: an outage in the
+// mining backend must never disable swaps or ordinary TON wallet connections.
+// The connect button requests TON Proof separately before enabling mining.
 (async()=>{
  try{
-  const client=await ensureTonConnectUI();
-  await startTonProofPreparation(client);
-  // Mount STON.fi only after the shared instance has a fresh challenge, so its
-  // first wallet handshake can include TON Proof too.
+  await ensureTonConnectUI();
   await loadIfziSwap();
  }catch(error){
   msg('walletMsg','err','TON Connect initialization failed: '+(error?.message||String(error)));
