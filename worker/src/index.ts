@@ -37,9 +37,22 @@ app.use('*', cors({
 app.get('/health', c => c.json({ok:true, service:'ifzi-mining-api', ts:Date.now()}));
 app.get('/health/ready',async c=>{
   try{
+    // Probe every production table/column used by public mining, tasks and payouts.
+    // LIMIT 0 validates the schema without reading or changing user records.
     await c.env.DB.prepare('SELECT total_raw,distributed_raw,reserved_raw FROM pool_state WHERE id=1').first();
-    await c.env.DB.prepare('SELECT referral_code,telegram_id FROM auth_challenges LIMIT 1').all();
-    await c.env.DB.prepare('SELECT wallet_status,network,referral_code FROM users LIMIT 1').all();
+    await c.env.DB.prepare('SELECT referral_code,telegram_id FROM auth_challenges LIMIT 0').all();
+    await c.env.DB.prepare('SELECT wallet_status,network,referral_code,telegram_id,task_boost_multiplier FROM users LIMIT 0').all();
+    await c.env.DB.prepare('SELECT id,level,daily_rate_raw,gross_reward_raw,started_at,ends_at,status FROM mining_cycles LIMIT 0').all();
+    await c.env.DB.prepare('SELECT available_raw,total_earned_raw,total_referral_raw FROM reward_balances LIMIT 0').all();
+    await c.env.DB.prepare('SELECT cycle_id,user_id,gross_raw,user_raw,referral_raw,referral_user_id,created_at FROM claims LIMIT 0').all();
+    await c.env.DB.prepare('SELECT id,user_id,wallet_raw,amount_raw,status,tx_hash,review_note,created_at,updated_at FROM withdrawals LIMIT 0').all();
+    await c.env.DB.prepare('SELECT id,user_id,task_key,proof_url,status,created_at,reviewed_at FROM task_submissions LIMIT 0').all();
+    await c.env.DB.prepare('SELECT user_id,checkin_date,created_at FROM daily_checkins LIMIT 0').all();
+    await c.env.DB.prepare('SELECT user_id,cycle_start_date,milestone_day,reward_raw,created_at FROM streak_rewards LIMIT 0').all();
+    await c.env.DB.prepare('SELECT user_id,cycle_start_date,badge_code,awarded_at FROM monthly_badges LIMIT 0').all();
+    await c.env.DB.prepare('SELECT id,event_type,user_id,amount_raw,reference_id,created_at FROM pool_ledger LIMIT 0').all();
+    await c.env.DB.prepare('SELECT id,user_id,tx_hash,sender_raw,destination_raw,amount_nano,network,status,verified_at,created_at FROM ton_boost_payments LIMIT 0').all();
+    await c.env.DB.prepare('SELECT id,action,target_type,target_id,details,created_at FROM admin_audit LIMIT 0').all();
     const jwtSecretConfigured=!!c.env.JWT_SECRET&&c.env.JWT_SECRET.length>=32;
     const adminSecretConfigured=!!c.env.ADMIN_SECRET&&c.env.ADMIN_SECRET.length>=32;
     const ready=jwtSecretConfigured&&adminSecretConfigured;
@@ -186,17 +199,34 @@ app.get('/api/mining/status',async c=>{
 app.post('/api/mining/start',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   if(user.wallet_status!=='approved')return jsonError(c,'Wallet account is not active.',403);
-  const existing=await c.env.DB.prepare("SELECT id FROM mining_cycles WHERE user_id=? AND status IN ('running','completed') LIMIT 1").bind(user.id).first();
-  if(existing)return jsonError(c,'You already have an unclaimed mining cycle.',409);
-  let balanceRaw:bigint;try{balanceRaw=await getVerifiedIfziBalanceRaw(c.env,user.wallet_raw)}catch(e){return jsonError(c,e instanceof Error?e.message:'Could not verify IFZI balance',503);}
+  const existing=await c.env.DB.prepare("SELECT id,level,daily_rate_raw,gross_reward_raw,started_at,ends_at,status FROM mining_cycles WHERE user_id=? AND status IN ('running','completed') ORDER BY started_at DESC LIMIT 1").bind(user.id).first() as any;
+  const existingResponse=(cycle:any)=>c.json({ok:true,already_running:true,status:cycle.ends_at<=nowSec()?'ready':'active',cycle_id:cycle.id,ends_at:cycle.ends_at*1000,reward:fmt(cycle.gross_reward_raw),level:cycle.level,daily_rate:fmt(cycle.daily_rate_raw)});
+  if(existing)return existingResponse(existing);
+  // IFZI balance only affects the optional level/holding bonus. A TONAPI outage
+  // must never prevent a connected address-only wallet from starting Level 1.
+  let balanceRaw=0n,balanceVerified=true;
+  try{balanceRaw=await getVerifiedIfziBalanceRaw(c.env,user.wallet_raw)}
+  catch(error){
+    balanceVerified=false;
+    console.warn('IFZI balance lookup unavailable; starting this cycle at Level 1 without holding bonus.',error);
+  }
   const wholeBalance=balanceRaw/UNIT;
   let level=1,baseRateTokens=100n;for(let i=0;i<levels.length;i++){if(wholeBalance>=levels[i][0]){level=i+1;baseRateTokens=levels[i][1]}}
-  const holdingEligible=balanceRaw>=10_000n*UNIT;
+  const holdingEligible=balanceVerified&&balanceRaw>=10_000n*UNIT;
   const holdingBonusPercent=holdingEligible?(level<=5?50n:25n):0n;
   const rate=baseRateTokens*UNIT*(100n+holdingBonusPercent)/100n,reward=rate,started=nowSec(),ends=started+DAY,id=crypto.randomUUID();
-  const insert=await c.env.DB.prepare("INSERT INTO mining_cycles(id,user_id,level,daily_rate_raw,gross_reward_raw,started_at,ends_at,status) VALUES(?,?,?,?,?,?,?,'running')").bind(id,user.id,level,rate.toString(),reward.toString(),started,ends).run();
-  if(insert.meta.changes!==1)return jsonError(c,'Could not start mining cycle',500);
-  return c.json({ok:true,cycle_id:id,ends_at:ends*1000,reward:fmt(reward),level,daily_rate:fmt(rate),base_daily_rate:fmt(baseRateTokens*UNIT),holding_bonus_percent:Number(holdingBonusPercent),verified_balance:fmt(balanceRaw)});
+  try{
+    const insert=await c.env.DB.prepare("INSERT INTO mining_cycles(id,user_id,level,daily_rate_raw,gross_reward_raw,started_at,ends_at,status) VALUES(?,?,?,?,?,?,?,'running')").bind(id,user.id,level,rate.toString(),reward.toString(),started,ends).run();
+    if(insert.meta.changes!==1)return jsonError(c,'Could not start mining cycle',500);
+  }catch(error){
+    // Concurrent wallet-status callbacks are safe: return the cycle created by
+    // the first request instead of surfacing a duplicate-cycle server error.
+    const raced=await c.env.DB.prepare("SELECT id,level,daily_rate_raw,gross_reward_raw,started_at,ends_at,status FROM mining_cycles WHERE user_id=? AND status IN ('running','completed') ORDER BY started_at DESC LIMIT 1").bind(user.id).first() as any;
+    if(raced)return existingResponse(raced);
+    console.error('IFZI mining cycle insert failed',error);
+    return jsonError(c,'Could not start mining cycle. Please retry.',500);
+  }
+  return c.json({ok:true,already_running:false,status:'active',cycle_id:id,ends_at:ends*1000,reward:fmt(reward),level,daily_rate:fmt(rate),base_daily_rate:fmt(baseRateTokens*UNIT),holding_bonus_percent:Number(holdingBonusPercent),balance_verified:balanceVerified,verified_balance:balanceVerified?fmt(balanceRaw):null});
 });
 app.post('/api/mining/claim',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
