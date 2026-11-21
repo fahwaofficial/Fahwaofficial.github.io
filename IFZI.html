@@ -290,10 +290,8 @@ async function loadIfziSwap(){
  button.disabled=true;button.textContent='LOADING STON.FI…';status.textContent='Loading the STON.fi swap module…';
  try{
   const client=await ensureTonConnectUI();
-  // STON.fi must remain usable even if the IFZI mining API is unavailable.
-  // It shares this TON Connect UI instance, but swap wallet connection is not
-  // gated by the mining server's TON Proof challenge. Mining stays locked until
-  // a valid server-verified TON Proof session exists.
+  // STON.fi shares the same TON Connect UI instance; mining uses a separate
+  // address-only account session and never requests TON Proof.
   if(!window.OmnistonWidget){
    if(!ifziSwapLoaderPromise)ifziSwapLoaderPromise=new Promise((resolve,reject)=>{
     const script=document.createElement('script');script.src='https://widget.ston.fi/v0/index.js';script.async=true;
