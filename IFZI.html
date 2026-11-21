@@ -78,8 +78,26 @@ body{background:radial-gradient(ellipse at 50% -24%,#171a1e 0%,#08090b 38%,#0304
 #optionalTask{border-color:#d7dce333;background:linear-gradient(145deg,rgba(35,37,41,.92),rgba(8,9,11,.96))}
 @media(max-width:760px){.wrap{padding:12px}.top{position:relative;align-items:center;flex-direction:column}.nav{justify-content:center}.hero{padding:30px 8px 24px}.grid{grid-template-columns:1fr}.mining{min-height:470px;padding:24px 14px}.mine-orb{width:224px;height:224px;min-height:224px}.mine-orb img{width:136px;height:136px}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{padding:13px 6px}}
 @media(max-width:420px){.nav .btn{font-size:10px;padding:9px 10px}.mine-orb{width:208px;height:208px;min-height:208px}.mine-orb img{width:126px;height:126px}.panel{padding:18px 15px}.hero h1{font-size:39px}}
-/* STON.fi Omniston swap panel */
-#ifziSwapMount{color:#f4f5f6}#ifziSwapMount>*{max-width:100%}@media(max-width:760px){#swap>div:first-of-type{grid-template-columns:1fr!important}#ifziSwapMount{min-height:520px!important}}
+/* STON.fi Omniston swap panel: force a readable light palette for quote/amount text */
+#ifziSwapMount{
+ color:#111!important;color-scheme:light!important;background:#fff!important;
+ --widget-text-primary:#111111;--widget-text-secondary:#333333;
+ --color-text-primary:#111111;--color-text-secondary:#333333;
+ --text-primary:#111111;--text-secondary:#333333;
+ --color-primary-text:#111111;--color-base-content:#111111;
+ --mantine-color-text:#111111;--mantine-color-dimmed:#444444;
+ --tg-theme-text-color:#111111;--tg-theme-hint-color:#444444;
+}
+#ifziSwapMount>*{max-width:100%}
+#ifziSwapMount input,#ifziSwapMount textarea,
+#ifziSwapMount [class*="amount"],#ifziSwapMount [class*="Amount"],
+#ifziSwapMount [class*="price"],#ifziSwapMount [class*="Price"],
+#ifziSwapMount [class*="value"],#ifziSwapMount [class*="Value"],
+#ifziSwapMount [class*="balance"],#ifziSwapMount [class*="Balance"]{
+ color:#111!important;-webkit-text-fill-color:#111!important
+}
+#ifziSwapMount input::placeholder{color:#666!important;-webkit-text-fill-color:#666!important}
+@media(max-width:760px){#swap>div:first-of-type{grid-template-columns:1fr!important}#ifziSwapMount{min-height:520px!important}}
 </style><script src="https://telegram.org/js/telegram-web-app.js?65"></script></head><body><div class="wrap">
 <header class="top"><div class="brand"><img src="https://fahwaofficial.github.io/images/logo-ifc.jpg" alt="IFZI"><span>IFZI PROTOCOL</span></div><nav class="nav"><a class="btn" href="#mine">MINING</a><a class="btn" href="#tasks">TASKS</a><a class="btn" href="#withdrawalHistoryPanel">WITHDRAWALS</a><a class="btn" href="#buy">BUY IFZI</a><a class="btn" href="#swap">SWAP IFZI</a><a class="btn primary" href="https://fahwaofficial.github.io/IFZI-presale.html">PRIVATE SALE ↗</a><a class="btn" href="https://app.ston.fi/pools/EQBjAe1hG6qi7AqSEXR7B6tueAvY5uONHDAIa8fJuX_B64f8" target="_blank" rel="noopener">LIQUIDITY POOL ↗</a></nav></header>
 <section class="hero"><div class="eyebrow">TON ECOSYSTEM · COMMUNITY MINING</div><h1>Mine the next<br>digital frontier.</h1><p>Earn IFZI through transparent 24-hour mining cycles. Connect your TON wallet, complete verification and track your rewards.</p><button class="btn primary" id="connectWalletBtn" type="button">CONNECT TON WALLET</button></section>
@@ -144,9 +162,9 @@ async function ensureTonConnectUI(){
   }
   if(!window.TON_CONNECT_UI?.TonConnectUI)throw new Error('TON Connect SDK could not load from either CDN. '+(lastError?.message||'Unknown loader error'));
   ui=new window.TON_CONNECT_UI.TonConnectUI({manifestUrl:'https://fahwaofficial.github.io/tonconnect-manifest-v2.json',network:'-239',enableAndroidBackHandler:false});
-  // Keep the TON Proof request in a loading state until the server challenge is ready.
-  // This lets the wallet chooser open immediately instead of waiting on the API.
-  ui.setConnectRequestParameters({state:'loading'});
+  // Do not set state:'loading' here: TON Connect intentionally shows a spinner
+  // instead of wallet choices while that state is active. The proof challenge
+  // is prepared in the background and the chooser opens only after state='ready'.
   if(!tonConnectListenersReady){
    ui.onStatusChange(onWallet,e=>msg('walletMsg','err','TON Connect error: '+(e?.message||String(e))));
    ui.onModalStateChange(state=>{if(state.status==='opened')$('connectWalletBtn').textContent='SELECT YOUR TON WALLET'});
@@ -165,7 +183,6 @@ async function loadPoolStatus(){try{const d=await api('/api/pool/status');$('poo
 function fmt(n){return Number(n||0).toLocaleString(undefined,{maximumFractionDigits:4})}
 async function loadStreak(){if(!token)return;try{const d=await api('/api/tasks/streak');$('streakCount').textContent=d.streak_days+' / 30';$('streakNext').textContent=d.next_weekly_milestone?d.next_weekly_milestone+' days':(d.streak_days===30?'Badge earned':'—');$('badgeCount').textContent=d.badge_count||0;const host=$('streakCalendar');host.innerHTML='';for(const day of d.calendar){const el=document.createElement('div');el.className='streak-day'+(day.checked?' done':'')+(day.date===d.today?' today':'');const dt=new Date(day.date+'T00:00:00Z');const name=dt.toLocaleDateString(undefined,{weekday:'short',timeZone:'UTC'});const num=dt.getUTCDate();const b=document.createElement('b');b.textContent=String(num);const small=document.createElement('span');small.textContent=day.checked?'✓ '+name:name;el.append(b,small);host.append(el)}const badges=$('streakBadges');badges.innerHTML='';if(!d.badges.length){badges.textContent='Your 30-day badges will appear here.'}else{for(const badge of d.badges){const el=document.createElement('span');el.className='badge-medal';el.textContent='🏅 IFZI 30-DAY · '+badge.cycle_start_date;badges.append(el)}}}catch(e){$('streakCalendar').textContent='Streak information is temporarily unavailable.'}}
 async function prepareProof(client){
- client.setConnectRequestParameters({state:'loading'});
  const requestJson=async(path,options={},timeoutMs=20000)=>{
   const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),timeoutMs);
   try{
@@ -186,8 +203,8 @@ async function prepareProof(client){
   client.setConnectRequestParameters({state:'ready',value:{tonProof:d.payload}});
   return true;
  }catch(error){
-  // Do not clear the loading state: keep the chooser visible and allow a retry.
-  try{client.setConnectRequestParameters({state:'loading'})}catch(_){}
+  // Never leave TonConnect's modal in its permanent loading/spinner state.
+  try{client.setConnectRequestParameters(null)}catch(_){}
   throw new Error('Secure TON Proof preparation failed: '+(error?.message||String(error)));
  }
 }
@@ -221,15 +238,15 @@ $('connectWalletBtn').onclick=async()=>{
  try{
   const client=await ensureTonConnectUI();
   if(wallet&&!token){await client.disconnect();wallet=null}
-  // Start/retry the server challenge without blocking the wallet chooser.
-  // prepareProof sets state=loading synchronously; when ready, the QR/wallet request updates.
-  const proofTask=startTonProofPreparation(client);
-  b.textContent='OPENING SECURE WALLET REQUEST…';
+  // The TON Connect SDK shows a spinner instead of wallet choices while
+  // request parameters are in the 'loading' state. Wait for the secure challenge
+  // first, then open the chooser with a ready TON Proof request attached.
+  b.textContent='PREPARING SECURE TON PROOF…';
+  const proofOk=await startTonProofPreparation(client);
+  if(!proofOk)throw new Error(tonProofError?.message||'Secure TON Proof could not be prepared. Please retry.');
+  b.textContent='OPENING WALLET CHOOSER…';
   await client.openModal();
   b.textContent='SELECT YOUR TON WALLET';
-  proofTask.then(ok=>{
-   if(!ok)msg('walletMsg','err',tonProofError?.message||'Secure TON Proof could not be prepared. Close the chooser and retry.');
-  });
  }catch(e){
   let details=e?.message||String(e);
   if(ui){try{const wallets=await ui.getWallets();details+=' · Wallet registry returned '+wallets.length+' wallets'}catch(registryError){details+=' · Wallet registry error: '+(registryError?.message||String(registryError))}}
@@ -308,8 +325,9 @@ async function loadIfziSwap(){
 }
 $('loadIfziSwap').addEventListener('click',loadIfziSwap);
 
-// Warm up TON Connect and the secure TON Proof challenge on page load.
-// The modal is no longer held hostage by the API health/challenge request.
+// Warm up TON Connect and prepare a secure TON Proof challenge in the background.
+// The wallet chooser is opened only after the challenge is ready, so users see
+// the wallet list instead of TON Connect's intentional loading spinner.
 (async()=>{
  try{
   const client=await ensureTonConnectUI();
