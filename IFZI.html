@@ -242,6 +242,21 @@ function startTonProofPreparation(client,force=false){
  tonProofPromise=pending;
  return pending;
 }
+// Prepare a TON Proof challenge silently before the first wallet connection.
+// Unlike startTonProofPreparation(), this does NOT put the wallet picker into
+// a loading state. STON.fi remains usable if the IFZI API is slow or offline.
+function prefetchTonProof(client){
+ if(tonProofPromise&&!tonProofError){
+  if(!tonProofPreparedAt||Date.now()-tonProofPreparedAt<4*60*1000)return tonProofPromise;
+ }
+ tonProofReady=false;tonProofError=null;tonProofPreparedAt=0;
+ const pending=prepareProof(client).then(()=>{
+  tonProofReady=true;tonProofError=null;tonProofPreparedAt=Date.now();return true;
+ }).catch(error=>{
+  tonProofReady=false;tonProofError=error;tonProofPreparedAt=0;return false;
+ });
+ tonProofPromise=pending;return pending;
+}
 function syncMineAction(){const b=$('mineActionBtn'),label=$('mineActionLabel');if(!token){b.disabled=false;label.textContent=wallet?'CONNECTED · SECURE PROOF REQUIRED':'CONNECT WALLET TO START';return}if($('approval').textContent!=='Verified · active'){b.disabled=true;label.textContent=$('approval').textContent.includes('awaiting')?'AWAITING ADMIN APPROVAL':'WALLET RESTRICTED';return}if(!$('claimBtn').disabled){b.disabled=false;label.textContent='CLAIM YOUR IFZI REWARD';return}if(!$('startBtn').disabled){b.disabled=false;label.textContent='START 24-HOUR MINING';return}b.disabled=true;label.textContent='MINING ACTIVE · CLAIM AFTER 24H'}
 function countdown(){if(tick)clearInterval(tick);const draw=()=>{const ms=Math.max(0,cycleEnd-Date.now());const h=String(Math.floor(ms/3600000)).padStart(2,'0'),m=String(Math.floor(ms%3600000/60000)).padStart(2,'0'),s=String(Math.floor(ms%60000/1000)).padStart(2,'0');$('timer').textContent=h+':'+m+':'+s;if(ms===0){clearInterval(tick);$('mineStatus').textContent='Cycle complete · tap the IFZI logo to claim';$('claimBtn').disabled=false;syncMineAction()}else syncMineAction()};draw();tick=setInterval(draw,1000)}
 async function onWallet(w){
@@ -484,7 +499,12 @@ $('loadIfziSwap').addEventListener('click',loadIfziSwap);
 // The connect button requests TON Proof separately before enabling mining.
 (async()=>{
  try{
-  await ensureTonConnectUI();
+  const client=await ensureTonConnectUI();
+  // Warm the server-issued nonce before the user opens either wallet picker.
+  // No loading overlay is shown; if the API fails, STON.fi still mounts and
+  // ordinary swaps remain available. A successful first connect carries proof.
+  const proofWarmup=prefetchTonProof(client);
+  await Promise.race([proofWarmup,new Promise(resolve=>setTimeout(resolve,2500))]);
   await loadIfziSwap();
  }catch(error){
   msg('walletMsg','err','TON Connect initialization failed: '+(error?.message||String(error)));
