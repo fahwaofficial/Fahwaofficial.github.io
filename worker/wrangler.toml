@@ -4,6 +4,15 @@ main = "src/index.ts"
 compatibility_date = "2026-11-01"
 compatibility_flags = ["nodejs_compat"]
 
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+invocation_logs = true
+persist = true
+
 [vars]
 SITE_ORIGIN = "https://fahwaofficial.github.io"
 SITE_DOMAIN = "fahwaofficial.github.io"
