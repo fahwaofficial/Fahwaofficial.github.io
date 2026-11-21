@@ -1,4 +1,4 @@
-// IFZI production API: secure TON Proof sessions, mining rewards, pool accounting and admin registry.
+// IFZI production API: TON address-only sessions, mining rewards, pool accounting and admin registry.
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { Address, Cell, contractAddress, loadStateInit } from '@ton/core';
@@ -81,7 +81,7 @@ function parseAmount(value:unknown):bigint {
 function fmt(raw:string|bigint){const n=BigInt(raw);return (Number(n)/1e9).toLocaleString('en-US',{maximumFractionDigits:9});}
 function nowSec(){return Math.floor(Date.now()/1000);}
 app.post('/api/session/refresh',async c=>{
-  const user=await getUser(c);if(!user)return jsonError(c,'Session expired; secure wallet login is required',401);
+  const user=await getUser(c);if(!user)return jsonError(c,'Session expired; reconnect the TON wallet to continue',401);
   return c.json({ok:true,token:await issueJWT(c.env,user),expires_in:30*DAY});
 });
 async function getUser(c:any):Promise<User|null>{
@@ -182,7 +182,39 @@ async function validateTelegramInitData(raw:string,botToken:string):Promise<stri
   if(actual.length!==expected.length||!actual.every((byte,i)=>byte===expected[i]))throw new Error('Telegram initData signature is invalid');
   return telegramId;
 }
-app.post('/api/ton-proof/payload',async c=>{
+app.post('/api/wallet/connect',async c=>{
+  const body=await c.req.json().catch(()=>({}));
+  let wallet:string;try{wallet=rawAddress(String(body.address||''))}catch{return jsonError(c,'Invalid TON wallet address');}
+  if(String(body.network)!=='-239')return jsonError(c,'Only TON Mainnet wallets are accepted',400);
+  const referralCode=typeof body.referralCode==='string'&&/^[A-Z0-9]{5,20}$/i.test(body.referralCode)?body.referralCode.toUpperCase():null;
+  let telegramId:string|null=null;
+  if(typeof body.telegramInitData==='string'&&body.telegramInitData&&c.env.TELEGRAM_BOT_TOKEN){
+    try{telegramId=await validateTelegramInitData(body.telegramInitData,c.env.TELEGRAM_BOT_TOKEN)}catch(e){return jsonError(c,e instanceof Error?e.message:'Telegram identity verification failed',401)}
+  }
+  let user=await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE wallet_raw=?').bind(wallet).first() as User|null;
+  if(!user){
+    if(telegramId){const linked=await c.env.DB.prepare('SELECT id FROM users WHERE telegram_id=?').bind(telegramId).first() as any;if(linked)return jsonError(c,'This Telegram account is already linked to another IFZI wallet.',409)}
+    const referral=referralCode?await c.env.DB.prepare('SELECT id FROM users WHERE referral_code=?').bind(referralCode).first() as any:null;
+    const id=crypto.randomUUID(),newCode=crypto.randomUUID().replace(/-/g,'').slice(0,12).toUpperCase();
+    await c.env.DB.prepare("INSERT INTO users(id,wallet_raw,referred_by,created_at,network,wallet_status,updated_at,referral_code,telegram_id) VALUES(?,?,?,?,'-239','approved',?,?,?)").bind(id,wallet,referral?.id||null,nowSec(),nowSec(),newCode,telegramId).run();
+    await c.env.DB.prepare("INSERT OR IGNORE INTO reward_balances(user_id,available_raw,total_earned_raw,total_referral_raw) VALUES(?,'0','0','0')").bind(id).run();
+    user={id,wallet_raw:wallet,wallet_status:'approved',network:'-239',referred_by:referral?.id||null};
+  }else{
+    if(user.wallet_status==='suspended'||user.wallet_status==='under_review')return jsonError(c,'This wallet is restricted and requires administrator review.',403);
+    if(telegramId){
+      const linked=await c.env.DB.prepare('SELECT telegram_id FROM users WHERE id=?').bind(user.id).first() as any;
+      if(linked?.telegram_id&&String(linked.telegram_id)!==telegramId)return jsonError(c,'This Telegram account is already linked to a different identity.',409);
+      const other=await c.env.DB.prepare('SELECT id FROM users WHERE telegram_id=? AND id<>?').bind(telegramId,user.id).first() as any;
+      if(other)return jsonError(c,'This Telegram account is already linked to another IFZI wallet.',409);
+      await c.env.DB.prepare('UPDATE users SET telegram_id=COALESCE(telegram_id,?),updated_at=? WHERE id=?').bind(telegramId,nowSec(),user.id).run();
+    }
+    await c.env.DB.prepare("UPDATE users SET network='-239',wallet_status='approved',updated_at=? WHERE id=?").bind(nowSec(),user.id).run();
+    user=await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE id=?').bind(user.id).first() as User|null;
+  }
+  if(!user)return jsonError(c,'Could not create or load the IFZI wallet account',500);
+  return c.json({ok:true,token:await issueJWT(c.env,user),wallet_status:user.wallet_status,ownership_verified:false});
+});
+app.get('/api/user',async c=>{
   const body=await c.req.json().catch(()=>({}));
   const nonce=crypto.randomUUID();
   const referralCode=typeof body.referralCode==='string'&&/^[A-Z0-9]{5,20}$/.test(body.referralCode.toUpperCase())?body.referralCode.toUpperCase():null;
@@ -253,7 +285,7 @@ app.get('/api/mining/status',async c=>{
 });
 app.post('/api/mining/start',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
-  if(user.wallet_status!=='approved')return jsonError(c,'Wallet is awaiting manual admin approval.',403);
+  if(user.wallet_status!=='approved')return jsonError(c,'Wallet account is not active.',403);
   const existing=await c.env.DB.prepare("SELECT id FROM mining_cycles WHERE user_id=? AND status IN ('running','completed') LIMIT 1").bind(user.id).first();
   if(existing)return jsonError(c,'You already have an unclaimed mining cycle.',409);
   let balanceRaw:bigint;try{balanceRaw=await getVerifiedIfziBalanceRaw(c.env,user.wallet_raw)}catch(e){return jsonError(c,e instanceof Error?e.message:'Could not verify IFZI balance',503);}
@@ -268,7 +300,7 @@ app.post('/api/mining/start',async c=>{
 });
 app.post('/api/mining/claim',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
-  if(user.wallet_status!=='approved')return jsonError(c,'Wallet is not approved.',403);
+  if(user.wallet_status!=='approved')return jsonError(c,'Wallet account is not active.',403);
   const cycle=await c.env.DB.prepare("SELECT * FROM mining_cycles WHERE user_id=? AND status='running' ORDER BY started_at DESC LIMIT 1").bind(user.id).first() as any;
   if(!cycle)return jsonError(c,'No claimable mining cycle',404);
   const now=nowSec();if(cycle.ends_at>now)return jsonError(c,'Mining cycle is not complete yet',400);
