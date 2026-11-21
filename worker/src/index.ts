@@ -1,9 +1,7 @@
-// IFZI production API: secure TON Proof sessions, mining rewards, pool accounting and admin registry.
+// IFZI production API: TON address-only sessions, mining rewards, pool accounting and admin registry.
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { Address, Cell, contractAddress, loadStateInit } from '@ton/core';
-import { sha256 } from '@noble/hashes/sha256';
-import { ed25519 } from '@noble/curves/ed25519';
+import { Address } from '@ton/core';
 
 
 type Bindings = {
@@ -23,7 +21,6 @@ app.onError((error,c)=>{
 const DAY = 86400;
 const DECIMALS = 9;
 const UNIT = 10n ** 9n;
-const MAX_PROOF_AGE = 600;
 
 const levels = [
   [0n,100n],[10_000n,120n],[25_000n,140n],[50_000n,160n],[100_000n,180n],
@@ -61,15 +58,6 @@ function b64url(data:Uint8Array|string) {
 function fromB64(value:string):Uint8Array {
   const raw=atob(value); return Uint8Array.from(raw,c=>c.charCodeAt(0));
 }
-function concat(...parts:Uint8Array[]) {
-  const out=new Uint8Array(parts.reduce((n,p)=>n+p.length,0)); let off=0;
-  for(const p of parts){out.set(p,off);off+=p.length;} return out;
-}
-function u32le(n:number){const b=new Uint8Array(4);new DataView(b.buffer).setUint32(0,n,true);return b;}
-function u64le(n:bigint){const b=new Uint8Array(8);new DataView(b.buffer).setBigUint64(0,n,true);return b;}
-function u32be(n:number){const b=new Uint8Array(4);new DataView(b.buffer).setUint32(0,n,false);return b;}
-function u64be(n:bigint){const b=new Uint8Array(8);new DataView(b.buffer).setBigUint64(0,n,false);return b;}
-function bytesHex(s:string){if(!/^[0-9a-f]{64}$/i.test(s))throw new Error('Invalid public key');return Uint8Array.from(s.match(/../g)!,x=>parseInt(x,16));}
 function rawAddress(input:string){return Address.parse(input).toRawString();}
 function parseAmount(value:unknown):bigint {
   if(typeof value!=='string' && typeof value!=='number') throw new Error('amount must be a decimal number');
@@ -81,7 +69,7 @@ function parseAmount(value:unknown):bigint {
 function fmt(raw:string|bigint){const n=BigInt(raw);return (Number(n)/1e9).toLocaleString('en-US',{maximumFractionDigits:9});}
 function nowSec(){return Math.floor(Date.now()/1000);}
 app.post('/api/session/refresh',async c=>{
-  const user=await getUser(c);if(!user)return jsonError(c,'Session expired; secure wallet login is required',401);
+  const user=await getUser(c);if(!user)return jsonError(c,'Session expired; reconnect the TON wallet to continue',401);
   return c.json({ok:true,token:await issueJWT(c.env,user),expires_in:30*DAY});
 });
 async function getUser(c:any):Promise<User|null>{
@@ -120,48 +108,6 @@ async function getVerifiedIfziBalanceRaw(env:Bindings,walletRaw:string):Promise<
   if(!data||data.jetton?.address===undefined)throw new Error('IFZI jetton balance response is incomplete');
   return BigInt(data.balance||'0');
 }
-// Public-key layouts are enabled only for exact code hashes of standard TON wallets.
-const WALLET_CODE_LAYOUTS:Record<string,(slice:any)=>Uint8Array>={
-  'a0cfc2c48aee16a271f2cfc0b7382d81756cecb1017d077faaab3bb602f6868c':s=>{s.loadUint(32);return s.loadBuffer(32)}, // v1r1
-  'd4902fcc9fad74698fa8e353220a68da0dcf72e32bcb2eb9ee04217c17d3062c':s=>{s.loadUint(32);return s.loadBuffer(32)}, // v1r2
-  '587cc789eff1c84f46ec3797e45fc809a14ff5ae24f1e0c7a6a99cc9dc9061ff':s=>{s.loadUint(32);return s.loadBuffer(32)}, // v1r3
-  '5c9a5e68c108e18721a07c42f9956bfb39ad77ec6d624b60c576ec88eee65329':s=>{s.loadUint(32);return s.loadBuffer(32)}, // v2r1
-  'fe9530d3243853083ef2ef0b4c2908c0abf6fa1c31ea243aacaa5bf8c7d753f1':s=>{s.loadUint(32);return s.loadBuffer(32)}, // v2r2
-  'b61041a58a7980b946e8fb9e198e3c904d24799ffa36574ea4251c41a566f581':s=>{s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}, // v3r1
-  '84dafa449f98a6987789ba232358072bc0f76dc4524002a5d0918b9a75d2d599':s=>{s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}, // v3r2
-  '64dd54805522c5be8a9db59cea0105ccf0d08786ca79beb8cb79e880a8d7322d':s=>{s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}, // v4r1
-  'feb5ff6820e2ff0d9483e7e0d62c817d846789fb4ae580c878866d959dabd5c0':s=>{s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)}, // v4r2
-  '20834b7b72b112147e1b2fb457b84e74d1a30f04f737d4f62a668e9552d2b72f':s=>{s.loadBoolean();s.loadUint(32);s.loadUint(32);return s.loadBuffer(32)} // v5r1
-};
-function extractWalletKey(stateInit:any):Uint8Array|null {
-  if(!stateInit.code||!stateInit.data)return null;
-  const layout=WALLET_CODE_LAYOUTS[stateInit.code.hash().toString('hex')];
-  if(!layout)return null;
-  try{return new Uint8Array(layout(stateInit.data.beginParse()))}catch{return null;}
-}
-function verifyTonProof(address:string,network:string,stateInitB64:string,proof:any,expectedDomain:string,expectedPayload:string,reportedPublicKey?:string){
-  if(network!=='-239')throw new Error('Only TON mainnet wallets are accepted');
-  if(!proof||typeof proof.signature!=='string'||typeof proof.payload!=='string')throw new Error('TON Proof is incomplete');
-  const ts=Number(proof.timestamp);if(!Number.isInteger(ts)||Math.abs(nowSec()-ts)>MAX_PROOF_AGE)throw new Error('TON Proof timestamp expired');
-  const domain=proof.domain?.value;
-  const domainBytes=new TextEncoder().encode(String(domain||''));
-  if(domain!==expectedDomain||proof.domain?.lengthBytes!==domainBytes.length)throw new Error('TON Proof domain mismatch');
-  if(proof.payload!==expectedPayload)throw new Error('TON Proof challenge mismatch');
-  const addr=Address.parse(address);
-  const state=loadStateInit(Cell.fromBase64(stateInitB64).beginParse());
-  if(!contractAddress(addr.workChain,state).equals(addr))throw new Error('Wallet StateInit does not match address');
-  const publicKey=extractWalletKey(state);
-  if(!publicKey||publicKey.length!==32)throw new Error('Unsupported wallet contract. This wallet version is not yet approved for secure login.');
-  if(reportedPublicKey && !bytesHex(reportedPublicKey).every((b,i)=>b===publicKey[i]))throw new Error('Wallet public key mismatch');
-  const wc=new Uint8Array(4);new DataView(wc.buffer).setInt32(0,addr.workChain,false);
-  const domainLen=u32le(domainBytes.length);
-  const message=concat(new TextEncoder().encode('ton-proof-item-v2/'),wc,new Uint8Array(addr.hash),domainLen,domainBytes,u64le(BigInt(ts)),new TextEncoder().encode(proof.payload));
-  const digest=sha256(concat(new Uint8Array([255,255]),new TextEncoder().encode('ton-connect'),sha256(message)));
-  const sig=fromB64(proof.signature);
-  if(sig.length!==64||!ed25519.verify(sig,digest,publicKey))throw new Error('TON Proof signature invalid');
-}
-
-
 async function validateTelegramInitData(raw:string,botToken:string):Promise<string>{
   if(!raw||raw.length>8192)throw new Error('Telegram Mini App initData is missing or too large');
   const params=new URLSearchParams(raw),hash=params.get('hash');
@@ -182,51 +128,37 @@ async function validateTelegramInitData(raw:string,botToken:string):Promise<stri
   if(actual.length!==expected.length||!actual.every((byte,i)=>byte===expected[i]))throw new Error('Telegram initData signature is invalid');
   return telegramId;
 }
-app.post('/api/ton-proof/payload',async c=>{
+app.post('/api/wallet/connect',async c=>{
   const body=await c.req.json().catch(()=>({}));
-  const nonce=crypto.randomUUID();
-  const referralCode=typeof body.referralCode==='string'&&/^[A-Z0-9]{5,20}$/.test(body.referralCode.toUpperCase())?body.referralCode.toUpperCase():null;
+  let wallet:string;try{wallet=rawAddress(String(body.address||''))}catch{return jsonError(c,'Invalid TON wallet address');}
+  if(String(body.network)!=='-239')return jsonError(c,'Only TON Mainnet wallets are accepted',400);
+  const referralCode=typeof body.referralCode==='string'&&/^[A-Z0-9]{5,20}$/i.test(body.referralCode)?body.referralCode.toUpperCase():null;
   let telegramId:string|null=null;
   if(typeof body.telegramInitData==='string'&&body.telegramInitData&&c.env.TELEGRAM_BOT_TOKEN){
     try{telegramId=await validateTelegramInitData(body.telegramInitData,c.env.TELEGRAM_BOT_TOKEN)}catch(e){return jsonError(c,e instanceof Error?e.message:'Telegram identity verification failed',401)}
   }
-  await c.env.DB.prepare('INSERT INTO auth_challenges(nonce,wallet_raw,expires_at,used,referral_code,telegram_id) VALUES(?,NULL,?,0,?,?)').bind(nonce,Date.now()+5*60*1000,referralCode,telegramId).run();
-  return c.json({payload:nonce});
-});
-app.post('/api/ton-proof/verify',async c=>{
-  const body=await c.req.json().catch(()=>({}));
-  let wallet:string;try{wallet=rawAddress(body.address)}catch{return jsonError(c,'Invalid wallet address');}
-  const challenge=await c.env.DB.prepare('SELECT nonce,referral_code,telegram_id FROM auth_challenges WHERE nonce=? AND (wallet_raw IS NULL OR wallet_raw=?) AND used=0 AND expires_at>?').bind(body.proof?.payload,wallet,Date.now()).first() as {nonce:string;referral_code:string|null;telegram_id:string|null}|null;
-  if(!challenge)return jsonError(c,'Challenge invalid, expired, or already used',401);
-  try{verifyTonProof(wallet,String(body.network),body.walletStateInit||body.proof?.state_init,body.proof,c.env.SITE_DOMAIN,challenge.nonce,body.publicKey||body.public_key);}
-  catch(e){return jsonError(c,e instanceof Error?e.message:'Proof verification failed',401);}
-  const used=await c.env.DB.prepare('UPDATE auth_challenges SET used=1,wallet_raw=? WHERE nonce=? AND (wallet_raw IS NULL OR wallet_raw=?) AND used=0 AND expires_at>?').bind(wallet,challenge.nonce,wallet,Date.now()).run();
-  if(used.meta.changes!==1)return jsonError(c,'Challenge already consumed',409);
   let user=await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE wallet_raw=?').bind(wallet).first() as User|null;
   if(!user){
-    const id=crypto.randomUUID();
-    if(challenge.telegram_id){
-      const linkedTelegram=await c.env.DB.prepare('SELECT id FROM users WHERE telegram_id=?').bind(challenge.telegram_id).first() as any;
-      if(linkedTelegram)return jsonError(c,'This Telegram account is already linked to another IFZI wallet.',409);
-    }
-    const referral=challenge.referral_code?await c.env.DB.prepare('SELECT id FROM users WHERE referral_code=?').bind(challenge.referral_code).first() as any:null;
-    const newCode=crypto.randomUUID().replace(/-/g,'').slice(0,12).toUpperCase();
-    // A valid TON Proof is the wallet-ownership approval for public mining.
-    await c.env.DB.prepare("INSERT INTO users(id,wallet_raw,referred_by,created_at,network,wallet_status,wallet_verified_at,updated_at,referral_code,telegram_id) VALUES(?,?,?,?,'-239','approved',?,?,?,?)").bind(id,wallet,referral?.id||null,nowSec(),nowSec(),nowSec(),newCode,challenge.telegram_id).run();
+    if(telegramId){const linked=await c.env.DB.prepare('SELECT id FROM users WHERE telegram_id=?').bind(telegramId).first() as any;if(linked)return jsonError(c,'This Telegram account is already linked to another IFZI wallet.',409)}
+    const referral=referralCode?await c.env.DB.prepare('SELECT id FROM users WHERE referral_code=?').bind(referralCode).first() as any:null;
+    const id=crypto.randomUUID(),newCode=crypto.randomUUID().replace(/-/g,'').slice(0,12).toUpperCase();
+    await c.env.DB.prepare("INSERT INTO users(id,wallet_raw,referred_by,created_at,network,wallet_status,updated_at,referral_code,telegram_id) VALUES(?,?,?,?,'-239','approved',?,?,?)").bind(id,wallet,referral?.id||null,nowSec(),nowSec(),newCode,telegramId).run();
     await c.env.DB.prepare("INSERT OR IGNORE INTO reward_balances(user_id,available_raw,total_earned_raw,total_referral_raw) VALUES(?,'0','0','0')").bind(id).run();
     user={id,wallet_raw:wallet,wallet_status:'approved',network:'-239',referred_by:referral?.id||null};
   }else{
     if(user.wallet_status==='suspended'||user.wallet_status==='under_review')return jsonError(c,'This wallet is restricted and requires administrator review.',403);
-    if(challenge.telegram_id){
+    if(telegramId){
       const linked=await c.env.DB.prepare('SELECT telegram_id FROM users WHERE id=?').bind(user.id).first() as any;
-      if(linked?.telegram_id&&String(linked.telegram_id)!==challenge.telegram_id)return jsonError(c,'This Telegram account is already linked to a different identity.',409);
-      await c.env.DB.prepare('UPDATE users SET telegram_id=COALESCE(telegram_id,?),updated_at=? WHERE id=?').bind(challenge.telegram_id,nowSec(),user.id).run();
+      if(linked?.telegram_id&&String(linked.telegram_id)!==telegramId)return jsonError(c,'This Telegram account is already linked to a different identity.',409);
+      const other=await c.env.DB.prepare('SELECT id FROM users WHERE telegram_id=? AND id<>?').bind(telegramId,user.id).first() as any;
+      if(other)return jsonError(c,'This Telegram account is already linked to another IFZI wallet.',409);
+      await c.env.DB.prepare('UPDATE users SET telegram_id=COALESCE(telegram_id,?),updated_at=? WHERE id=?').bind(telegramId,nowSec(),user.id).run();
     }
-    await c.env.DB.prepare("UPDATE users SET network='-239',wallet_status=CASE WHEN wallet_status='pending' THEN 'approved' ELSE wallet_status END,wallet_verified_at=COALESCE(wallet_verified_at,?),updated_at=? WHERE id=? AND wallet_status IN ('pending','approved')").bind(nowSec(),nowSec(),user.id).run();
+    await c.env.DB.prepare("UPDATE users SET network='-239',wallet_status='approved',updated_at=? WHERE id=?").bind(nowSec(),user.id).run();
     user=await c.env.DB.prepare('SELECT id,wallet_raw,wallet_status,network,referred_by FROM users WHERE id=?').bind(user.id).first() as User|null;
-    if(!user||user.wallet_status!=='approved')return jsonError(c,'Wallet approval could not be completed. Please retry or contact support.',403);
   }
-  return c.json({ok:true,token:await issueJWT(c.env,user),wallet_status:user.wallet_status});
+  if(!user)return jsonError(c,'Could not create or load the IFZI wallet account',500);
+  return c.json({ok:true,token:await issueJWT(c.env,user),wallet_status:user.wallet_status,ownership_verified:false});
 });
 app.get('/api/user',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
@@ -253,7 +185,7 @@ app.get('/api/mining/status',async c=>{
 });
 app.post('/api/mining/start',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
-  if(user.wallet_status!=='approved')return jsonError(c,'Wallet is awaiting manual admin approval.',403);
+  if(user.wallet_status!=='approved')return jsonError(c,'Wallet account is not active.',403);
   const existing=await c.env.DB.prepare("SELECT id FROM mining_cycles WHERE user_id=? AND status IN ('running','completed') LIMIT 1").bind(user.id).first();
   if(existing)return jsonError(c,'You already have an unclaimed mining cycle.',409);
   let balanceRaw:bigint;try{balanceRaw=await getVerifiedIfziBalanceRaw(c.env,user.wallet_raw)}catch(e){return jsonError(c,e instanceof Error?e.message:'Could not verify IFZI balance',503);}
@@ -268,7 +200,7 @@ app.post('/api/mining/start',async c=>{
 });
 app.post('/api/mining/claim',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
-  if(user.wallet_status!=='approved')return jsonError(c,'Wallet is not approved.',403);
+  if(user.wallet_status!=='approved')return jsonError(c,'Wallet account is not active.',403);
   const cycle=await c.env.DB.prepare("SELECT * FROM mining_cycles WHERE user_id=? AND status='running' ORDER BY started_at DESC LIMIT 1").bind(user.id).first() as any;
   if(!cycle)return jsonError(c,'No claimable mining cycle',404);
   const now=nowSec();if(cycle.ends_at>now)return jsonError(c,'Mining cycle is not complete yet',400);
