@@ -260,8 +260,8 @@ app.post('/api/mining/claim',async c=>{
 app.post('/api/withdrawals/request',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   if(user.wallet_status!=='approved')return jsonError(c,'Wallet is not approved.',403);
-  const completedTask=await c.env.DB.prepare("SELECT id FROM task_submissions WHERE user_id=? AND status='approved' LIMIT 1").bind(user.id).first();
-  if(!completedTask)return jsonError(c,'Complete at least one approved social task before requesting a withdrawal.',403);
+  const completedTasks=await c.env.DB.prepare("SELECT COUNT(DISTINCT task_key) AS n FROM task_submissions WHERE user_id=? AND status='approved' AND task_key IN ('telegram','youtube','x')").bind(user.id).first() as any;
+  if(Number(completedTasks?.n||0)<3)return jsonError(c,'All three required IFZI Airdrop tasks (Telegram, YouTube and X) must be approved before withdrawal.',403);
   const body=await c.req.json().catch(()=>({}));
   let amount:bigint;try{amount=parseAmount(body.amount)}catch(e){return jsonError(c,e instanceof Error?e.message:'Invalid amount');}
   const min=BigInt(c.env.MIN_WITHDRAW_IFZI||'1000')*UNIT;
@@ -276,7 +276,17 @@ app.post('/api/withdrawals/request',async c=>{
     c.env.DB.prepare('UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)-? WHERE user_id=? AND CAST(available_raw AS INTEGER)>=? AND EXISTS(SELECT 1 FROM withdrawals WHERE id=?)').bind(amount.toString(),user.id,amount.toString(),id)
   ]);
   if(results[0]?.meta?.changes!==1 || results[1]?.meta?.changes!==1)return jsonError(c,'Insufficient balance or balance changed; refresh and try again',409);
-  return c.json({ok:true,id,amount:fmt(amount),status:'pending'});
+  const emailNotified=await sendPresaleEmail(
+    c.env,
+    'New IFZI Airdrop withdrawal request · '+fmt(amount)+' IFZI',
+    '<h2>New IFZI Airdrop withdrawal request</h2>'+
+    '<p><b>Request ID:</b> '+id+'</p>'+
+    '<p><b>Amount:</b> '+fmt(amount)+' IFZI</p>'+
+    '<p><b>TON wallet:</b> '+user.wallet_raw+'</p>'+
+    '<p><b>Status:</b> Pending manual review</p>'+
+    '<p><a href="https://fahwaofficial.github.io/Admin.html">Open IFZI Admin</a> to review the request. Do not send tokens until you approve it.</p>'
+  );
+  return c.json({ok:true,id,amount:fmt(amount),status:'pending',email_notified:emailNotified});
 });
 
 app.get('/api/withdrawals/history',async c=>{
@@ -358,6 +368,13 @@ app.post('/api/tasks/submit',async c=>{
   const id=crypto.randomUUID();
   await c.env.DB.prepare("INSERT INTO task_submissions(id,user_id,task_key,proof_url,status,created_at) VALUES(?,?,?,?,'pending',?)").bind(id,user.id,key,proofUrl,nowSec()).run();
   return c.json({ok:true,id,status:'pending'});
+});
+app.get('/api/tasks/status',async c=>{
+  const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
+  const rows=await c.env.DB.prepare("SELECT task_key,status,proof_url,created_at,reviewed_at,review_note FROM task_submissions WHERE user_id=? AND task_key IN ('telegram','youtube','x') ORDER BY created_at DESC").bind(user.id).all();
+  const latest=new Map<string,any>();
+  for(const row of (rows.results||[]) as any[]){if(!latest.has(row.task_key))latest.set(row.task_key,row);}
+  return c.json({items:['telegram','youtube','x'].map(task_key=>({task_key,...(latest.get(task_key)||{status:'not_submitted',proof_url:null,created_at:null,reviewed_at:null,review_note:null})}))});
 });
 function utcDateOffset(date:string,days:number){const d=new Date(date+'T00:00:00.000Z');d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10);}
 async function readStreak(c:any,userId:string){
@@ -463,7 +480,7 @@ app.post('/api/admin/tasks/:id/:action',async c=>{
   }
   // Ordinary social tasks have one fixed reward; the optional TON task is credited separately.
   const multiplier=1;
-  const amount=BigInt(c.env.TASK_REWARD_IFZI||'50')*BigInt(multiplier)*UNIT;
+  const amount=BigInt(c.env.TASK_REWARD_IFZI||'1000')*BigInt(multiplier)*UNIT;
   const results=await c.env.DB.batch([
     c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND EXISTS(SELECT 1 FROM task_submissions WHERE id=? AND status='pending')").bind(amount.toString(),amount.toString(),id),
     c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) SELECT ?,'task_reward',?,?,?,? WHERE changes()=1").bind(crypto.randomUUID(),task.user_id,amount.toString(),id,now),
@@ -597,8 +614,25 @@ app.post('/api/admin/presale/orders/:id/:action',async c=>{
 // named export alongside "export default app" is not picked up for Cron events.
 // IFZI mining cycles are started by authenticated HTTP requests, so Cron is a
 // harmless no-op and must never modify user balances or mining cycles.
+async function fetchWithErrorBoundary(request:Request,env:Bindings,ctx:ExecutionContext):Promise<Response>{
+  try{
+    return await app.fetch(request,env,ctx);
+  }catch(error){
+    const requestId=request.headers.get('cf-ray')||crypto.randomUUID();
+    console.error('IFZI uncaught Worker fetch exception',{requestId,method:request.method,path:new URL(request.url).pathname,error});
+    return new Response(JSON.stringify({error:'Worker runtime exception',request_id:requestId}),{
+      status:500,
+      headers:{
+        'content-type':'application/json; charset=utf-8',
+        'cache-control':'no-store',
+        'access-control-allow-origin':'*'
+      }
+    });
+  }
+}
+
 export default {
-  fetch: app.fetch,
+  fetch: fetchWithErrorBoundary,
   async scheduled(
     _controller: ScheduledController,
     _env: Bindings,
