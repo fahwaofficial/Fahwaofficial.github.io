@@ -141,9 +141,14 @@ let ui=null,tonConnectLoadPromise=null,tonConnectListenersReady=false;
 
 function msg(id,type,text){$(id).innerHTML='';const d=document.createElement('div');d.className='status '+type;d.textContent=text;$(id).append(d)}
 async function api(path,method='GET',body){
- const headers={...(token?{Authorization:'Bearer '+token}:{})};
- // Avoid forcing JSON Content-Type on GET requests; it needlessly triggers CORS preflight.
- if(body!==undefined&&body!==null)headers['content-type']='application/json';
+ // Wallet connection is a public address-only bootstrap endpoint. Do not send a
+ // stale bearer token or a non-simple JSON Content-Type: both can trigger a
+ // browser CORS preflight before the Worker receives the request. The Worker
+ // parses the JSON body regardless of the request Content-Type.
+ const publicWalletConnect=path==='/api/wallet/connect';
+ const headers={...(!publicWalletConnect&&token?{Authorization:'Bearer '+token}:{})};
+ // Use a CORS-safelisted Content-Type for the unauthenticated wallet bootstrap.
+ if(body!==undefined&&body!==null)headers['content-type']=publicWalletConnect?'text/plain;charset=UTF-8':'application/json';
  let r;
  try{r=await fetch(API+path,{method,headers,body:body!==undefined&&body!==null?JSON.stringify(body):undefined})}
  catch(e){throw new Error('Network/CORS failure at '+path+' ('+API+path+'). The browser received no HTTP response from the IFZI Worker. '+(e?.message||String(e)))}
