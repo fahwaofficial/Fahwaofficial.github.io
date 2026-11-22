@@ -330,9 +330,41 @@ $('startBtn').onclick=async()=>{try{$('startBtn').disabled=true;const d=await ap
 $('claimBtn').onclick=async()=>{
  $('claimBtn').disabled=true;let d;
  try{d=await api('/api/mining/claim','POST',{})}catch(e){msg('mineMsg','err',e.message);$('claimBtn').disabled=false;syncMineAction();return}
- msg('mineMsg','ok','Claimed '+d.reward+' IFZI. Starting next cycle…');
- try{await refresh()}catch(e){msg('mineMsg','err','Claimed '+d.reward+' IFZI, but status refresh failed.');return}
- try{const next=await api('/api/mining/start','POST',{});cycleEnd=next.ends_at;$('mineLevel').textContent='Level '+next.level;$('dailyRate').textContent=next.daily_rate+' IFZI';$('startBtn').disabled=true;$('claimBtn').disabled=true;countdown();$('mineStatus').textContent='Next 24-hour cycle started';msg('mineMsg','ok','Claimed '+d.reward+' IFZI. Next cycle started.');syncMineAction()}catch(e){try{await refresh()}catch(_){}msg('mineMsg','err','Claimed '+d.reward+' IFZI, but next cycle did not start: '+e.message);syncMineAction()}
+ // Start the next cycle immediately after a successful claim. A secondary
+ // profile/status refresh must never block the next mining cycle.
+ let next;
+ try{
+  next=await api('/api/mining/start','POST',{});
+  cycleEnd=next.ends_at;
+  $('mineLevel').textContent='Level '+next.level;
+  $('dailyRate').textContent=next.daily_rate+' IFZI';
+  $('startBtn').disabled=true;
+  $('claimBtn').disabled=true;
+  $('mineStatus').textContent='Next 24-hour cycle started';
+  countdown();
+  syncMineAction();
+ }catch(e){
+  try{await refresh()}catch(_){}
+  msg('mineMsg','err','Claimed '+d.reward+' IFZI, but the next cycle could not start: '+e.message);
+  syncMineAction();
+  return;
+ }
+ try{
+  await refresh();
+  $('mineStatus').textContent='Next 24-hour cycle started';
+  msg('mineMsg','ok','Claimed '+d.reward+' IFZI. Next cycle started.');
+ }catch(e){
+  // The cycle is already running; only the secondary account display failed.
+  cycleEnd=next.ends_at;
+  $('mineLevel').textContent='Level '+next.level;
+  $('dailyRate').textContent=next.daily_rate+' IFZI';
+  $('startBtn').disabled=true;
+  $('claimBtn').disabled=true;
+  countdown();
+  $('mineStatus').textContent='Mining is active. Account details could not refresh.';
+  msg('mineMsg','ok','Claimed '+d.reward+' IFZI. The next cycle is active; account details refresh failed: '+e.message);
+ }
+ syncMineAction();
 };
 
 $('mineActionBtn').onclick=()=>{if(wallet&&!token){void onWallet(wallet);return}if(!token){$('connectWalletBtn').click();return}if(!$('claimBtn').disabled){$('claimBtn').click();return}if(!$('startBtn').disabled){$('startBtn').click();return}};
