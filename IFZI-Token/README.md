@@ -32,10 +32,10 @@
 | Mining cycle | 24 hours |
 
 - [View contract on Tonviewer](https://tonviewer.com/EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0)
-- [View IFZI market data on DYOR](https://dyor.io/token/EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0)
+- [Open the token's DYOR data page](https://dyor.io/token/EQB9KGhnd0PA00ml_eXZoVrQKWrcxRv3NN3LNWoQp_RqDaA0)
 - [View IFZI community listing on Coinvote](https://coinvote.cc/id/coin/IFZI)
 
-> **Metadata indexing note:** Token information can take time to refresh across independent explorers and market-data services. If an explorer shows an older name or symbol, use the Jetton Master address above as the definitive identifier and compare it with the official project website.
+> **Metadata indexing note (26 November 2026):** The project reports that the token metadata has been corrected. However, the public DYOR token page still displays the former name and symbol (IFCoin / IFC) when checked. Independent explorers and market-data services may take time to refresh their indexed data. Use the Jetton Master address above as the definitive identifier until every listing displays IFZI.
 
 ## About the project
 
