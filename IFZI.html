@@ -188,6 +188,13 @@ async function ensureTonConnectUI(){
    ui.onModalStateChange(state=>{if(state.status==='opened')$('connectWalletBtn').textContent='SELECT YOUR TON WALLET'});
    tonConnectListenersReady=true;
   }
+  // Explicitly resume an already-connected wallet after SDK restoration.
+  // onStatusChange may also fire; onWallet sets the shared wallet synchronously,
+  // so the guard prevents scheduling a duplicate restore in the common case.
+  const restoredWallet=ui.wallet;
+  if(restoredWallet?.account?.address&&!wallet){
+   Promise.resolve().then(()=>{if(!wallet)void onWallet(restoredWallet)});
+  }
   return ui;
  })();
  try{return await tonConnectLoadPromise}catch(e){tonConnectLoadPromise=null;throw e}
@@ -207,12 +214,13 @@ async function onWallet(w){
   syncMineAction();return;
  }
  wallet=w;const a=w.account;
+ $('connectWalletBtn').textContent='WALLET CONNECTED · SETTING UP';
  // Never let a previous wallet's bearer token remain active after account switching.
  if(localStorage.getItem('ifzi_session_wallet')!==a.address){token=null;clearSession()}
  $('wallet').textContent=short(a.address);$('network').textContent=a.chain==='-239'?'TON Mainnet':'Unsupported network';
  $('disconnectWalletBtn').style.display='block';
  if(a.chain!=='-239'){
-  token=null;clearSession();$('approval').textContent='Unsupported network';
+  token=null;clearSession();$('approval').textContent='Unsupported network';$('connectWalletBtn').textContent='UNSUPPORTED NETWORK';
   $('startBtn').disabled=$('claimBtn').disabled=$('withdrawBtn').disabled=true;
   msg('walletMsg','err','Please switch your wallet to TON Mainnet.');syncMineAction();return;
  }
@@ -234,7 +242,8 @@ async function onWallet(w){
   await loadPoolStatus();
  }catch(e){
   $('startBtn').disabled=!token;$('claimBtn').disabled=true;$('withdrawBtn').disabled=!token;
-  msg('walletMsg','err','Wallet connected, but IFZI setup failed: '+e.message);
+  $('connectWalletBtn').textContent='RETRY ACCOUNT SETUP';
+  msg('walletMsg','err','Wallet is connected, but IFZI account setup failed: '+e.message);
   syncMineAction();
  }
 }
@@ -381,6 +390,10 @@ $('connectWalletBtn').onclick=async()=>{
   // No TON Proof challenge is requested. Wallet address is used for an
   // address-only IFZI session; ownership is explicitly not verified.
   client.setConnectRequestParameters({state:'ready',value:{}});
+  // TonConnect can restore a wallet even when the page's local callback state
+  // has not yet caught up. Prefer the SDK's actual active wallet.
+  const activeWallet=client.wallet;
+  if(activeWallet?.account?.address){await onWallet(activeWallet);return}
   if(wallet&&!token){await onWallet(wallet);return}
   b.textContent='OPENING TON WALLET…';
   await client.openModal();
