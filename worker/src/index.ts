@@ -438,7 +438,7 @@ app.post('/api/tasks/weekly-claim',async c=>{
   if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1||results[2]?.meta?.changes!==1)return jsonError(c,'Weekly reward is already claimed or the IFZI reward pool is exhausted.',409);
   return c.json({ok:true,reward:fmt(reward),cycle_start_date:pending.cycle_start_date,status:'claimed'});
 });
-// One optional, one-time 0.05 TON task. A successful TON Mainnet payment credits 50,000 IFZI immediately.
+// One optional, one-time 0.05 TON task. A successful TON Mainnet payment credits 5,000 IFZI immediately.
 app.post('/api/boost/verify',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   if(user.wallet_status!=='approved')return jsonError(c,'Wallet approval is required.',403);
