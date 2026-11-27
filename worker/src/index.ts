@@ -407,7 +407,7 @@ app.post('/api/tasks/daily-checkin',async c=>{
   const prior=await readStreak(c,user.id);
   const nextStreak=prior.last_checkin===yesterday?prior.continuous_days+1:1;
   const weeklyRewardDue=nextStreak%7===0;
-  const weekStart=weeklyRewardDue?utcDateOffset(date,-6):null;
+  const weekStart=weeklyRewardDue?'v2-'+utcDateOffset(date,-6):null;
   const amount=BigInt(c.env.DAILY_CHECKIN_REWARD_IFZI||'10')*UNIT,now=nowSec(),ref=user.id+':'+date;
   const statements=[
     c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND NOT EXISTS(SELECT 1 FROM daily_checkins WHERE user_id=? AND checkin_date=?)").bind(amount.toString(),amount.toString(),user.id,date),
