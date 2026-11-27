@@ -23,9 +23,9 @@ const DECIMALS = 9;
 const UNIT = 10n ** 9n;
 
 const levels = [
-  [0n,100n],[10_000n,120n],[25_000n,140n],[50_000n,160n],[100_000n,180n],
-  [200_000n,200n],[350_000n,220n],[500_000n,240n],[750_000n,260n],
-  [1_000_000n,280n],[2_000_000n,300n]
+  [0n,200n],[10_000n,240n],[25_000n,280n],[50_000n,320n],[100_000n,360n],
+  [200_000n,400n],[350_000n,440n],[500_000n,480n],[750_000n,520n],
+  [1_000_000n,560n],[2_000_000n,600n]
 ] as const;
 
 app.use('*', cors({
@@ -211,11 +211,16 @@ app.post('/api/mining/start',async c=>{
   try{balanceRaw=await getVerifiedIfziBalanceRaw(c.env,user.wallet_raw)}
   catch(error){
     balanceVerified=false;
-    console.warn('IFZI balance lookup unavailable; starting this cycle at Level 1 without holding bonus.',error);
+    console.warn('IFZI on-chain balance lookup unavailable; using the verified in-site rewards balance for level calculation.',error);
   }
-  const wholeBalance=balanceRaw/UNIT;
-  let level=1,baseRateTokens=100n;for(let i=0;i<levels.length;i++){if(wholeBalance>=levels[i][0]){level=i+1;baseRateTokens=levels[i][1]}}
-  const holdingEligible=balanceVerified&&balanceRaw>=10_000n*UNIT;
+  // The user's server-side IFZI rewards balance also counts toward level
+  // progression. Use the larger verified balance; never trust a client value.
+  const siteBalanceRow=await c.env.DB.prepare('SELECT available_raw FROM reward_balances WHERE user_id=?').bind(user.id).first() as any;
+  const siteBalanceRaw=BigInt(siteBalanceRow?.available_raw||'0');
+  const levelBalanceRaw=balanceRaw>siteBalanceRaw?balanceRaw:siteBalanceRaw;
+  const wholeBalance=levelBalanceRaw/UNIT;
+  let level=1,baseRateTokens=200n;for(let i=0;i<levels.length;i++){if(wholeBalance>=levels[i][0]){level=i+1;baseRateTokens=levels[i][1]}}
+  const holdingEligible=levelBalanceRaw>=10_000n*UNIT;
   const holdingBonusPercent=holdingEligible?(level<=5?50n:25n):0n;
   const rate=baseRateTokens*UNIT*(100n+holdingBonusPercent)/100n,reward=rate,started=nowSec(),ends=started+DAY,id=crypto.randomUUID();
   try{
@@ -229,7 +234,7 @@ app.post('/api/mining/start',async c=>{
     console.error('IFZI mining cycle insert failed',error);
     return jsonError(c,'Could not start mining cycle. Please retry.',500);
   }
-  return c.json({ok:true,already_running:false,status:'active',cycle_id:id,ends_at:ends*1000,reward:fmt(reward),level,daily_rate:fmt(rate),base_daily_rate:fmt(baseRateTokens*UNIT),holding_bonus_percent:Number(holdingBonusPercent),balance_verified:balanceVerified,verified_balance:balanceVerified?fmt(balanceRaw):null});
+  return c.json({ok:true,already_running:false,status:'active',cycle_id:id,ends_at:ends*1000,reward:fmt(reward),level,daily_rate:fmt(rate),base_daily_rate:fmt(baseRateTokens*UNIT),holding_bonus_percent:Number(holdingBonusPercent),balance_verified:balanceVerified,verified_balance:balanceVerified?fmt(balanceRaw):null,site_rewards_balance:fmt(siteBalanceRaw),level_balance:fmt(levelBalanceRaw)});
 });
 app.post('/api/mining/claim',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
@@ -260,12 +265,10 @@ app.post('/api/mining/claim',async c=>{
 app.post('/api/withdrawals/request',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   if(user.wallet_status!=='approved')return jsonError(c,'Wallet is not approved.',403);
-  const completedTasks=await c.env.DB.prepare("SELECT COUNT(DISTINCT task_key) AS n FROM task_submissions WHERE user_id=? AND status='approved' AND task_key IN ('telegram','youtube','x')").bind(user.id).first() as any;
-  if(Number(completedTasks?.n||0)<3)return jsonError(c,'All three required IFZI Airdrop tasks (Telegram, YouTube and X) must be approved before withdrawal.',403);
   const body=await c.req.json().catch(()=>({}));
   let amount:bigint;try{amount=parseAmount(body.amount)}catch(e){return jsonError(c,e instanceof Error?e.message:'Invalid amount');}
-  const min=BigInt(c.env.MIN_WITHDRAW_IFZI||'1000')*UNIT;
-  if(amount<min)return jsonError(c,'Minimum withdrawal is '+(c.env.MIN_WITHDRAW_IFZI||'1000')+' IFZI');
+  const min=BigInt(c.env.MIN_WITHDRAW_IFZI||'10000')*UNIT;
+  if(amount<min)return jsonError(c,'Minimum withdrawal is '+(c.env.MIN_WITHDRAW_IFZI||'10000')+' IFZI');
   const pending=await c.env.DB.prepare("SELECT id FROM withdrawals WHERE user_id=? AND status IN ('pending','approved') LIMIT 1").bind(user.id).first();
   if(pending)return jsonError(c,'You already have a withdrawal awaiting admin review.',409);
   const id=crypto.randomUUID(),now=nowSec();
@@ -385,11 +388,12 @@ async function readStreak(c:any,userId:string){
   const anchor=dateSet.has(today)?today:utcDateOffset(today,-1);
   let raw=0;
   if(dateSet.has(anchor)){let cursor=anchor;while(dateSet.has(cursor)&&raw<365){raw++;cursor=utcDateOffset(cursor,-1)}}
-  const cycleDay=raw?((raw-1)%30)+1:0;
-  const cycleStart=raw?utcDateOffset(anchor,-(cycleDay-1)):null;
-  const calendar=Array.from({length:30},(_,i)=>{const date=utcDateOffset(today,i-29);return {date,checked:dateSet.has(date)}});
+  const cycleDay=raw?((raw-1)%7)+1:0;
+  const cycleStart=raw?utcDateOffset(anchor,-((raw-1)%7)):null;
+  const calendar=Array.from({length:7},(_,i)=>{const date=utcDateOffset(today,i-6);return {date,checked:dateSet.has(date)}});
   const badges=await c.env.DB.prepare('SELECT cycle_start_date,badge_code,awarded_at FROM monthly_badges WHERE user_id=? ORDER BY awarded_at DESC LIMIT 12').bind(userId).all();
-  return {today,streak_days:cycleDay,continuous_days:raw,last_checkin:dates[0]||null,next_weekly_milestone:cycleDay<7?7:cycleDay<14?14:cycleDay<21?21:cycleDay<28?28:cycleDay<30?30:null,calendar,badges:badges.results||[],badge_count:(badges.results||[]).length,cycle_start_date:cycleStart};
+  const pendingWeekly=await c.env.DB.prepare("SELECT sr.cycle_start_date,sr.reward_raw FROM streak_rewards sr WHERE sr.user_id=? AND CAST(sr.reward_raw AS INTEGER)>=2500000000000 AND NOT EXISTS(SELECT 1 FROM pool_ledger pl WHERE pl.event_type='daily_checkin' AND pl.reference_id='weekly:'||sr.user_id||':'||sr.cycle_start_date) AND NOT EXISTS(SELECT 1 FROM pool_ledger pl WHERE pl.event_type='daily_checkin' AND pl.reference_id=sr.user_id||':'||sr.cycle_start_date||':7') ORDER BY sr.created_at ASC LIMIT 1").bind(userId).first() as any;
+  return {today,streak_days:cycleDay,continuous_days:raw,last_checkin:dates[0]||null,next_weekly_milestone:cycleDay===0?7:cycleDay<7?7:null,calendar,badges:badges.results||[],badge_count:(badges.results||[]).length,cycle_start_date:cycleStart,weekly_reward_available:!!pendingWeekly,weekly_reward_amount:pendingWeekly?fmt(pendingWeekly.reward_raw):'0'};
 }
 app.get('/api/tasks/streak',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
@@ -399,36 +403,42 @@ app.post('/api/tasks/daily-checkin',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   if(user.wallet_status!=='approved')return jsonError(c,'Wallet approval is required before task rewards.',403);
   const date=new Date().toISOString().slice(0,10);
+  const yesterday=utcDateOffset(date,-1);
+  const prior=await readStreak(c,user.id);
+  const nextStreak=prior.last_checkin===yesterday?prior.continuous_days+1:1;
+  const weeklyRewardDue=nextStreak%7===0;
+  const weekStart=weeklyRewardDue?'v2-'+utcDateOffset(date,-6):null;
   const amount=BigInt(c.env.DAILY_CHECKIN_REWARD_IFZI||'10')*UNIT,now=nowSec(),ref=user.id+':'+date;
-  const results=await c.env.DB.batch([
+  const statements=[
     c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND NOT EXISTS(SELECT 1 FROM daily_checkins WHERE user_id=? AND checkin_date=?)").bind(amount.toString(),amount.toString(),user.id,date),
     c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) SELECT ?,'daily_checkin',?,?,?,? WHERE changes()=1").bind(crypto.randomUUID(),user.id,amount.toString(),ref,now),
-    c.env.DB.prepare("INSERT INTO daily_checkins(user_id,checkin_date,created_at) SELECT ?,?,? WHERE EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(user.id,date,now,ref),
-    c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=? AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(amount.toString(),amount.toString(),user.id,ref)
-  ]);
-  if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1)return jsonError(c,'Daily check-in already claimed or community reward allocation exhausted',409);
+    c.env.DB.prepare("INSERT INTO daily_checkins(user_id,checkin_date,created_at) SELECT ?,?,? WHERE EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(user.id,date,now,ref)
+  ];
+  if(weeklyRewardDue&&weekStart){
+    statements.push(c.env.DB.prepare("INSERT OR IGNORE INTO streak_rewards(user_id,cycle_start_date,milestone_day,reward_raw,created_at) SELECT ?,?,7,?,? WHERE EXISTS(SELECT 1 FROM daily_checkins WHERE user_id=? AND checkin_date=?)").bind(user.id,weekStart,(2500n*UNIT).toString(),now,user.id,date));
+  }
+  statements.push(c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=? AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(amount.toString(),amount.toString(),user.id,ref));
+  const results=await c.env.DB.batch(statements);
+  if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1||results[2]?.meta?.changes!==1)return jsonError(c,'Daily check-in already claimed or community reward allocation exhausted',409);
+  if(results[results.length-1]?.meta?.changes!==1)return jsonError(c,'Daily check-in reward could not be credited. Contact support with your wallet address.',500);
   const stats=await readStreak(c,user.id);
-  let weeklyBonus=0n,weeklyMilestone=0;
-  if([7,14,21,28].includes(stats.streak_days)&&stats.cycle_start_date){
-    weeklyMilestone=stats.streak_days;
-    weeklyBonus=70n*BigInt(stats.streak_days/7)*UNIT;
-    const rewardRef=user.id+':'+stats.cycle_start_date+':'+weeklyMilestone;
-    const bonusResults=await c.env.DB.batch([
-      c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND NOT EXISTS(SELECT 1 FROM streak_rewards WHERE user_id=? AND cycle_start_date=? AND milestone_day=?)").bind(weeklyBonus.toString(),weeklyBonus.toString(),user.id,stats.cycle_start_date,weeklyMilestone),
-      c.env.DB.prepare("INSERT INTO streak_rewards(user_id,cycle_start_date,milestone_day,reward_raw,created_at) SELECT ?,?,?,?,? WHERE changes()=1").bind(user.id,stats.cycle_start_date,weeklyMilestone,weeklyBonus.toString(),now),
-      c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) SELECT ?,'daily_checkin',?,?,?,? WHERE changes()=1").bind(crypto.randomUUID(),user.id,weeklyBonus.toString(),rewardRef,now),
-      c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=? AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(weeklyBonus.toString(),weeklyBonus.toString(),user.id,rewardRef)
-    ]);
-    if(bonusResults[0]?.meta?.changes!==1||bonusResults[1]?.meta?.changes!==1)weeklyBonus=0n;
-  }
-  let monthlyBadgeAwarded=false;
-  if(stats.streak_days===30&&stats.cycle_start_date){
-    const badge=await c.env.DB.prepare("INSERT OR IGNORE INTO monthly_badges(user_id,cycle_start_date,badge_code,awarded_at) VALUES(?,?,'IFZI-30-DAY',?)").bind(user.id,stats.cycle_start_date,now).run();
-    monthlyBadgeAwarded=badge.meta.changes===1;
-  }
-  return c.json({ok:true,reward:fmt(amount),weekly_bonus:fmt(weeklyBonus),weekly_milestone:weeklyMilestone||null,monthly_badge_awarded:monthlyBadgeAwarded,streak_days:stats.streak_days,date});
+  return c.json({ok:true,reward:fmt(amount),weekly_reward_available:stats.weekly_reward_available,weekly_reward_amount:stats.weekly_reward_amount,streak_days:stats.streak_days,continuous_days:stats.continuous_days,date});
 });
-// One optional, one-time 0.05 TON task. A successful TON Mainnet payment credits 50,000 IFZI immediately.
+app.post('/api/tasks/weekly-claim',async c=>{
+  const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
+  if(user.wallet_status!=='approved')return jsonError(c,'Wallet approval is required before claiming streak rewards.',403);
+  const pending=await c.env.DB.prepare("SELECT sr.cycle_start_date,sr.reward_raw FROM streak_rewards sr WHERE sr.user_id=? AND CAST(sr.reward_raw AS INTEGER)>=2500000000000 AND NOT EXISTS(SELECT 1 FROM pool_ledger pl WHERE pl.event_type='daily_checkin' AND pl.reference_id='weekly:'||sr.user_id||':'||sr.cycle_start_date) AND NOT EXISTS(SELECT 1 FROM pool_ledger pl WHERE pl.event_type='daily_checkin' AND pl.reference_id=sr.user_id||':'||sr.cycle_start_date||':7') ORDER BY sr.created_at ASC LIMIT 1").bind(user.id).first() as any;
+  if(!pending)return jsonError(c,'No unclaimed 7-day reward is available yet.',409);
+  const reward=BigInt(pending.reward_raw),now=nowSec(),ref='weekly:'+user.id+':'+pending.cycle_start_date;
+  const results=await c.env.DB.batch([
+    c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND EXISTS(SELECT 1 FROM streak_rewards WHERE user_id=? AND cycle_start_date=? AND milestone_day=7) AND NOT EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(reward.toString(),reward.toString(),user.id,pending.cycle_start_date,ref),
+    c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) SELECT ?,'daily_checkin',?,?,?,? WHERE changes()=1").bind(crypto.randomUUID(),user.id,reward.toString(),ref,now),
+    c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=? AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(reward.toString(),reward.toString(),user.id,ref)
+  ]);
+  if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1||results[2]?.meta?.changes!==1)return jsonError(c,'Weekly reward is already claimed or the IFZI reward pool is exhausted.',409);
+  return c.json({ok:true,reward:fmt(reward),cycle_start_date:pending.cycle_start_date,status:'claimed'});
+});
+// One optional, one-time 0.05 TON task. A successful TON Mainnet payment credits 5,000 IFZI immediately.
 app.post('/api/boost/verify',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   if(user.wallet_status!=='approved')return jsonError(c,'Wallet approval is required.',403);
@@ -449,7 +459,7 @@ app.post('/api/boost/verify',async c=>{
   if(BigInt(msg.value||'0')!==BigInt(c.env.TON_BOOST_AMOUNT_NANO||'50000000'))return jsonError(c,'Payment must be exactly 0.05 TON',400);
   const registered=await c.env.DB.prepare('SELECT created_at FROM users WHERE id=?').bind(user.id).first() as any;
   if(Number(tx.utime||0)<Number(registered?.created_at||0))return jsonError(c,'Payment must be made after wallet registration',400);
-  const reward=BigInt(c.env.TON_BOOST_REWARD_IFZI||'50000')*UNIT,now=nowSec(),paymentId=crypto.randomUUID();
+  const reward=BigInt(c.env.TON_BOOST_REWARD_IFZI||'5000')*UNIT,now=nowSec(),paymentId=crypto.randomUUID();
   const results=await c.env.DB.batch([
     c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND NOT EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='boost_task' AND reference_id=?) AND NOT EXISTS(SELECT 1 FROM ton_boost_payments WHERE user_id=? AND status='verified') AND NOT EXISTS(SELECT 1 FROM ton_boost_payments WHERE tx_hash=?)").bind(reward.toString(),reward.toString(),user.id,user.id,hash),
     c.env.DB.prepare("INSERT INTO ton_boost_payments(id,user_id,tx_hash,sender_raw,destination_raw,amount_nano,network,status,verified_at,created_at) SELECT ?,?,?,?,?,?,'-239','verified',?,? WHERE changes()=1").bind(paymentId,user.id,hash,sender,destination,String(msg.value),now,now),
@@ -458,7 +468,7 @@ app.post('/api/boost/verify',async c=>{
   ]);
   if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1||results[2]?.meta?.changes!==1||results[3]?.meta?.changes!==1)return jsonError(c,'Payment was already used, the task was already claimed, or the IFZI reward pool is exhausted.',409);
   await c.env.DB.prepare("INSERT INTO admin_audit(id,action,target_type,target_id,details,created_at) VALUES(?,'optional_boost_paid','user',?,?,?)").bind(crypto.randomUUID(),user.id,'reward_raw='+reward.toString()+';tx='+hash,now).run();
-  return c.json({ok:true,status:'verified',reward:fmt(reward),message:'0.05 TON verified on TON Mainnet. 50,000 IFZI credited to your rewards balance.'});
+  return c.json({ok:true,status:'verified',reward:fmt(reward),message:'0.05 TON verified on TON Mainnet. '+fmt(reward)+' IFZI credited to your rewards balance.'});
 });
 app.get('/api/admin/tasks',async c=>{
   if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
@@ -625,7 +635,12 @@ async function fetchWithErrorBoundary(request:Request,env:Bindings,ctx:Execution
       headers:{
         'content-type':'application/json; charset=utf-8',
         'cache-control':'no-store',
-        'access-control-allow-origin':'*'
+        'access-control-allow-origin':'*',
+        'access-control-allow-methods':'GET, POST, OPTIONS',
+        'access-control-allow-headers':'Content-Type, Authorization, x-admin-secret',
+        'access-control-max-age':'86400',
+        'access-control-expose-headers':'cf-ray',
+        'vary':'Origin'
       }
     });
   }
