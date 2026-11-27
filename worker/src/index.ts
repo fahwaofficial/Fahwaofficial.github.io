@@ -265,12 +265,10 @@ app.post('/api/mining/claim',async c=>{
 app.post('/api/withdrawals/request',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
   if(user.wallet_status!=='approved')return jsonError(c,'Wallet is not approved.',403);
-  const completedTasks=await c.env.DB.prepare("SELECT COUNT(DISTINCT task_key) AS n FROM task_submissions WHERE user_id=? AND status='approved' AND task_key IN ('telegram','youtube','x')").bind(user.id).first() as any;
-  if(Number(completedTasks?.n||0)<3)return jsonError(c,'All three required IFZI Airdrop tasks (Telegram, YouTube and X) must be approved before withdrawal.',403);
   const body=await c.req.json().catch(()=>({}));
   let amount:bigint;try{amount=parseAmount(body.amount)}catch(e){return jsonError(c,e instanceof Error?e.message:'Invalid amount');}
-  const min=BigInt(c.env.MIN_WITHDRAW_IFZI||'1000')*UNIT;
-  if(amount<min)return jsonError(c,'Minimum withdrawal is '+(c.env.MIN_WITHDRAW_IFZI||'1000')+' IFZI');
+  const min=BigInt(c.env.MIN_WITHDRAW_IFZI||'10000')*UNIT;
+  if(amount<min)return jsonError(c,'Minimum withdrawal is '+(c.env.MIN_WITHDRAW_IFZI||'10000')+' IFZI');
   const pending=await c.env.DB.prepare("SELECT id FROM withdrawals WHERE user_id=? AND status IN ('pending','approved') LIMIT 1").bind(user.id).first();
   if(pending)return jsonError(c,'You already have a withdrawal awaiting admin review.',409);
   const id=crypto.randomUUID(),now=nowSec();
@@ -451,7 +449,7 @@ app.post('/api/boost/verify',async c=>{
   if(BigInt(msg.value||'0')!==BigInt(c.env.TON_BOOST_AMOUNT_NANO||'50000000'))return jsonError(c,'Payment must be exactly 0.05 TON',400);
   const registered=await c.env.DB.prepare('SELECT created_at FROM users WHERE id=?').bind(user.id).first() as any;
   if(Number(tx.utime||0)<Number(registered?.created_at||0))return jsonError(c,'Payment must be made after wallet registration',400);
-  const reward=BigInt(c.env.TON_BOOST_REWARD_IFZI||'50000')*UNIT,now=nowSec(),paymentId=crypto.randomUUID();
+  const reward=BigInt(c.env.TON_BOOST_REWARD_IFZI||'5000')*UNIT,now=nowSec(),paymentId=crypto.randomUUID();
   const results=await c.env.DB.batch([
     c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND NOT EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='boost_task' AND reference_id=?) AND NOT EXISTS(SELECT 1 FROM ton_boost_payments WHERE user_id=? AND status='verified') AND NOT EXISTS(SELECT 1 FROM ton_boost_payments WHERE tx_hash=?)").bind(reward.toString(),reward.toString(),user.id,user.id,hash),
     c.env.DB.prepare("INSERT INTO ton_boost_payments(id,user_id,tx_hash,sender_raw,destination_raw,amount_nano,network,status,verified_at,created_at) SELECT ?,?,?,?,?,?,'-239','verified',?,? WHERE changes()=1").bind(paymentId,user.id,hash,sender,destination,String(msg.value),now,now),
@@ -460,7 +458,7 @@ app.post('/api/boost/verify',async c=>{
   ]);
   if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1||results[2]?.meta?.changes!==1||results[3]?.meta?.changes!==1)return jsonError(c,'Payment was already used, the task was already claimed, or the IFZI reward pool is exhausted.',409);
   await c.env.DB.prepare("INSERT INTO admin_audit(id,action,target_type,target_id,details,created_at) VALUES(?,'optional_boost_paid','user',?,?,?)").bind(crypto.randomUUID(),user.id,'reward_raw='+reward.toString()+';tx='+hash,now).run();
-  return c.json({ok:true,status:'verified',reward:fmt(reward),message:'0.05 TON verified on TON Mainnet. 50,000 IFZI credited to your rewards balance.'});
+  return c.json({ok:true,status:'verified',reward:fmt(reward),message:'0.05 TON verified on TON Mainnet. '+fmt(reward)+' IFZI credited to your rewards balance.'});
 });
 app.get('/api/admin/tasks',async c=>{
   if(!await requireAdmin(c))return jsonError(c,'Admin unauthorized',401);
