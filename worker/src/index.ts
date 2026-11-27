@@ -392,7 +392,8 @@ async function readStreak(c:any,userId:string){
   const cycleStart=raw?utcDateOffset(anchor,-((raw-1)%7)):null;
   const calendar=Array.from({length:7},(_,i)=>{const date=utcDateOffset(today,i-6);return {date,checked:dateSet.has(date)}});
   const badges=await c.env.DB.prepare('SELECT cycle_start_date,badge_code,awarded_at FROM monthly_badges WHERE user_id=? ORDER BY awarded_at DESC LIMIT 12').bind(userId).all();
-  return {today,streak_days:cycleDay,continuous_days:raw,last_checkin:dates[0]||null,next_weekly_milestone:cycleDay===0?7:cycleDay<7?7:null,calendar,badges:badges.results||[],badge_count:(badges.results||[]).length,cycle_start_date:cycleStart};
+  const pendingWeekly=await c.env.DB.prepare("SELECT sr.cycle_start_date,sr.reward_raw FROM streak_rewards sr WHERE sr.user_id=? AND CAST(sr.reward_raw AS INTEGER)>=2500000000000 AND NOT EXISTS(SELECT 1 FROM pool_ledger pl WHERE pl.event_type='daily_checkin' AND pl.reference_id='weekly:'||sr.user_id||':'||sr.cycle_start_date) AND NOT EXISTS(SELECT 1 FROM pool_ledger pl WHERE pl.event_type='daily_checkin' AND pl.reference_id=sr.user_id||':'||sr.cycle_start_date||':7') ORDER BY sr.created_at ASC LIMIT 1").bind(userId).first() as any;
+  return {today,streak_days:cycleDay,continuous_days:raw,last_checkin:dates[0]||null,next_weekly_milestone:cycleDay===0?7:cycleDay<7?7:null,calendar,badges:badges.results||[],badge_count:(badges.results||[]).length,cycle_start_date:cycleStart,weekly_reward_available:!!pendingWeekly,weekly_reward_amount:pendingWeekly?fmt(pendingWeekly.reward_raw):'0'};
 }
 app.get('/api/tasks/streak',async c=>{
   const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
@@ -405,28 +406,37 @@ app.post('/api/tasks/daily-checkin',async c=>{
   const yesterday=utcDateOffset(date,-1);
   const prior=await readStreak(c,user.id);
   const nextStreak=prior.last_checkin===yesterday?prior.continuous_days+1:1;
-  const weeklyBonus=nextStreak%7===0?2500n*UNIT:0n;
-  const weeklyStart=weeklyBonus>0n?utcDateOffset(date,-6):null;
-  const amount=BigInt(c.env.DAILY_CHECKIN_REWARD_IFZI||'10')*UNIT;
-  const total=amount+weeklyBonus,now=nowSec(),ref=user.id+':'+date;
-  const weeklyRef=weeklyStart?'weekly:'+user.id+':'+weeklyStart:null;
+  const weeklyRewardDue=nextStreak%7===0;
+  const weekStart=weeklyRewardDue?utcDateOffset(date,-6):null;
+  const amount=BigInt(c.env.DAILY_CHECKIN_REWARD_IFZI||'10')*UNIT,now=nowSec(),ref=user.id+':'+date;
   const statements=[
-    c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND NOT EXISTS(SELECT 1 FROM daily_checkins WHERE user_id=? AND checkin_date=?)").bind(total.toString(),total.toString(),user.id,date),
+    c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND NOT EXISTS(SELECT 1 FROM daily_checkins WHERE user_id=? AND checkin_date=?)").bind(amount.toString(),amount.toString(),user.id,date),
     c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) SELECT ?,'daily_checkin',?,?,?,? WHERE changes()=1").bind(crypto.randomUUID(),user.id,amount.toString(),ref,now),
-    c.env.DB.prepare("INSERT INTO daily_checkins(user_id,checkin_date,created_at) SELECT ?,?,? WHERE EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(user.id,date,now,ref),
+    c.env.DB.prepare("INSERT INTO daily_checkins(user_id,checkin_date,created_at) SELECT ?,?,? WHERE EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(user.id,date,now,ref)
   ];
-  if(weeklyBonus>0n&&weeklyStart&&weeklyRef){
-    statements.push(c.env.DB.prepare("INSERT INTO streak_rewards(user_id,cycle_start_date,milestone_day,reward_raw,created_at) SELECT ?,?,7,?,? WHERE EXISTS(SELECT 1 FROM daily_checkins WHERE user_id=? AND checkin_date=?) AND NOT EXISTS(SELECT 1 FROM streak_rewards WHERE user_id=? AND cycle_start_date=? AND milestone_day=7)").bind(user.id,weeklyStart,weeklyBonus.toString(),now,user.id,date,user.id,weeklyStart));
-    statements.push(c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) SELECT ?,'daily_checkin',?,?,?,? WHERE EXISTS(SELECT 1 FROM streak_rewards WHERE user_id=? AND cycle_start_date=? AND milestone_day=7)").bind(crypto.randomUUID(),user.id,weeklyBonus.toString(),weeklyRef,now,user.id,weeklyStart));
+  if(weeklyRewardDue&&weekStart){
+    statements.push(c.env.DB.prepare("INSERT OR IGNORE INTO streak_rewards(user_id,cycle_start_date,milestone_day,reward_raw,created_at) SELECT ?,?,7,?,? WHERE EXISTS(SELECT 1 FROM daily_checkins WHERE user_id=? AND checkin_date=?)").bind(user.id,weekStart,(2500n*UNIT).toString(),now,user.id,date));
   }
-  statements.push(c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=? AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(total.toString(),total.toString(),user.id,ref));
+  statements.push(c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=? AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(amount.toString(),amount.toString(),user.id,ref));
   const results=await c.env.DB.batch(statements);
   if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1||results[2]?.meta?.changes!==1)return jsonError(c,'Daily check-in already claimed or community reward allocation exhausted',409);
-  const balanceUpdate=results[results.length-1];
-  if(balanceUpdate?.meta?.changes!==1)return jsonError(c,'Daily check-in reward could not be credited. Contact support with your wallet address.',500);
-  if(weeklyBonus>0n&&(results[3]?.meta?.changes!==1||results[4]?.meta?.changes!==1))return jsonError(c,'Weekly reward could not be recorded. Contact support before retrying.',500);
+  if(results[results.length-1]?.meta?.changes!==1)return jsonError(c,'Daily check-in reward could not be credited. Contact support with your wallet address.',500);
   const stats=await readStreak(c,user.id);
-  return c.json({ok:true,reward:fmt(amount),weekly_bonus:fmt(weeklyBonus),weekly_milestone:weeklyBonus>0n?7:null,streak_days:stats.streak_days,continuous_days:stats.continuous_days,date});
+  return c.json({ok:true,reward:fmt(amount),weekly_reward_available:stats.weekly_reward_available,weekly_reward_amount:stats.weekly_reward_amount,streak_days:stats.streak_days,continuous_days:stats.continuous_days,date});
+});
+app.post('/api/tasks/weekly-claim',async c=>{
+  const user=await getUser(c);if(!user)return jsonError(c,'Unauthorized',401);
+  if(user.wallet_status!=='approved')return jsonError(c,'Wallet approval is required before claiming streak rewards.',403);
+  const pending=await c.env.DB.prepare("SELECT sr.cycle_start_date,sr.reward_raw FROM streak_rewards sr WHERE sr.user_id=? AND CAST(sr.reward_raw AS INTEGER)>=2500000000000 AND NOT EXISTS(SELECT 1 FROM pool_ledger pl WHERE pl.event_type='daily_checkin' AND pl.reference_id='weekly:'||sr.user_id||':'||sr.cycle_start_date) AND NOT EXISTS(SELECT 1 FROM pool_ledger pl WHERE pl.event_type='daily_checkin' AND pl.reference_id=sr.user_id||':'||sr.cycle_start_date||':7') ORDER BY sr.created_at ASC LIMIT 1").bind(user.id).first() as any;
+  if(!pending)return jsonError(c,'No unclaimed 7-day reward is available yet.',409);
+  const reward=BigInt(pending.reward_raw),now=nowSec(),ref='weekly:'+user.id+':'+pending.cycle_start_date;
+  const results=await c.env.DB.batch([
+    c.env.DB.prepare("UPDATE pool_state SET distributed_raw=CAST(distributed_raw AS INTEGER)+? WHERE id=1 AND CAST(total_raw AS INTEGER)-CAST(distributed_raw AS INTEGER)-CAST(reserved_raw AS INTEGER)>=? AND EXISTS(SELECT 1 FROM streak_rewards WHERE user_id=? AND cycle_start_date=? AND milestone_day=7) AND NOT EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(reward.toString(),reward.toString(),user.id,pending.cycle_start_date,ref),
+    c.env.DB.prepare("INSERT INTO pool_ledger(id,event_type,user_id,amount_raw,reference_id,created_at) SELECT ?,'daily_checkin',?,?,?,? WHERE changes()=1").bind(crypto.randomUUID(),user.id,reward.toString(),ref,now),
+    c.env.DB.prepare("UPDATE reward_balances SET available_raw=CAST(available_raw AS INTEGER)+?,total_earned_raw=CAST(total_earned_raw AS INTEGER)+? WHERE user_id=? AND EXISTS(SELECT 1 FROM pool_ledger WHERE event_type='daily_checkin' AND reference_id=?)").bind(reward.toString(),reward.toString(),user.id,ref)
+  ]);
+  if(results[0]?.meta?.changes!==1||results[1]?.meta?.changes!==1||results[2]?.meta?.changes!==1)return jsonError(c,'Weekly reward is already claimed or the IFZI reward pool is exhausted.',409);
+  return c.json({ok:true,reward:fmt(reward),cycle_start_date:pending.cycle_start_date,status:'claimed'});
 });
 // One optional, one-time 0.05 TON task. A successful TON Mainnet payment credits 50,000 IFZI immediately.
 app.post('/api/boost/verify',async c=>{
