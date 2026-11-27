@@ -340,8 +340,7 @@ async function loadStreak(){
    const small=document.createElement('span');small.textContent=day.checked?'✓ '+name:name;el.append(b,small);host.append(el);
   }
   const badges=$('streakBadges');badges.innerHTML='';
-  if(!d.badges.length){badges.textContent='Your 30-day badges will appear here.'}
-  else{for(const badge of d.badges){const el=document.createElement('span');el.className='badge-medal';el.textContent='🏅 IFZI WEEKLY · '+badge.cycle_start_date;badges.append(el)}}
+  badges.textContent='Weekly rewards are recorded after each successful 2,500 IFZI claim.';
  }catch(e){$('streakCalendar').textContent='Streak information is temporarily unavailable.'}
 }
 
